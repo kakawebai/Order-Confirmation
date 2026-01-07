@@ -233,6 +233,18 @@ hr {
     height: auto;
 }
 
+.order-preview[dir="rtl"] {
+    direction: rtl;
+}
+
+.order-preview[dir="rtl"] .header-row {
+    flex-direction: row-reverse;
+}
+
+.order-preview[dir="rtl"] .total-row {
+    flex-direction: row-reverse;
+}
+
 .order-header {
     text-align: center;
     border-bottom: 2px solid #333;

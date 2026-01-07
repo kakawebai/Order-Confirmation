@@ -80,6 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
             discount: '折扣:',
             totalAmount: '合計金額:'
         },
+        'ar': {
+            title: 'تأكيد الطلب',
+            customer: 'العميل',
+            date: 'التاريخ',
+            totalItems: 'إجمالي العناصر:',
+            discount: 'الخصم:',
+            totalAmount: 'المبلغ الإجمالي:'
+        },
         'ja': {
             title: '注文確認書',
             customer: '顧客',
@@ -200,6 +208,13 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.labelTotalItems.textContent = t.totalItems;
         dom.labelDiscount.textContent = t.discount;
         dom.labelTotalAmount.textContent = t.totalAmount;
+
+        document.documentElement.lang = lang;
+        if (lang === 'ar') {
+            dom.captureArea.setAttribute('dir', 'rtl');
+        } else {
+            dom.captureArea.removeAttribute('dir');
+        }
     }
 
     function handleCurrencyChange() {
