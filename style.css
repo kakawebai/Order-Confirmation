@@ -382,13 +382,34 @@ hr {
 
 /* Responsive adjustments */
 @media (max-width: 800px) {
+    body {
+        overflow: auto;
+    }
     .container {
         flex-direction: column;
         overflow-y: auto;
+        overflow-x: hidden;
     }
     .left-panel, .right-panel {
         width: 100%;
         overflow: visible;
+    }
+    .left-panel {
+        min-width: 0;
+        padding: 20px 16px;
+    }
+    .form-row {
+        flex-wrap: wrap;
+    }
+    .form-row .form-group {
+        min-width: 0;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+        width: 100%;
+        max-width: 100%;
     }
     .right-panel {
         height: auto;
