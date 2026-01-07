@@ -177,6 +177,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Functions ---
 
+    function escapeHtml(input) {
+        return String(input).replace(/[&<>"']/g, (ch) => {
+            switch (ch) {
+                case '&': return '&amp;';
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '"': return '&quot;';
+                case "'": return '&#39;';
+                default: return ch;
+            }
+        });
+    }
+
     function handleLanguageChange() {
         const lang = dom.languageSelect.value;
         const t = translations[lang] || translations['en'];
@@ -361,11 +374,12 @@ document.addEventListener('DOMContentLoaded', () => {
             item.className = 'list-item';
             // Use current currency symbol
             const symbol = dom.totalCurrencySymbol.textContent;
+            const safeTitle = escapeHtml(p.title);
             
             item.innerHTML = `
                 <img src="${p.image || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2RkZCIvPjwvc3ZnPg=='}">
                 <div class="list-item-info">
-                    <div class="list-item-title">${p.title}</div>
+                    <div class="list-item-title">${safeTitle}</div>
                     <div class="list-item-desc">${symbol}${p.price.toFixed(2)} x ${p.qty}</div>
                 </div>
                 <div class="list-actions">
@@ -394,16 +408,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const subtotal = p.price * p.qty;
             const item = document.createElement('div');
             item.className = 'preview-item';
+            const safeTitle = escapeHtml(p.title);
+            const safeNote = escapeHtml(p.note);
             
             // Default placeholder if no image
             const imgSrc = p.image || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YwZjBmMCIvPjwvc3ZnPg==';
 
             item.innerHTML = `
-                <div class="preview-img"><img src="${imgSrc}" alt="${p.title}"></div>
+                <div class="preview-img"><img src="${imgSrc}" alt="${safeTitle}"></div>
                 <div class="preview-details">
                     <div>
-                        <div class="preview-title">${p.title}</div>
-                        ${p.note ? `<div class="preview-note">${p.note}</div>` : ''}
+                        <div class="preview-title">${safeTitle}</div>
+                        ${p.note ? `<div class="preview-note">${safeNote}</div>` : ''}
                     </div>
                     <div class="preview-price-row">
                         <span class="price">${currentCurrency}${p.price.toFixed(2)} x ${p.qty}</span>

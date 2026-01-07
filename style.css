@@ -316,6 +316,7 @@ hr {
     color: #777;
     margin-top: 2px;
     font-style: italic;
+    white-space: pre-wrap;
 }
 
 .preview-price-row {
@@ -353,18 +354,6 @@ hr {
     margin-bottom: 10px;
     font-size: 14px;
     color: #555;
-}
-
-.discount-row {
-    color: #777;
-}
-
-.discount-price-group {
-    display: flex;
-    align-items: baseline;
-    gap: 0;
-    font-variant-numeric: tabular-nums;
-    color: var(--success-color);
 }
 
 .main-total {
