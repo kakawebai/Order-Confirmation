@@ -28,16 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
         labelCustomer: document.getElementById('labelCustomer'),
         labelDate: document.getElementById('labelDate'),
         labelTotalItems: document.getElementById('labelTotalItems'),
+        labelOriginalPrice: document.getElementById('labelOriginalPrice'),
         labelDiscount: document.getElementById('labelDiscount'),
         labelTotalAmount: document.getElementById('labelTotalAmount'),
         
         // Total Display
         totalCurrencyCode: document.getElementById('totalCurrencyCode'),
         totalCurrencySymbol: document.getElementById('totalCurrencySymbol'),
+        originalPriceRow: document.getElementById('originalPriceRow'),
+        originalCurrencyCode: document.getElementById('originalCurrencyCode'),
+        originalCurrencySymbol: document.getElementById('originalCurrencySymbol'),
+        originalAmount: document.getElementById('originalAmount'),
         discountRow: document.getElementById('discountRow'),
-        discountCurrencySymbol: document.getElementById('discountCurrencySymbol'),
-        discountAmount: document.getElementById('discountAmount'),
-
+        discountPercent: document.getElementById('discountPercent'),
+        
         // Buttons
         addBtn: document.getElementById('addProductBtn'),
         updateBtn: document.getElementById('updateProductBtn'),
@@ -61,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: 'Customer',
             date: 'Date',
             totalItems: 'Total Items:',
+            originalPrice: 'Original Price:',
             discount: 'Discount:',
             totalAmount: 'Total Amount:'
         },
@@ -69,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: '客户',
             date: '日期',
             totalItems: '商品总数:',
+            originalPrice: '原价:',
             discount: '折扣:',
             totalAmount: '合计金额:'
         },
@@ -77,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: '客戶',
             date: '日期',
             totalItems: '商品總數:',
+            originalPrice: '原價:',
             discount: '折扣:',
             totalAmount: '合計金額:'
         },
@@ -85,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: 'العميل',
             date: 'التاريخ',
             totalItems: 'إجمالي العناصر:',
+            originalPrice: 'السعر الأصلي:',
             discount: 'الخصم:',
             totalAmount: 'المبلغ الإجمالي:'
         },
@@ -93,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: '顧客',
             date: '日付',
             totalItems: '合計点数:',
+            originalPrice: '元値:',
             discount: '割引:',
             totalAmount: '合計金額:'
         },
@@ -101,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: '고객',
             date: '날짜',
             totalItems: '총 수량:',
+            originalPrice: '원래 가격:',
             discount: '할인:',
             totalAmount: '총 금액:'
         },
@@ -109,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: 'Клиент',
             date: 'Дата',
             totalItems: 'Всего товаров:',
+            originalPrice: 'Исходная цена:',
             discount: 'Скидка:',
             totalAmount: 'Итоговая сумма:'
         },
@@ -117,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: 'Client',
             date: 'Date',
             totalItems: 'Articles au total:',
+            originalPrice: 'Prix original:',
             discount: 'Remise:',
             totalAmount: 'Montant total:'
         },
@@ -125,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: 'Kunde',
             date: 'Datum',
             totalItems: 'Gesamtartikel:',
+            originalPrice: 'Originalpreis:',
             discount: 'Rabatt:',
             totalAmount: 'Gesamtbetrag:'
         },
@@ -133,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: 'Cliente',
             date: 'Fecha',
             totalItems: 'Artículos totales:',
+            originalPrice: 'Precio original:',
             discount: 'Descuento:',
             totalAmount: 'Importe total:'
         },
@@ -141,6 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             customer: 'Cliente',
             date: 'Data',
             totalItems: 'Articoli totali:',
+            originalPrice: 'Prezzo originale:',
             discount: 'Sconto:',
             totalAmount: 'Importo totale:'
         }
@@ -206,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.labelCustomer.textContent = t.customer;
         dom.labelDate.textContent = t.date;
         dom.labelTotalItems.textContent = t.totalItems;
+        dom.labelOriginalPrice.textContent = t.originalPrice;
         dom.labelDiscount.textContent = t.discount;
         dom.labelTotalAmount.textContent = t.totalAmount;
 
@@ -230,7 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Total
         dom.totalCurrencyCode.textContent = currentCurrencyCode;
         dom.totalCurrencySymbol.textContent = currentCurrency;
-        dom.discountCurrencySymbol.textContent = currentCurrency;
+        dom.originalCurrencyCode.textContent = currentCurrencyCode;
+        dom.originalCurrencySymbol.textContent = currentCurrency;
         // Re-render Preview to update item prices
         render();
     }
@@ -456,8 +473,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const shouldShowDiscount = dom.discountInput.value.trim() !== '' && percent > 0;
         
         dom.totalCount.textContent = totalQty;
-        dom.discountAmount.textContent = appliedDiscount.toFixed(2);
+        dom.originalAmount.textContent = totalAmt.toFixed(2);
+        dom.discountPercent.textContent = `-${percent}%`;
         dom.totalAmount.textContent = finalAmt.toFixed(2);
+        
+        dom.originalPriceRow.style.display = shouldShowDiscount ? 'flex' : 'none';
         dom.discountRow.style.display = shouldShowDiscount ? 'flex' : 'none';
     }
 

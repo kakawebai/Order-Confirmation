@@ -241,7 +241,10 @@ hr {
     flex-direction: row-reverse;
 }
 
-.order-preview[dir="rtl"] .total-row {
+.order-preview[dir="rtl"] .total-row,
+.order-preview[dir="rtl"] .total-price-group,
+.order-preview[dir="rtl"] .original-price-group,
+.order-preview[dir="rtl"] .discount-price-group {
     flex-direction: row-reverse;
 }
 
@@ -390,6 +393,16 @@ hr {
 .main-total .currency {
     font-size: inherit; /* Match parent font size */
     margin-right: 0;
+}
+
+.original-price-row {
+    color: #666;
+    font-size: 14px;
+}
+
+.original-price-group {
+    text-decoration: line-through;
+    opacity: 0.7;
 }
 
 /* Responsive adjustments */
