@@ -1,0 +1,488 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // State
+    let products = [];
+    let editingId = null;
+    let tempImageBase64 = null;
+    let currentCurrency = '$';
+    let currentCurrencyCode = 'USD';
+
+    // DOM Elements
+    const dom = {
+        // Form Inputs
+        languageSelect: document.getElementById('languageSelector'),
+        customerInput: document.getElementById('customerNameInput'),
+        customerNameDisplay: document.getElementById('customerNameDisplay'),
+        dateInput: document.getElementById('orderDate'),
+        currencySelect: document.getElementById('currencySelector'),
+        discountInput: document.getElementById('discountInput'),
+        priceSymbol: document.getElementById('priceCurrencySymbol'),
+        imageInput: document.getElementById('productImage'),
+        imagePreviewBox: document.getElementById('imagePreviewBox'),
+        titleInput: document.getElementById('productTitle'),
+        priceInput: document.getElementById('productPrice'),
+        qtyInput: document.getElementById('productQty'),
+        noteInput: document.getElementById('productNote'),
+        
+        // Preview Text Labels
+        previewTitle: document.getElementById('previewTitle'),
+        labelCustomer: document.getElementById('labelCustomer'),
+        labelDate: document.getElementById('labelDate'),
+        labelTotalItems: document.getElementById('labelTotalItems'),
+        labelDiscount: document.getElementById('labelDiscount'),
+        labelTotalAmount: document.getElementById('labelTotalAmount'),
+        
+        // Total Display
+        totalCurrencyCode: document.getElementById('totalCurrencyCode'),
+        totalCurrencySymbol: document.getElementById('totalCurrencySymbol'),
+        discountRow: document.getElementById('discountRow'),
+        discountCurrencySymbol: document.getElementById('discountCurrencySymbol'),
+        discountAmount: document.getElementById('discountAmount'),
+
+        // Buttons
+        addBtn: document.getElementById('addProductBtn'),
+        updateBtn: document.getElementById('updateProductBtn'),
+        cancelBtn: document.getElementById('cancelEditBtn'),
+        clearAllBtn: document.getElementById('clearAllBtn'),
+        saveBtn: document.getElementById('saveBtn'),
+
+        // Lists/Display
+        productList: document.getElementById('productList'),
+        previewItems: document.getElementById('previewItems'),
+        currentDate: document.getElementById('currentDate'),
+        totalCount: document.getElementById('totalCount'),
+        totalAmount: document.getElementById('totalAmount'),
+        captureArea: document.getElementById('captureArea')
+    };
+
+    // Translations
+    const translations = {
+        'en': {
+            title: 'Order Confirmation',
+            customer: 'Customer',
+            date: 'Date',
+            totalItems: 'Total Items:',
+            discount: 'Discount:',
+            totalAmount: 'Total Amount:'
+        },
+        'zh-CN': {
+            title: '订单确认',
+            customer: '客户',
+            date: '日期',
+            totalItems: '商品总数:',
+            discount: '折扣:',
+            totalAmount: '合计金额:'
+        },
+        'zh-TW': {
+            title: '訂單確認',
+            customer: '客戶',
+            date: '日期',
+            totalItems: '商品總數:',
+            discount: '折扣:',
+            totalAmount: '合計金額:'
+        },
+        'ja': {
+            title: '注文確認書',
+            customer: '顧客',
+            date: '日付',
+            totalItems: '合計点数:',
+            discount: '割引:',
+            totalAmount: '合計金額:'
+        },
+        'ko': {
+            title: '주문 확인서',
+            customer: '고객',
+            date: '날짜',
+            totalItems: '총 수량:',
+            discount: '할인:',
+            totalAmount: '총 금액:'
+        },
+        'ru': {
+            title: 'Подтверждение заказа',
+            customer: 'Клиент',
+            date: 'Дата',
+            totalItems: 'Всего товаров:',
+            discount: 'Скидка:',
+            totalAmount: 'Итоговая сумма:'
+        },
+        'fr': {
+            title: 'Confirmation de commande',
+            customer: 'Client',
+            date: 'Date',
+            totalItems: 'Articles au total:',
+            discount: 'Remise:',
+            totalAmount: 'Montant total:'
+        },
+        'de': {
+            title: 'Auftragsbestätigung',
+            customer: 'Kunde',
+            date: 'Datum',
+            totalItems: 'Gesamtartikel:',
+            discount: 'Rabatt:',
+            totalAmount: 'Gesamtbetrag:'
+        },
+        'es': {
+            title: 'Confirmación de pedido',
+            customer: 'Cliente',
+            date: 'Fecha',
+            totalItems: 'Artículos totales:',
+            discount: 'Descuento:',
+            totalAmount: 'Importe total:'
+        },
+        'it': {
+            title: 'Conferma d\'ordine',
+            customer: 'Cliente',
+            date: 'Data',
+            totalItems: 'Articoli totali:',
+            discount: 'Sconto:',
+            totalAmount: 'Importo totale:'
+        }
+    };
+
+    // Initialize Date
+    const now = new Date();
+    dom.currentDate.textContent = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+    // Event Listeners
+    dom.customerInput.addEventListener('input', () => {
+        const val = dom.customerInput.value.trim();
+        if (val) {
+            dom.customerNameDisplay.textContent = val;
+            dom.customerNameDisplay.parentElement.style.visibility = 'visible';
+        } else {
+            dom.customerNameDisplay.textContent = '';
+            dom.customerNameDisplay.parentElement.style.visibility = 'hidden';
+        }
+    });
+    // Init state
+    dom.customerNameDisplay.parentElement.style.visibility = 'hidden';
+    dom.dateInput.addEventListener('input', () => {
+        dom.currentDate.textContent = dom.dateInput.value;
+    });
+    dom.languageSelect.addEventListener('change', handleLanguageChange);
+    dom.currencySelect.addEventListener('change', handleCurrencyChange);
+    dom.discountInput.addEventListener('input', updateTotals);
+    dom.imageInput.addEventListener('change', handleImageUpload);
+
+    // Initialize Buttons
+    dom.addBtn.addEventListener('click', addProduct);
+    dom.updateBtn.addEventListener('click', updateProduct);
+    dom.cancelBtn.addEventListener('click', cancelEdit);
+    dom.clearAllBtn.addEventListener('click', clearAllProducts);
+    dom.saveBtn.addEventListener('click', saveAsImage);
+    dom.productList.addEventListener('click', handleListAction);
+
+    // Initial sync
+    handleCurrencyChange();
+    handleLanguageChange();
+
+    // --- Functions ---
+
+    function handleLanguageChange() {
+        const lang = dom.languageSelect.value;
+        const t = translations[lang] || translations['en'];
+
+        dom.previewTitle.textContent = t.title;
+        dom.labelCustomer.textContent = t.customer;
+        dom.labelDate.textContent = t.date;
+        dom.labelTotalItems.textContent = t.totalItems;
+        dom.labelDiscount.textContent = t.discount;
+        dom.labelTotalAmount.textContent = t.totalAmount;
+    }
+
+    function handleCurrencyChange() {
+        currentCurrency = dom.currencySelect.value;
+        
+        // Extract currency code from option text (e.g., "USD ($)" -> "USD")
+        const selectedOption = dom.currencySelect.options[dom.currencySelect.selectedIndex];
+        const text = selectedOption.text;
+        currentCurrencyCode = text.split(' ')[0]; // Assumes format "CODE (SYMBOL)"
+
+        // Update Form Label
+        dom.priceSymbol.textContent = currentCurrency;
+        // Update Total
+        dom.totalCurrencyCode.textContent = currentCurrencyCode;
+        dom.totalCurrencySymbol.textContent = currentCurrency;
+        dom.discountCurrencySymbol.textContent = currentCurrency;
+        // Re-render Preview to update item prices
+        render();
+    }
+
+    function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                tempImageBase64 = event.target.result;
+                displayImagePreview(tempImageBase64);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function displayImagePreview(src) {
+        if (src) {
+            dom.imagePreviewBox.innerHTML = `<img src="${src}" alt="Preview">`;
+        } else {
+            dom.imagePreviewBox.innerHTML = `<span>暂无图片</span>`;
+        }
+    }
+
+    function getFormData() {
+        const title = dom.titleInput.value.trim();
+        const price = parseFloat(dom.priceInput.value);
+        const qty = parseInt(dom.qtyInput.value);
+        const note = dom.noteInput.value.trim();
+
+        if (!title) {
+            alert('请输入商品标题');
+            return null;
+        }
+        if (isNaN(price) || price < 0) {
+            alert('请输入有效的单价');
+            return null;
+        }
+        if (isNaN(qty) || qty < 1) {
+            alert('请输入有效的数量');
+            return null;
+        }
+
+        return {
+            id: Date.now().toString(), // Simple ID generation
+            image: tempImageBase64, // Can be null
+            title,
+            price,
+            qty,
+            note
+        };
+    }
+
+    function addProduct() {
+        const data = getFormData();
+        if (data) {
+            products.push(data);
+            resetForm();
+            render();
+            // Focus on title for rapid entry
+            dom.titleInput.focus();
+        }
+    }
+
+    function clearAllProducts() {
+        if (products.length === 0) return;
+        if (confirm('确定清空所有商品吗？')) {
+            products = [];
+            cancelEdit();
+            render();
+        }
+    }
+
+    function handleListAction(e) {
+        const btn = e.target.closest('.action-btn');
+        if (!btn) return;
+
+        const id = btn.dataset.id;
+        if (btn.classList.contains('del-btn')) {
+            if (confirm('确定删除该商品吗？')) {
+                products = products.filter(p => p.id !== id);
+                // If we were editing this item, cancel edit
+                if (editingId === id) cancelEdit();
+                render();
+            }
+        } else if (btn.classList.contains('edit-btn')) {
+            startEdit(id);
+        }
+    }
+
+    function startEdit(id) {
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+
+        editingId = id;
+        
+        // Populate form
+        dom.titleInput.value = product.title;
+        dom.priceInput.value = product.price;
+        dom.qtyInput.value = product.qty;
+        dom.noteInput.value = product.note;
+        tempImageBase64 = product.image;
+        displayImagePreview(tempImageBase64);
+
+        // Switch buttons
+        dom.addBtn.style.display = 'none';
+        dom.updateBtn.style.display = 'inline-block';
+        dom.cancelBtn.style.display = 'inline-block';
+        
+        // Scroll to top of form
+        document.querySelector('.left-panel').scrollTop = 0;
+    }
+
+    function updateProduct() {
+        if (!editingId) return;
+
+        const data = getFormData(); // This gets new ID, we need to keep old ID
+        if (data) {
+            const index = products.findIndex(p => p.id === editingId);
+            if (index !== -1) {
+                products[index] = { ...data, id: editingId };
+                cancelEdit(); // Reset UI state
+                render();
+            }
+        }
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        resetForm();
+        dom.addBtn.style.display = 'inline-block';
+        dom.updateBtn.style.display = 'none';
+        dom.cancelBtn.style.display = 'none';
+    }
+
+    function resetForm() {
+        dom.titleInput.value = '';
+        dom.priceInput.value = '';
+        dom.qtyInput.value = '1';
+        dom.noteInput.value = '';
+        dom.imageInput.value = ''; // Reset file input
+        tempImageBase64 = null;
+        displayImagePreview(null);
+    }
+
+    function render() {
+        renderProductList();
+        renderPreview();
+        updateTotals();
+    }
+
+    function renderProductList() {
+        dom.productList.innerHTML = '';
+        products.forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            // Use current currency symbol
+            const symbol = dom.totalCurrencySymbol.textContent;
+            
+            item.innerHTML = `
+                <img src="${p.image || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2RkZCIvPjwvc3ZnPg=='}">
+                <div class="list-item-info">
+                    <div class="list-item-title">${p.title}</div>
+                    <div class="list-item-desc">${symbol}${p.price.toFixed(2)} x ${p.qty}</div>
+                </div>
+                <div class="list-actions">
+                    <button class="action-btn edit-btn" data-id="${p.id}">编辑</button>
+                    <button class="action-btn del-btn" data-id="${p.id}">删除</button>
+                </div>
+            `;
+            dom.productList.appendChild(item);
+        });
+
+        // Toggle Clear All Button
+        if (dom.clearAllBtn) {
+            dom.clearAllBtn.style.display = products.length > 0 ? 'block' : 'none';
+        }
+    }
+
+    function renderPreview() {
+        dom.previewItems.innerHTML = '';
+        
+        if (products.length === 0) {
+            dom.previewItems.innerHTML = '<div class="empty-state">No items added</div>';
+            return;
+        }
+
+        products.forEach(p => {
+            const subtotal = p.price * p.qty;
+            const item = document.createElement('div');
+            item.className = 'preview-item';
+            
+            // Default placeholder if no image
+            const imgSrc = p.image || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YwZjBmMCIvPjwvc3ZnPg==';
+
+            item.innerHTML = `
+                <div class="preview-img"><img src="${imgSrc}" alt="${p.title}"></div>
+                <div class="preview-details">
+                    <div>
+                        <div class="preview-title">${p.title}</div>
+                        ${p.note ? `<div class="preview-note">${p.note}</div>` : ''}
+                    </div>
+                    <div class="preview-price-row">
+                        <span class="price">${currentCurrency}${p.price.toFixed(2)} x ${p.qty}</span>
+                        <span class="subtotal">${currentCurrency}${subtotal.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+            dom.previewItems.appendChild(item);
+        });
+    }
+
+    function updateTotals() {
+        const totalQty = products.reduce((sum, p) => sum + p.qty, 0);
+        const totalAmt = products.reduce((sum, p) => sum + (p.price * p.qty), 0);
+        const rawPercent = parseFloat(dom.discountInput.value);
+        const percent = isNaN(rawPercent) || rawPercent < 0 ? 0 : Math.min(100, rawPercent);
+        const appliedDiscount = totalAmt * (percent / 100);
+        const finalAmt = Math.max(0, totalAmt - appliedDiscount);
+        const shouldShowDiscount = dom.discountInput.value.trim() !== '' && percent > 0;
+        
+        dom.totalCount.textContent = totalQty;
+        dom.discountAmount.textContent = appliedDiscount.toFixed(2);
+        dom.totalAmount.textContent = finalAmt.toFixed(2);
+        dom.discountRow.style.display = shouldShowDiscount ? 'flex' : 'none';
+    }
+
+    function getExportScale() {
+        const imgs = Array.from(document.querySelectorAll('.preview-img img'));
+        if (imgs.length === 0) {
+            return Math.max(window.devicePixelRatio || 1, 2);
+        }
+        const ratios = imgs.map(img => {
+            const w = img.naturalWidth || img.width || 1;
+            const h = img.naturalHeight || img.height || 1;
+            const cw = img.clientWidth || 1;
+            const ch = img.clientHeight || 1;
+            return Math.min(w / cw, h / ch);
+        });
+        const minRatio = Math.max(1, Math.min(...ratios));
+        const base = Math.max(window.devicePixelRatio || 1, 2);
+        const scale = Math.min(4, Math.max(base, Math.floor(minRatio)));
+        return scale;
+    }
+
+    function saveAsImage() {
+        // Use html2canvas
+        // Temporarily remove shadow for cleaner print-like image, or keep it. Let's keep it for realism.
+        // We might want to ensure high resolution.
+        
+        dom.saveBtn.textContent = '生成中...';
+        dom.saveBtn.disabled = true;
+
+        html2canvas(dom.captureArea, {
+            scale: getExportScale(),
+            useCORS: true, // For images if from external (though ours are base64 mostly)
+            backgroundColor: '#ffffff'
+        }).then(canvas => {
+            // Create download link
+            const link = document.createElement('a');
+            
+            // Generate filename based on Customer and Date
+            const customerName = dom.customerInput.value.trim() || 'Customer';
+            const dateStr = dom.dateInput.value.trim() || new Date().toISOString().split('T')[0];
+            
+            // Sanitize filename characters
+            const safeCustomer = customerName.replace(/[\\/:*?"<>|]/g, '_');
+            const safeDate = dateStr.replace(/[\\/:*?"<>|]/g, '_');
+            
+            link.download = `${safeCustomer}_${safeDate}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            dom.saveBtn.textContent = '保存为图片';
+            dom.saveBtn.disabled = false;
+        }).catch(err => {
+            console.error('Save failed:', err);
+            alert('图片生成失败，请重试');
+            dom.saveBtn.textContent = '保存为图片';
+            dom.saveBtn.disabled = false;
+        });
+    }
+});
