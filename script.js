@@ -226,11 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.labelTotalAmount.textContent = t.totalAmount;
 
         document.documentElement.lang = lang;
-        if (lang === 'ar') {
-            dom.captureArea.setAttribute('dir', 'rtl');
-        } else {
-            dom.captureArea.removeAttribute('dir');
-        }
     }
 
     function handleCurrencyChange() {
