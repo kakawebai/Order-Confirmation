@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cancelBtn: document.getElementById('cancelEditBtn'),
         clearAllBtn: document.getElementById('clearAllBtn'),
         saveBtn: document.getElementById('saveBtn'),
+        saveWhatsAppBtn: document.getElementById('saveWhatsAppBtn'),
 
         // Lists/Display
         productList: document.getElementById('productList'),
@@ -192,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.cancelBtn.addEventListener('click', cancelEdit);
     dom.clearAllBtn.addEventListener('click', clearAllProducts);
     dom.saveBtn.addEventListener('click', saveAsImage);
+    dom.saveWhatsAppBtn.addEventListener('click', () => saveAsImage(true));
     dom.productList.addEventListener('click', handleListAction);
 
     // Initial sync
@@ -494,41 +496,49 @@ document.addEventListener('DOMContentLoaded', () => {
         return scale;
     }
 
-    function saveAsImage() {
+    function saveAsImage(isWhatsApp = false) {
         // Use html2canvas
         // Temporarily remove shadow for cleaner print-like image, or keep it. Let's keep it for realism.
         // We might want to ensure high resolution.
         
-        dom.saveBtn.textContent = '生成中...';
-        dom.saveBtn.disabled = true;
+        const btn = isWhatsApp ? dom.saveWhatsAppBtn : dom.saveBtn;
+        const originalText = btn.textContent;
+        
+        btn.textContent = '生成中...';
+        btn.disabled = true;
 
+        // For WhatsApp, we might want a slightly different style or forced scale
+        const scale = isWhatsApp ? 3 : getExportScale();
+        
         html2canvas(dom.captureArea, {
-            scale: getExportScale(),
-            useCORS: true, // For images if from external (though ours are base64 mostly)
-            backgroundColor: '#ffffff'
+            scale: scale,
+            useCORS: true, 
+            backgroundColor: '#ffffff',
+            windowWidth: dom.captureArea.scrollWidth,
+            windowHeight: dom.captureArea.scrollHeight
         }).then(canvas => {
             // Create download link
             const link = document.createElement('a');
             
-            // Generate filename based on Customer and Date
+            // Generate filename
             const customerName = dom.customerInput.value.trim() || 'Customer';
             const dateStr = dom.dateInput.value.trim() || new Date().toISOString().split('T')[0];
+            const suffix = isWhatsApp ? '_WA' : '';
             
-            // Sanitize filename characters
             const safeCustomer = customerName.replace(/[\\/:*?"<>|]/g, '_');
             const safeDate = dateStr.replace(/[\\/:*?"<>|]/g, '_');
             
-            link.download = `${safeCustomer}_${safeDate}.png`;
+            link.download = `${safeCustomer}_${safeDate}${suffix}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
             
-            dom.saveBtn.textContent = '保存为图片';
-            dom.saveBtn.disabled = false;
+            btn.textContent = originalText;
+            btn.disabled = false;
         }).catch(err => {
             console.error('Save failed:', err);
             alert('图片生成失败，请重试');
-            dom.saveBtn.textContent = '保存为图片';
-            dom.saveBtn.disabled = false;
+            btn.textContent = originalText;
+            btn.disabled = false;
         });
     }
 });
