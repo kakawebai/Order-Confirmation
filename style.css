@@ -255,7 +255,7 @@ hr {
 }
 
 .order-header h2 {
-    font-size: 14px;
+    font-size: 18px;
     margin-bottom: 15px;
 }
 
@@ -294,22 +294,14 @@ hr {
 }
 
 .preview-img {
-    width: 160px;
-    height: auto;
+    width: 140px;
+    height: 140px;
     border-radius: 4px;
     background-color: #f0f0f0;
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.preview-img img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    object-position: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .preview-details {
@@ -321,7 +313,7 @@ hr {
 
 .preview-title {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 13px;
     color: #000;
 }
 

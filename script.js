@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const imgSrc = p.image || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YwZjBmMCIvPjwvc3ZnPg==';
 
             item.innerHTML = `
-                <div class="preview-img"><img src="${imgSrc}" alt="${safeTitle}"></div>
+                <div class="preview-img" style="background-image: url('${imgSrc}')"></div>
                 <div class="preview-details">
                     <div>
                         <div class="preview-title">${safeTitle}</div>
@@ -479,43 +479,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getExportScale() {
-        const imgs = Array.from(document.querySelectorAll('.preview-img img'));
-        if (imgs.length === 0) {
-            return Math.max(window.devicePixelRatio || 1, 2);
-        }
-        const ratios = imgs.map(img => {
-            const w = img.naturalWidth || img.width || 1;
-            const h = img.naturalHeight || img.height || 1;
-            const cw = img.clientWidth || 1;
-            const ch = img.clientHeight || 1;
-            return Math.min(w / cw, h / ch);
-        });
-        const minRatio = Math.max(1, Math.min(...ratios));
-        const base = Math.max(window.devicePixelRatio || 1, 2);
-        const scale = Math.min(4, Math.max(base, Math.floor(minRatio)));
-        return scale;
+        // 既然用户要求超高清，我们将基础倍率设为 4，最高允许 6
+        const base = Math.max(window.devicePixelRatio || 1, 4);
+        return Math.min(6, base);
     }
 
     function saveAsImage(isWhatsApp = false) {
-        // Use html2canvas
-        // Temporarily remove shadow for cleaner print-like image, or keep it. Let's keep it for realism.
-        // We might want to ensure high resolution.
-        
         const btn = isWhatsApp ? dom.saveWhatsAppBtn : dom.saveBtn;
         const originalText = btn.textContent;
         
-        btn.textContent = '生成中...';
+        btn.textContent = '生成超清图片中...';
         btn.disabled = true;
 
-        // For WhatsApp, we might want a slightly different style or forced scale
-        const scale = isWhatsApp ? 3 : getExportScale();
+        // WhatsApp 专用格式使用更高的倍率 (5倍)，普通保存使用 getExportScale (4-6倍)
+        const scale = isWhatsApp ? 5 : getExportScale();
         
         html2canvas(dom.captureArea, {
             scale: scale,
             useCORS: true, 
             backgroundColor: '#ffffff',
-            windowWidth: dom.captureArea.scrollWidth,
-            windowHeight: dom.captureArea.scrollHeight
+            width: dom.captureArea.offsetWidth,
+            height: dom.captureArea.offsetHeight,
+            onclone: (clonedDoc) => {
+                // 确保克隆的元素在导出时保持预览图的 100x100 比例
+                const clonedCaptureArea = clonedDoc.getElementById('captureArea');
+                if (clonedCaptureArea) {
+                    clonedCaptureArea.style.width = '450px';
+                }
+            }
         }).then(canvas => {
             // Create download link
             const link = document.createElement('a');
