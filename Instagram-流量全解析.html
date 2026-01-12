@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram 流量增长指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fafafa;
+            padding-top: 50px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 0 40px;
+            display: flex;
+            justify-content: center;
+            height: 50px;
+            align-items: center;
+            gap: 30px;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #666;
+            font-size: 15px;
+            font-weight: 500;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-item:hover {
+            color: #4a90e2;
+        }
+
+        .nav-item.active {
+            color: #4a90e2;
+        }
+
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #4a90e2;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .ig-gradient {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hover-scale {
+            transition: transform 0.2s;
+        }
+        .hover-scale:hover {
+            transform: translateY(-2px);
+        }
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        @media (max-width: 1400px) {
+             .sidebar-nav {
+                 display: none;
+             }
+             .main-content {
+                 margin-left: auto !important;
+                 margin-right: auto !important;
+             }
+         }
+         .sidebar-link-active {
+             color: #d6249f !important;
+             background-color: #fdf2f8 !important;
+             border-right: 4px solid #d6249f;
+         }
+     </style>
+</head>
+<body class="text-gray-900 leading-relaxed">
+    <nav class="top-nav">
+        <a href="index.html" class="nav-item">订单清单</a>
+        <a href="Instagram-流量全解析.html" class="nav-item active">Instagram 流量全解析</a>
+    </nav>
+
+    <!-- Fixed Sidebar Navigation -->
+    <nav class="sidebar-nav hidden xl:block">
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-gray-100">
+            <div class="flex items-center mb-6 px-2">
+                <div class="w-1.5 h-6 ig-gradient rounded-full mr-2"></div>
+                <span class="font-black text-sm tracking-tighter uppercase">流量全解析</span>
+            </div>
+            <ul class="space-y-1">
+                <li><a href="#sec-1" class="block p-2 text-xs font-bold text-gray-500 hover:text-pink-600 hover:bg-pink-50 rounded-xl transition-all">一、流量核心定义</a></li>
+                <li><a href="#sec-2" class="block p-2 text-xs font-bold text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all">二、互动流量解析</a></li>
+                <li><a href="#sec-3" class="block p-2 text-xs font-bold text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all">三、进阶流量指标</a></li>
+                <li><a href="#sec-4" class="block p-2 text-xs font-bold text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-all">四、流量逻辑总结</a></li>
+                <li><a href="#sec-5" class="block p-2 text-xs font-bold text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">五、实战案例拆解</a></li>
+                <li><a href="#sec-6" class="block p-2 text-xs font-bold text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all">六、流量健康诊断</a></li>
+                <li><a href="#sec-7" class="block p-2 text-xs font-bold text-gray-500 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-all">七、Reach 起不来？</a></li>
+                <li><a href="#sec-8" class="block p-2 text-xs font-bold text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">八、冷启动点火</a></li>
+                <li><a href="#sec-9" class="block p-2 text-xs font-bold text-gray-500 hover:text-black hover:bg-gray-100 rounded-xl transition-all">九、官方级结论</a></li>
+                <li><a href="#sec-10" class="block p-2 text-xs font-bold text-gray-500 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-all">十、私域小号策略</a></li>
+                <li><a href="#sec-11" class="block p-2 text-xs font-bold text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">十一、转化漏斗公式</a></li>
+                <li><a href="#sec-12" class="block p-2 text-xs font-bold text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all">十二、全能计算器</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="ig-gradient text-white py-12 px-4 shadow-lg mb-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">Instagram 流量全解析</h1>
+            <p class="text-lg md:text-xl opacity-90 font-medium">官方指标解读 · 算法逻辑拆解 · 账号增长必备</p>
+            <p class="mt-2 text-sm opacity-70 tracking-widest font-bold">三九英雄出品</p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 pb-20 main-content xl:ml-[280px]">
+
+        <!-- Section 1: Core Definitions -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 ig-gradient rounded-full mr-3"></div>
+                <h2 id="sec-1" class="text-2xl font-bold">一、IG 流量的核心定义（官方视角）</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Reach -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-scale">
+                    <div class="flex items-center mb-4 text-pink-500">
+                        <i class="fas fa-users text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">1️⃣ 覆盖人数 (Reach)</h3>
+                    </div>
+                    <p class="mb-2"><span class="font-bold text-gray-700">定义：</span>有多少 <span class="text-pink-600 font-semibold">不同的人</span> 看到你的帖子</p>
+                    <p class="mb-4"><span class="font-bold text-gray-700">意义：</span>你内容“被多少人看见”</p>
+                    <div class="bg-pink-50 p-3 rounded-lg border-l-4 border-pink-400">
+                        <p class="text-sm text-pink-800 font-medium">👉 判断曝光面大小的核心指标</p>
+                    </div>
+                </div>
+                <!-- Impressions -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-scale">
+                    <div class="flex items-center mb-4 text-blue-500">
+                        <i class="fas fa-eye text-2xl mr-3"></i>
+                        <h3 class="text-xl font-bold">2️⃣ 展示次数 (Impressions)</h3>
+                    </div>
+                    <p class="mb-2"><span class="font-bold text-gray-700">定义：</span>帖子被展示的 <span class="text-blue-600 font-semibold">总次数</span> （同一个人多次看到也会累计）</p>
+                    <p class="mb-1"><span class="font-bold text-gray-700">意义：</span>内容被反复推送、刷到的频率</p>
+                    <p class="mb-4 text-xs text-blue-500 italic"><span class="font-bold">含义：</span>意向用户第一次滑走你的作品、二次再次推荐</p>
+                    <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
+                        <p class="text-sm text-blue-800 font-medium">👉 判断推荐强度</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Engagement Traffic -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-orange-500 rounded-full mr-3"></div>
+                <h2 id="sec-2" class="text-2xl font-bold">二、互动流量（算法非常看重）</h2>
+            </div>
+            <p class="text-gray-600 mb-6 italic">这些直接影响 IG 是否继续给你推流 👇</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center hover-scale">
+                    <div class="text-red-500 text-3xl mb-3"><i class="fas fa-heart"></i></div>
+                    <h3 class="font-bold mb-2">3️⃣ 点赞 (Likes)</h3>
+                    <p class="text-sm text-gray-500">最基础互动</p>
+                    <p class="text-xs mt-2 text-gray-400">权重偏低，但量大有用</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center hover-scale">
+                    <div class="text-yellow-500 text-3xl mb-3"><i class="fas fa-comment"></i></div>
+                    <h3 class="font-bold mb-2">4️⃣ 评论 (Comments)</h3>
+                    <p class="text-sm text-gray-500 font-semibold">权重高</p>
+                    <p class="text-xs mt-2 text-gray-400">长评论 > 表情评论</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center hover-scale">
+                    <div class="text-blue-400 text-3xl mb-3"><i class="fas fa-paper-plane"></i></div>
+                    <h3 class="font-bold mb-2">5️⃣ 分享 (Shares)</h3>
+                    <p class="text-sm text-blue-600 font-bold">非常高权重</p>
+                    <p class="text-xs mt-2 text-gray-400">代表内容“值得传播”</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center hover-scale">
+                    <div class="text-green-500 text-3xl mb-3"><i class="fas fa-bookmark"></i></div>
+                    <h3 class="font-bold mb-2">6️⃣ 收藏 (Saves)</h3>
+                    <p class="text-sm text-green-600 font-bold">高质量信号</p>
+                    <p class="text-xs mt-2 text-gray-400">干货/教程最易拿收藏</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Advanced Metrics -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-purple-600 rounded-full mr-3"></div>
+                <h2 id="sec-3" class="text-2xl font-bold">三、进阶流量指标（做账号必看）</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="flex items-start bg-purple-50 p-6 rounded-2xl border border-purple-100">
+                    <div class="bg-purple-600 text-white p-3 rounded-xl mr-4">
+                        <i class="fas fa-id-card text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-1">7️⃣ 主页访问 (Profile Visits)</h3>
+                        <p class="text-gray-600">看完内容 → 点进你主页的人数</p>
+                        <p class="mt-2 text-purple-700 font-bold">代表 转化潜力</p>
+                    </div>
+                </div>
+                <div class="flex items-start bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                    <div class="bg-indigo-600 text-white p-3 rounded-xl mr-4">
+                        <i class="fas fa-user-plus text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-1">8️⃣ 新增关注 (Follows)</h3>
+                        <p class="text-gray-600">流量的最终结果之一</p>
+                        <p class="mt-2 text-indigo-700 font-bold">判断内容是否“值得长期关注”</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Summary Logic -->
+        <section class="mb-12 bg-gray-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8 opacity-10">
+                <i class="fas fa-brain text-9xl"></i>
+            </div>
+            <h2 id="sec-4" class="text-2xl font-bold mb-6 flex items-center">
+                <span class="bg-white text-gray-900 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">四</span>
+                一句话总结 IG 的「流量逻辑」
+            </h2>
+            <div class="bg-gray-800 p-6 rounded-2xl mb-8 border border-gray-700 text-center">
+                <p class="text-2xl md:text-3xl font-bold">
+                    IG 流量 = <span class="text-pink-400">曝光</span> × <span class="text-yellow-400">互动质量</span>
+                </p>
+                <p class="text-gray-400 mt-2">(Reach/Impressions) × (赞、评、藏、转)</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <p class="text-gray-400 mb-2">有没有人看？</p>
+                    <p class="text-xl font-bold">Reach</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-gray-400 mb-2">看了有没有反应？</p>
+                    <p class="text-xl font-bold">互动</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-gray-400 mb-2">值不值得继续推荐？</p>
+                    <p class="text-xl font-bold text-pink-400">收藏 & 分享</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Example & Algorithm -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-blue-600 rounded-full mr-3"></div>
+                <h2 id="sec-5" class="text-2xl font-bold">五、实战案例与算法推荐机制</h2>
+            </div>
+            
+            <!-- Case Study -->
+            <div class="bg-blue-50 p-8 rounded-2xl border border-blue-100 mb-8">
+                <h3 class="text-xl font-bold mb-6 flex items-center text-blue-800">
+                    <i class="fas fa-lightbulb mr-3"></i> 举个直观例子 🌰
+                </h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <p class="text-sm text-gray-500 mb-1">账号情况</p>
+                            <p class="font-bold">粉丝数：1,000</p>
+                            <p class="font-bold text-blue-600">某条帖子 Reach：3,500</p>
+                        </div>
+                        <div class="p-4 border-l-4 border-blue-400 bg-blue-100/50 rounded-r-xl">
+                            <p class="font-bold text-blue-900">这意味着：</p>
+                            <p class="text-blue-800">至少 <span class="underline decoration-2">2,500 人</span> 是没关注你、但刷到了你</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <p class="font-bold mb-3 text-gray-700">内容进入了：</p>
+                        <ul class="grid grid-cols-2 gap-3">
+                            <li class="flex items-center text-sm text-gray-600"><i class="fas fa-compass mr-2 text-blue-400"></i> Explore (发现页)</li>
+                            <li class="flex items-center text-sm text-gray-600"><i class="fas fa-play-circle mr-2 text-blue-400"></i> Reels 推荐</li>
+                            <li class="flex items-center text-sm text-gray-600"><i class="fas fa-hashtag mr-2 text-blue-400"></i> Hashtag 页面</li>
+                            <li class="flex items-center text-sm text-gray-600"><i class="fas fa-share-alt mr-2 text-blue-400"></i> 二次曝光</li>
+                        </ul>
+                        <div class="mt-4 pt-4 border-t border-gray-100 text-center">
+                            <span class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-bold">👉 这就是“进推荐池”的表现</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendation Process -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="relative bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="absolute -top-3 -left-3 w-10 h-10 bg-gray-900 text-white rounded-full flex items-center justify-center font-bold">1</div>
+                    <h4 class="font-bold mb-3 mt-2 text-lg">第一步：小范围测试</h4>
+                    <p class="text-sm text-gray-600">先推给一部分你的粉丝，观察他们的停留、点赞、收藏和分享反应。</p>
+                </div>
+                <div class="relative bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="absolute -top-3 -left-3 w-10 h-10 bg-pink-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                    <h4 class="font-bold mb-3 mt-2 text-lg text-pink-600">第二步：数据好 → 放大推荐</h4>
+                    <p class="text-sm text-gray-600">如果收藏/分享多、评论质量高、Reels 完播率高，IG 判断内容有价值。</p>
+                </div>
+                <div class="relative bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="absolute -top-3 -left-3 w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
+                    <h4 class="font-bold mb-3 mt-2 text-lg text-indigo-600">第三步：推给非粉丝</h4>
+                    <p class="text-sm text-gray-600">Reach 开始快速超过粉丝数，非粉丝占比显著上升，实现流量破圈。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Health Diagnosis -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-red-500 rounded-full mr-3"></div>
+                <h2 id="sec-6" class="text-2xl font-bold">六、流量健康度诊断</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Benchmarks Table -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-bold">什么程度算「明显高于」？</h3>
+                    </div>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50/50 text-xs text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-3 border-b">粉丝数</th>
+                                <th class="px-6 py-3 border-b">Reach</th>
+                                <th class="px-6 py-3 border-b">算法状态</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-gray-50 hover:bg-gray-50/30 transition-colors">
+                                <td class="px-6 py-4">1,000</td>
+                                <td class="px-6 py-4 font-medium">1,200</td>
+                                <td class="px-6 py-4 text-gray-500">正常水平</td>
+                            </tr>
+                            <tr class="border-b border-gray-50 hover:bg-gray-50/30 transition-colors">
+                                <td class="px-6 py-4">1,000</td>
+                                <td class="px-6 py-4 font-medium text-blue-600">2,000</td>
+                                <td class="px-6 py-4 text-blue-600 font-semibold">轻微推荐</td>
+                            </tr>
+                            <tr class="border-b border-gray-50 hover:bg-gray-50/30 transition-colors">
+                                <td class="px-6 py-4">1,000</td>
+                                <td class="px-6 py-4 font-medium text-pink-600">5,000+</td>
+                                <td class="px-6 py-4 text-pink-600 font-bold italic">明显起量</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/30 transition-colors">
+                                <td class="px-6 py-4">1,000</td>
+                                <td class="px-6 py-4 font-black text-orange-600">10,000+</td>
+                                <td class="px-6 py-4 text-orange-600 font-black tracking-wider">爆款级推荐 🔥</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="p-4 bg-orange-50 text-xs text-orange-800 border-t border-orange-100">
+                        <p>💡 <span class="font-bold">健康指标：</span>Reach ≥ 粉丝数 × 2 | <span class="font-bold text-orange-600">优秀指标：</span>Reach ≥ 粉丝数 × 5</p>
+                    </div>
+                </div>
+
+                <!-- Negative Diagnosis -->
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100">
+                    <h3 class="text-lg font-bold text-red-800 mb-4 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> 反向警示：Reach 低于粉丝数？
+                    </h3>
+                    <div class="bg-white p-4 rounded-xl shadow-sm mb-4 border border-red-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-gray-500">典型案例：</span>
+                            <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">异常状态</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <p class="font-bold text-sm text-gray-700">粉丝：5,000</p>
+                            <p class="font-bold text-sm text-red-600">Reach：800 ~ 1,200</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-red-900 font-bold mb-2">通常说明：</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center text-sm text-red-800"><i class="fas fa-times-circle mr-2 opacity-50"></i> 内容未被算法选中进入推荐池</li>
+                        <li class="flex items-center text-sm text-red-800"><i class="fas fa-times-circle mr-2 opacity-50"></i> 存量粉丝互动意愿持续低迷</li>
+                        <li class="flex items-center text-sm text-red-800"><i class="fas fa-times-circle mr-2 opacity-50"></i> 账号定位或内容质量亟需优化</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Common Failure Reasons -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-amber-500 rounded-full mr-3"></div>
+                <h2 id="sec-7" class="text-2xl font-bold">七、为什么很多帖子 Reach 起不来？</h2>
+            </div>
+            
+            <p class="text-gray-600 mb-6">Feed 帖子最容易卡在这几步，快看看你中招了吗？👇</p>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Reason 1 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-scale">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-3">1. 黄金 1 小时互动低</h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-center"><i class="fas fa-minus-circle mr-2 text-amber-400"></i> 点赞速度慢</li>
+                        <li class="flex items-center"><i class="fas fa-minus-circle mr-2 text-amber-400"></i> 评论寥寥无几</li>
+                        <li class="flex items-center font-bold text-amber-600"><i class="fas fa-hourglass-half mr-2 text-amber-500"></i> 停留时间占比</li>
+                    </ul>
+                    <p class="mt-4 text-xs text-amber-700 bg-amber-50 p-2 rounded">💡 算法会认为你的核心粉丝都不喜欢这篇内容</p>
+                </div>
+
+                <!-- Reason 2 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-scale">
+                    <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-share-alt text-xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-3">2. 缺乏“社交价值”</h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-center"><i class="fas fa-minus-circle mr-2 text-orange-400"></i> 收藏 / 分享弱</li>
+                        <li class="flex items-center"><i class="fas fa-minus-circle mr-2 text-orange-400"></i> 比如视频 20 秒，用户播看到不 70% 左右滑走</li>
+                        <li class="flex items-center"><i class="fas fa-minus-circle mr-2 text-orange-400"></i> 没有评价/点赞</li>
+                    </ul>
+                    <p class="mt-4 text-xs text-orange-700 bg-orange-50 p-2 rounded">💡 收藏和分享是进入大推荐池的“通行证”</p>
+                </div>
+
+                <!-- Reason 3 -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover-scale">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-hashtag text-xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-3">3. Hashtag 策略无效</h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-center"><i class="fas fa-minus-circle mr-2 text-red-400"></i> 标签竞争太大 (千万级)</li>
+                        <li class="flex items-center"><i class="fas fa-minus-circle mr-2 text-red-400"></i> 标签太乱、不相关</li>
+                    </ul>
+                    <p class="mt-4 text-xs text-red-700 bg-red-50 p-2 rounded">💡 错误的标签会让算法把内容推给“错的人”</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Cold Start Strategy -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-indigo-500 rounded-full mr-3"></div>
+                <h2 id="sec-8" class="text-2xl font-bold">八、账号受众行为与『冷启动点火』</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Authenticity -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="text-lg font-bold mb-4 flex items-center text-gray-800">
+                        <i class="fas fa-fingerprint mr-2 text-indigo-500"></i> 账号互动行为真实性
+                    </h3>
+                    <div class="space-y-3 mb-6">
+                        <p class="text-sm text-gray-600 italic">如果你的帖子长期处于：</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-center text-sm"><i class="fas fa-comment-slash mr-2 text-gray-400"></i> 很少评论</li>
+                            <li class="flex items-center text-sm"><i class="fas fa-envelope-open mr-2 text-gray-400"></i> 很少私信</li>
+                            <li class="flex items-center text-sm"><i class="fas fa-ghost mr-2 text-gray-400"></i> 几乎没人评价 / 分享 / 收藏</li>
+                        </ul>
+                    </div>
+                    <div class="bg-indigo-50 p-4 rounded-xl border-l-4 border-indigo-400">
+                        <p class="text-sm font-bold text-indigo-900 mb-1">👉 算法会认为：</p>
+                        <p class="text-xs text-indigo-800 leading-relaxed">这不是一个“有明确受众行为模式”的账号，系统无法准确判断谁会喜欢你的内容，从而停止推流。</p>
+                    </div>
+                </div>
+
+                <!-- Action Plan -->
+                <div class="bg-gradient-to-br from-indigo-600 to-blue-700 p-6 rounded-2xl shadow-xl text-white relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 opacity-10">
+                        <i class="fas fa-fire text-9xl rotate-12"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-fire-alt mr-2 text-orange-400 border-2 border-orange-400 rounded-full p-1"></i> 人工点火（非常重要）
+                    </h3>
+                    <div class="bg-white/10 p-4 rounded-xl mb-4 border border-white/20">
+                        <p class="text-sm font-bold text-yellow-300 italic mb-1">⚠️ 运营真相：</p>
+                        <p class="text-sm font-medium">现在这个阶段，等自然互动 = <span class="text-red-300 font-black">等死</span>。</p>
+                    </div>
+                    <p class="text-sm opacity-90 mb-3">你需要主动执行补救措施：</p>
+                    <ul class="space-y-4 relative z-10">
+                        <li class="flex items-start">
+                            <span class="bg-white/20 p-1 rounded mr-3 text-xs">执行 1</span>
+                            <p class="text-sm font-medium">利用真实朋友 / 小号，确保每条帖子有 <span class="underline decoration-yellow-400 font-bold">1–3 条真实评论</span></p>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-white/20 p-1 rounded mr-3 text-xs">执行 2</span>
+                            <p class="text-sm font-medium">你必须 <span class="underline decoration-yellow-400 font-bold">亲自回复、追问、制造对话</span>，把互动率撑起来</p>
+                        </li>
+                    </ul>
+                    <div class="mt-6 pt-4 border-t border-white/20">
+                        <p class="text-xs text-yellow-200 mb-3 flex items-center justify-center">
+                            <i class="fas fa-calendar-alt mr-2"></i> 连续做 7-15 天左右查看效果趋势
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-yellow-300 font-bold text-sm">
+                                <i class="fas fa-shield-alt mr-2"></i> 核心认知
+                            </div>
+                            <p class="text-xs italic opacity-80 font-bold text-blue-200">这是冷启动补救，不是违规！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Official Conclusion -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-black rounded-full mr-3"></div>
+                <h2 id="sec-9" class="text-2xl font-bold">九、一个“官方级结论”：为什么你被算法“忽略”了？</h2>
+            </div>
+            
+            <div class="bg-white border-2 border-black p-8 rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden hover:shadow-none transition-all duration-300">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="bg-gray-100 p-4 rounded-xl mb-6">
+                            <p class="text-sm font-mono text-gray-500 mb-2">// 算法判定公式</p>
+                            <p class="text-lg font-bold">几十条内容 + 几十粉 + 几乎无评论/私信</p>
+                            <p class="text-2xl font-black text-red-600 mt-2">= 重复失败 (Repeated Failure)</p>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">这不是惩罚，是<span class="bg-yellow-300 px-1">忽略</span></h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            IG 并不是看你发了多少，而是在海量测试中寻找：<br>
+                            <span class="text-black font-bold text-lg">“有没有哪一条，能稳定引发人类行为？”</span>
+                        </p>
+                    </div>
+
+                    <div class="border-l-0 md:border-l-2 border-gray-100 md:pl-8">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <i class="fas fa-database mr-2 text-gray-400"></i> 1️⃣ 算法已经“认识你”了
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-4">你不再是新号冷启动，而是进入了算法的“黑盒记录”：</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start text-sm">
+                                <div class="bg-gray-900 text-white p-1.5 rounded-lg mr-3 mt-1">
+                                    <i class="fas fa-history text-xs"></i>
+                                </div>
+                                <span><span class="font-bold block text-gray-900">历史表现记录</span>已被多次测试，多次未触发互动，数据模型已定型。</span>
+                            </li>
+                            <li class="flex items-start text-sm">
+                                <div class="bg-red-600 text-white p-1.5 rounded-lg mr-3 mt-1">
+                                    <i class="fas fa-layer-group text-xs"></i>
+                                </div>
+                                <span><span class="font-bold block text-gray-900">分池策略</span>账号被放入 <span class="text-red-500 font-bold">低优先级池 (Low Priority Pool)</span>，难以获得增量推流。</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-6 bg-red-50 p-4 rounded-xl border border-red-100">
+                            <p class="text-xs font-bold text-red-800 mb-2 flex items-center">
+                                <i class="fas fa-search mr-1"></i> 典型症状自检：
+                            </p>
+                            <ul class="text-xs text-red-700 space-y-2">
+                                <li class="flex items-center"><i class="fas fa-angle-right mr-1 opacity-50"></i> 播放量反复卡在 100 – 300 之间</li>
+                                <li class="flex items-center"><i class="fas fa-angle-right mr-1 opacity-50"></i> 偶尔突破 1000+，但下一条马上回落到冰点</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Updated Section: Private Domain Strategy -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-slate-600 rounded-full mr-3"></div>
+                <h2 id="sec-10" class="text-2xl font-bold">十、做“私域小号”：流量不是唯一标准</h2>
+            </div>
+            
+            <div class="bg-slate-100 p-8 rounded-3xl border border-slate-200 relative overflow-hidden">
+                <div class="absolute right-0 top-0 p-6 opacity-5">
+                    <i class="fas fa-handshake text-9xl"></i>
+                </div>
+
+                <!-- Part 0: Reality Check -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-slate-800 mb-8">
+                    <h3 class="text-xl font-bold text-slate-900 mb-4 flex items-center">
+                        <i class="fas fa-hand-holding-heart mr-2 text-slate-600"></i> 👉 接受
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="flex items-center space-x-3 p-3 bg-slate-50 rounded-xl">
+                            <i class="fas fa-bullseye text-slate-400"></i>
+                            <span class="font-bold text-slate-700">不追求流量</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-slate-50 rounded-xl">
+                            <i class="fas fa-random text-slate-400"></i>
+                            <span class="font-bold text-slate-700">不追求推荐</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-slate-50 rounded-xl">
+                            <i class="fas fa-user-shield text-slate-400"></i>
+                            <span class="font-bold text-slate-700">只服务少量精准客户</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100 flex items-center justify-between">
+                        <p class="text-amber-900 font-bold">这种账号：<span class="text-lg">永远几十～几百播放，但能成交</span></p>
+                        <i class="fas fa-check-double text-amber-500"></i>
+                    </div>
+                </div>
+                
+                <!-- Part 1: Definition -->
+                <div class="mb-10">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                            <i class="fas fa-store mr-2 text-slate-600"></i> 私域小号 = IG 不是你的流量来源
+                        </h3>
+                        <p class="text-lg font-medium text-slate-700 mb-6">IG 只是你的 <span class="text-indigo-600 font-bold underline decoration-2">“信任背书 + 展示橱窗”</span></p>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-red-50 p-4 rounded-xl">
+                                <p class="text-xs font-bold text-red-800 mb-2 uppercase tracking-wider">你不靠：</p>
+                                <ul class="text-sm text-red-700 space-y-1 font-medium">
+                                    <li><i class="fas fa-times mr-2 opacity-50"></i> Explore (发现页)</li>
+                                    <li><i class="fas fa-times mr-2 opacity-50"></i> 算法推荐</li>
+                                    <li><i class="fas fa-times mr-2 opacity-50"></i> 泛流量起量</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-xl">
+                                <p class="text-xs font-bold text-green-800 mb-2 uppercase tracking-wider">你靠的是：</p>
+                                <ul class="text-sm text-green-700 space-y-1 font-medium">
+                                    <li><i class="fas fa-check mr-2 opacity-50"></i> 已有渠道导流 (如官网/其他社媒)</li>
+                                    <li><i class="fas fa-check mr-2 opacity-50"></i> 熟人/老客户转介绍</li>
+                                    <li><i class="fas fa-check mr-2 opacity-50"></i> 搜到你后“敢不敢私信你”的信任感</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2: Success Criteria -->
+                <div class="grid md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="text-lg font-bold mb-4 text-slate-800">二、成功标准要彻底换</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-xs font-bold text-gray-400 mb-2">❌ 你不再追求：</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-gray-100 text-gray-500 px-2 py-1 rounded text-xs">播放量</span>
+                                    <span class="bg-gray-100 text-gray-500 px-2 py-1 rounded text-xs">Reach</span>
+                                    <span class="bg-gray-100 text-gray-500 px-2 py-1 rounded text-xs">粉丝增长</span>
+                                    <span class="bg-gray-100 text-gray-500 px-2 py-1 rounded text-xs">活跃时间</span>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t border-gray-50">
+                                <p class="text-xs font-bold text-green-600 mb-2">✅ 你只看 3 个核心指标：</p>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center justify-between bg-green-50 p-2 rounded">
+                                        <span class="text-sm font-bold">1️⃣ 私信数量</span>
+                                        <i class="fas fa-comments text-green-600"></i>
+                                    </li>
+                                    <li class="flex items-center justify-between bg-green-50 p-2 rounded">
+                                        <span class="text-sm font-bold">2️⃣ 私信转化率</span>
+                                        <i class="fas fa-funnel-dollar text-green-600"></i>
+                                    </li>
+                                    <li class="flex items-center justify-between bg-green-50 p-2 rounded">
+                                        <span class="text-sm font-bold">3️⃣ 成交率 / 客单价</span>
+                                        <i class="fas fa-shopping-cart text-green-600"></i>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-slate-800 rounded-xl text-center">
+                            <p class="text-white text-xs font-bold italic">“只要每 10 个私信能成交 1–2 单，这个号就是成功的”</p>
+                        </div>
+                    </div>
+
+                    <!-- Part 3: Account Structure -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="text-lg font-bold mb-4 text-slate-800">三、私域小号的「账号结构」</h3>
+                        <p class="text-sm text-slate-500 mb-4 font-bold">1️⃣ 主页 = 销售页（不是内容页）</p>
+                        
+                        <!-- Bio Example -->
+                        <div class="bg-slate-50 border-2 border-dashed border-slate-200 p-4 rounded-xl mb-4 relative">
+                            <div class="absolute -top-3 left-4 bg-slate-600 text-white text-[10px] px-2 py-0.5 rounded uppercase">Bio 模板示例</div>
+                            <div class="font-medium text-slate-700 space-y-1 text-sm pt-2">
+                                <p>手工皮具 | 工艺复刻</p>
+                                <p>只聊细节，不公开报价</p>
+                                <p>想了解 → <span class="text-indigo-600">私信「型号」</span></p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <p class="text-xs font-bold text-slate-400">📌 运营重点：</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <div class="flex items-center text-xs text-slate-600 bg-slate-50 p-2 rounded border border-slate-100">
+                                    <i class="fas fa-shield-virus mr-2 text-slate-400"></i> 不出现敏感词
+                                </div>
+                                <div class="flex items-center text-xs text-slate-600 bg-slate-50 p-2 rounded border border-slate-100">
+                                    <i class="fas fa-tag mr-2 text-slate-400"></i> 不出现价格
+                                </div>
+                                <div class="flex items-center text-xs text-slate-600 bg-slate-50 p-2 rounded border border-slate-100">
+                                    <i class="fas fa-ban mr-2 text-slate-400"></i> 不出现交易引导
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 text-white p-4 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="bg-gold-500 text-slate-900 px-2 py-1 rounded text-xs font-black mr-3" style="background: #ffd700;">核心定位</span>
+                        <p class="text-sm font-bold tracking-wide">📌 这是生意账号，不是内容账号</p>
+                    </div>
+                    <i class="fas fa-briefcase opacity-50"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 11: Funnel & Conversion Formulas -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
+                <h2 id="sec-11" class="text-2xl font-bold">十一、核心转化漏斗与计算公式</h2>
+            </div>
+            
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Funnel Visual -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold mb-6 flex items-center text-gray-800">
+                            <i class="fas fa-filter mr-2 text-blue-500"></i> 流量转化漏斗
+                        </h3>
+                        <div class="flex flex-col items-center space-y-1">
+                            <div class="w-full bg-blue-600 text-white py-3 px-6 rounded-t-2xl text-center font-bold shadow-md">
+                                浏览量 (Impressions) / 覆盖数 (Reach)
+                            </div>
+                            <div class="w-11/12 bg-blue-500 text-white py-3 px-6 text-center font-bold shadow-md">
+                                主页访问量 (Profile Visits)
+                            </div>
+                            <div class="w-9/12 bg-blue-400 text-white py-3 px-6 text-center font-bold shadow-md">
+                                外部链接点击 (Website Taps)
+                            </div>
+                            <div class="w-7/12 bg-blue-300 text-white py-3 px-6 rounded-b-2xl text-center font-bold shadow-md text-blue-900">
+                                WhatsApp 咨询 / 成交
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulas Grid -->
+                    <div class="space-y-6">
+                        <h3 class="text-lg font-bold mb-4 flex items-center text-gray-800">
+                            <i class="fas fa-square-root-alt mr-2 text-blue-500"></i> 核心转化公式
+                        </h3>
+                        <div class="grid gap-4">
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <p class="text-xs text-gray-500 mb-1 font-bold">1. 主页访问率 (Profile Visit Rate)</p>
+                                <p class="text-sm font-mono font-bold text-gray-800">主页访问量 ÷ 覆盖账户数</p>
+                                <p class="text-xs text-blue-600 mt-1">💡 判断内容引导用户进主页的能力</p>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <p class="text-xs text-gray-500 mb-1 font-bold">2. 触次率 (Link Click Rate)</p>
+                                <p class="text-sm font-mono font-bold text-gray-800">外部链接点击次数 ÷ 主页访问量</p>
+                                <p class="text-xs text-blue-600 mt-1">💡 判断主页 Bio 介绍是否有吸引力</p>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <p class="text-xs text-gray-500 mb-1 font-bold">3. 咨询率 (Inquiry Rate)</p>
+                                <p class="text-sm font-mono font-bold text-gray-800">WhatsApp 咨询数量 ÷ 外部链接点击次数</p>
+                                <p class="text-xs text-blue-600 mt-1">💡 判断落地页或产品本身的转化力</p>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <p class="text-xs text-gray-500 mb-1 font-bold">4. 内部咨询率 (Internal Inquiry Rate)</p>
+                                <p class="text-sm font-mono font-bold text-gray-800">内部咨询数量 ÷ 主页访问量</p>
+                                <p class="text-xs text-blue-600 mt-1">💡 判断主页整体对私信转化的拉动力</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 12: Tool & Standards -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="w-2 h-8 bg-green-500 rounded-full mr-3"></div>
+                <h2 id="sec-12" class="text-2xl font-bold">十二、全能流量计算器</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="md:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <!-- Global Input -->
+                    <div class="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <label class="block text-sm font-bold text-gray-700 mb-2 flex items-center">
+                            <i class="fas fa-users mr-2 text-pink-600"></i> 覆盖人数 (Reach)
+                        </label>
+                        <input type="number" id="reach" class="w-full p-3 border-2 border-pink-100 rounded-lg text-lg font-black text-pink-600 focus:border-pink-500 focus:outline-none transition-colors" placeholder="输入覆盖人数，作为计算基础">
+                        <p class="text-[10px] text-gray-400 mt-2 italic">※ 此数值将作为互动率与主页访问率的计算分母</p>
+                    </div>
+
+                    <!-- Engagement Part -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <i class="fas fa-heart mr-2 text-pink-500"></i> 互动率计算
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">点赞</label>
+                                <input type="number" id="likes" class="w-full p-2 border rounded border-gray-300 text-sm" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">评论</label>
+                                <input type="number" id="comments" class="w-full p-2 border rounded border-gray-300 text-sm" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">收藏</label>
+                                <input type="number" id="saves" class="w-full p-2 border rounded border-gray-300 text-sm" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">分享</label>
+                                <input type="number" id="shares" class="w-full p-2 border rounded border-gray-300 text-sm" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between bg-pink-50 p-4 rounded-lg border border-pink-100">
+                            <span class="font-bold">估算互动率：</span>
+                            <span id="result" class="text-2xl font-black text-pink-600">0.00%</span>
+                        </div>
+                    </div>
+
+                    <!-- Conversion Part -->
+                    <div class="pt-8 border-t border-gray-100">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <i class="fas fa-funnel-dollar mr-2 text-blue-500"></i> 转化率计算
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">主页访问量</label>
+                                <input type="number" id="profileVisits" class="w-full p-2 border rounded border-gray-300 text-sm" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">外部链接点击</label>
+                                <input type="number" id="linkClicks" class="w-full p-2 border rounded border-gray-300 text-sm" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">WhatsApp 咨询数量</label>
+                                <input type="number" id="inquiries" class="w-full p-2 border rounded border-gray-300 text-sm" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">内部咨询数量 (DM等)</label>
+                                <input type="number" id="internalInquiries" class="w-full p-2 border rounded border-gray-300 text-sm" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                <p class="text-[10px] text-blue-600 font-bold uppercase">主页访问率</p>
+                                <p id="visitRate" class="text-lg font-black text-blue-700">0.00%</p>
+                            </div>
+                            <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100">
+                                <p class="text-[10px] text-indigo-600 font-bold uppercase">触次率</p>
+                                <p id="tapRate" class="text-lg font-black text-indigo-700">0.00%</p>
+                            </div>
+                            <div class="bg-green-50 p-3 rounded-lg border border-green-100">
+                                <p class="text-[10px] text-green-600 font-bold uppercase">咨询率</p>
+                                <p id="inquiryRate" class="text-lg font-black text-green-700">0.00%</p>
+                            </div>
+                            <div class="bg-teal-50 p-3 rounded-lg border border-teal-100">
+                                <p class="text-[10px] text-teal-600 font-bold uppercase">内部咨询率</p>
+                                <p id="internalInquiryRate" class="text-lg font-black text-teal-700">0.00%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="bg-gradient-to-br from-yellow-50 to-orange-50 p-6 rounded-2xl border border-orange-100 h-full">
+                        <h3 class="font-bold mb-4 text-orange-800">快速判断标准</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="bg-orange-200 text-orange-800 p-1 rounded mr-3 text-xs">标准 1</span>
+                                <div>
+                                    <p class="font-bold text-sm">收藏 + 分享 > 点赞</p>
+                                    <p class="text-xs text-orange-700 mt-1">👉 算法非常喜欢，极具爆发潜力</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-200 text-orange-800 p-1 rounded mr-3 text-xs">标准 2</span>
+                                <div>
+                                    <p class="font-bold text-sm">Reach 明显高于粉丝数</p>
+                                    <p class="text-xs text-orange-700 mt-1">👉 内容已成功破圈，进入大推荐池</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-100 py-8 border-t border-gray-200">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <p class="text-gray-500 text-sm">© 2024 Instagram 流量增长指南 · 祝各位账号流量翻倍 🚀</p>
+        </div>
+    </footer>
+
+    <script>
+        const inputs = ['likes', 'comments', 'saves', 'shares', 'reach', 'profileVisits', 'linkClicks', 'inquiries', 'internalInquiries'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', calculate);
+        });
+
+        function calculate() {
+            // 基础数据获取
+            const likes = parseFloat(document.getElementById('likes').value) || 0;
+            const comments = parseFloat(document.getElementById('comments').value) || 0;
+            const saves = parseFloat(document.getElementById('saves').value) || 0;
+            const shares = parseFloat(document.getElementById('shares').value) || 0;
+            const reach = parseFloat(document.getElementById('reach').value) || 0;
+            
+            const profileVisits = parseFloat(document.getElementById('profileVisits').value) || 0;
+            const linkClicks = parseFloat(document.getElementById('linkClicks').value) || 0;
+            const inquiries = parseFloat(document.getElementById('inquiries').value) || 0;
+            const internalInquiries = parseFloat(document.getElementById('internalInquiries').value) || 0;
+
+            // 1. 互动率计算
+            if (reach > 0) {
+                const rate = ((likes + comments + saves + shares) / reach) * 100;
+                document.getElementById('result').innerText = rate.toFixed(2) + '%';
+            } else {
+                document.getElementById('result').innerText = '0.00%';
+            }
+
+            // 2. 主页访问率 (Profile Visit Rate) = Profile Visits / Reach
+            if (reach > 0) {
+                const vRate = (profileVisits / reach) * 100;
+                document.getElementById('visitRate').innerText = vRate.toFixed(2) + '%';
+            } else {
+                document.getElementById('visitRate').innerText = '0.00%';
+            }
+
+            // 3. 触次率 (Link Click Rate) = Link Clicks / Profile Visits
+            if (profileVisits > 0) {
+                const tRate = (linkClicks / profileVisits) * 100;
+                document.getElementById('tapRate').innerText = tRate.toFixed(2) + '%';
+            } else {
+                document.getElementById('tapRate').innerText = '0.00%';
+            }
+
+            // 4. 咨询率 (Inquiry Rate) = Inquiries / Link Clicks
+            if (linkClicks > 0) {
+                const iRate = (inquiries / linkClicks) * 100;
+                document.getElementById('inquiryRate').innerText = iRate.toFixed(2) + '%';
+            } else {
+                document.getElementById('inquiryRate').innerText = '0.00%';
+            }
+
+            // 5. 内部咨询率 (Internal Inquiry Rate) = Internal Inquiries / Profile Visits
+            if (profileVisits > 0) {
+                const iiRate = (internalInquiries / profileVisits) * 100;
+                document.getElementById('internalInquiryRate').innerText = iiRate.toFixed(2) + '%';
+            } else {
+                document.getElementById('internalInquiryRate').innerText = '0.00%';
+            }
+        }
+
+        // Sidebar Active State Tracking
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('h2[id]');
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('sidebar-link-active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('sidebar-link-active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
