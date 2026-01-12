@@ -69,6 +69,14 @@
             </div>
 
             <div class="form-group">
+                <label>图片显示模式</label>
+                <select id="imageFitSelector">
+                    <option value="cover">裁剪填充 (Cover)</option>
+                    <option value="contain">完整原图 (Contain)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label>商品图片</label>
                 <input type="file" id="productImage" accept="image/*">
                 <div class="image-preview-box" id="imagePreviewBox">
@@ -114,54 +122,56 @@
 
         <!-- Right Panel: Preview -->
         <div class="right-panel">
-            <div class="preview-header-actions">
-                <h2>订单清单</h2>
-                <div class="save-actions">
-                    <button id="saveBtn" class="btn success-btn">保存为图片</button>
-                    <button id="saveWhatsAppBtn" class="btn whatsapp-btn">WhatsApp 专用格式</button>
-                </div>
-            </div>
-            
-            <div id="captureArea" class="order-preview">
-                <div class="order-header">
-                    <h2 id="previewTitle">Order Confirmation</h2>
-                    <div class="header-row">
-                        <p class="customer"><span id="labelCustomer">Customer</span>: <span id="customerNameDisplay"></span></p>
-                        <p class="date"><span id="labelDate">Date</span>: <span id="currentDate"></span></p>
+            <div class="preview-container">
+                <div class="preview-header-actions">
+                    <h2>订单预览</h2>
+                    <div class="save-actions">
+                        <button id="saveBtn" class="btn success-btn">保存为图片</button>
+                        <button id="saveWhatsAppBtn" class="btn whatsapp-btn">WhatsApp 专用格式</button>
                     </div>
                 </div>
                 
-                <div class="order-items" id="previewItems">
-                    <!-- Preview items will be injected here -->
-                    <div class="empty-state">No items added</div>
-                </div>
+                <div id="captureArea" class="order-preview">
+                    <div class="order-header">
+                        <h2 id="previewTitle">Order Confirmation</h2>
+                        <div class="header-row">
+                            <p class="customer"><span id="labelCustomer">Customer</span>: <span id="customerNameDisplay"></span></p>
+                            <p class="date"><span id="labelDate">Date</span>: <span id="currentDate"></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items" id="previewItems">
+                        <!-- Preview items will be injected here -->
+                        <div class="empty-state">No items added</div>
+                    </div>
 
-                <div class="order-footer">
-                    <div class="total-row">
-                        <span id="labelTotalItems">Total Items:</span>
-                        <span id="totalCount">0</span>
-                    </div>
-                    <div class="total-row original-price-row" id="originalPriceRow" style="display: none;">
-                        <span id="labelOriginalPrice">Original Price:</span>
-                        <div class="original-price-group">
-                            <span id="originalCurrencyCode">USD</span>
-                            <span id="originalCurrencySymbol">$</span>
-                            <span id="originalAmount">0.00</span>
+                    <div class="order-footer">
+                        <div class="total-row">
+                            <span id="labelTotalItems">Total Items:</span>
+                            <span id="totalCount">0</span>
                         </div>
-                    </div>
-                    <div class="total-row discount-row" id="discountRow">
-                        <span id="labelDiscount">Discount:</span>
-                        <div class="discount-price-group">
-                            <span id="discountPercent">-0%</span>
+                        <div class="total-row original-price-row" id="originalPriceRow" style="display: none;">
+                            <span id="labelOriginalPrice">Original Price:</span>
+                            <div class="original-price-group">
+                                <span id="originalCurrencyCode">USD</span>
+                                <span id="originalCurrencySymbol">$</span>
+                                <span id="originalAmount">0.00</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="total-row main-total">
-                        <span id="labelTotalAmount">Total Amount:</span>
-                        <div class="total-price-group">
-                            <span id="totalCurrencyCode">USD</span>
-                            <div class="final-amount">
-                                <span id="totalCurrencySymbol">$</span>
-                                <span id="totalAmount">0.00</span>
+                        <div class="total-row discount-row" id="discountRow">
+                            <span id="labelDiscount">Discount:</span>
+                            <div class="discount-price-group">
+                                <span id="discountPercent">-0%</span>
+                            </div>
+                        </div>
+                        <div class="total-row main-total">
+                            <span id="labelTotalAmount">Total Amount:</span>
+                            <div class="total-price-group">
+                                <span id="totalCurrencyCode">USD</span>
+                                <div class="final-amount">
+                                    <span id="totalCurrencySymbol">$</span>
+                                    <span id="totalAmount">0.00</span>
+                                </div>
                             </div>
                         </div>
                     </div>

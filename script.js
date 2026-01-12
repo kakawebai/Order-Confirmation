@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         customerNameDisplay: document.getElementById('customerNameDisplay'),
         dateInput: document.getElementById('orderDate'),
         currencySelect: document.getElementById('currencySelector'),
+        imageFitSelect: document.getElementById('imageFitSelector'),
         discountInput: document.getElementById('discountInput'),
         priceSymbol: document.getElementById('priceCurrencySymbol'),
         imageInput: document.getElementById('productImage'),
@@ -184,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     dom.languageSelect.addEventListener('change', handleLanguageChange);
     dom.currencySelect.addEventListener('change', handleCurrencyChange);
+    dom.imageFitSelect.addEventListener('change', render);
     dom.discountInput.addEventListener('input', updateTotals);
     dom.imageInput.addEventListener('change', handleImageUpload);
 
@@ -443,9 +445,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Default placeholder if no image
             const imgSrc = p.image || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YwZjBmMCIvPjwvc3ZnPg==';
 
+            const isContain = dom.imageFitSelect.value === 'contain';
+            const imgHtml = isContain 
+                 ? `<img src="${imgSrc}" class="preview-img-contain" style="width: 160px; height: auto; object-fit: contain; border-radius: 4px; flex-shrink: 0; display: block; margin-right: 15px;">`
+                 : `<div class="preview-img" style="background-image: url('${imgSrc}'); background-size: cover; margin-right: 15px;"></div>`;
+
             item.innerHTML = `
-                <div class="preview-img" style="background-image: url('${imgSrc}')"></div>
-                <div class="preview-details">
+                ${imgHtml}
+                <div class="preview-details" style="flex: 1; min-width: 0;">
                     <div>
                         <div class="preview-title">${safeTitle}</div>
                         ${p.note ? `<div class="preview-note">${safeNote}</div>` : ''}

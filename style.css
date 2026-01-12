@@ -14,25 +14,26 @@
 }
 
 body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--text-color);
-    background-color: #fff;
-    height: 100vh;
+    background-color: #f8fafc; /* Light cool gray background */
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .top-nav {
     background-color: #fff;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #e2e8f0;
     padding: 0 40px;
     display: flex;
     justify-content: center;
-    height: 50px;
+    height: 60px;
     align-items: center;
-    gap: 30px;
+    gap: 40px;
     flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .nav-item {
@@ -53,43 +54,51 @@ body {
 
 .nav-item.active {
     color: var(--primary-color);
+    font-weight: 700;
 }
 
 .nav-item.active::after {
     content: "";
     position: absolute;
-    bottom: 0;
+    bottom: -1px;
     left: 0;
     width: 100%;
-    height: 2px;
+    height: 3px;
     background-color: var(--primary-color);
+    border-radius: 3px 3px 0 0;
 }
 
 .container {
     display: flex;
     flex: 1;
+    padding: 30px 40px; /* Added padding around the panels */
+    gap: 30px; /* Space between the two cards */
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
     overflow: hidden;
 }
 
 /* Left Panel */
 .left-panel {
-    width: 40%;
-    min-width: 350px;
+    flex: 1;
+    max-width: 600px;
     background-color: #fff;
-    padding: 40px 60px; /* Increased padding to move content away from edge */
-    border-right: 1px solid var(--border-color);
+    padding: 35px;
+    border-radius: 12px; /* Rounded corners for card feel */
+    border: 1px solid #e2e8f0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-    z-index: 10;
+    gap: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .left-panel h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: var(--primary-color); /* Use primary blue for headers */
+    font-weight: 700;
 }
 
 .form-group {
@@ -118,30 +127,40 @@ input[type="text"],
 input[type="number"],
 textarea,
 select {
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
+    width: 100%; /* Ensure inputs take full width of container */
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
     font-size: 14px;
-    transition: border-color 0.2s;
+    color: #1e293b;
+    background-color: #fff;
+    transition: all 0.2s ease;
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
 .image-preview-box {
-    width: 100px;
-    height: 100px;
-    border: 2px dashed var(--border-color);
-    border-radius: 6px;
+    width: 120px;
+    height: 120px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #aaa;
+    color: #94a3b8;
     overflow: hidden;
-    margin-top: 5px;
-    background-color: #fafafa;
+    margin-top: 8px;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.image-preview-box:hover {
+    border-color: var(--primary-color);
+    background-color: #eff6ff;
 }
 
 .image-preview-box img {
@@ -151,32 +170,61 @@ input:focus, textarea:focus {
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .primary-btn {
     background-color: var(--primary-color);
     color: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
-.primary-btn:hover { background-color: #357abd; }
+.primary-btn:hover { 
+    background-color: #3b82f6; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
 
 .secondary-btn {
-    background-color: #f39c12;
-    color: white;
+    background-color: #fff;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
 }
-.secondary-btn:hover { background-color: #d68910; }
+.secondary-btn:hover { 
+    background-color: #f8fafc;
+    color: #1e293b;
+}
 
 .success-btn {
-    background-color: var(--success-color);
+    background-color: #3b82f6; /* Modern Blue */
     color: white;
 }
-.success-btn:hover { background-color: #27ae60; }
+.success-btn:hover { background-color: #2563eb; }
+
+.save-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.whatsapp-btn {
+    background-color: #22c55e; /* WhatsApp Green */
+    color: white;
+}
+
+.whatsapp-btn:hover {
+    background-color: #16a34a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
 
 .text-btn {
     background: transparent;
@@ -246,49 +294,52 @@ hr {
 
 /* Right Panel */
 .right-panel {
-    flex: 1;
-    background-color: #eef2f5;
-    padding: 20px;
+    flex: 1.2;
+    background-color: transparent;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 20px;
     overflow-y: auto;
+}
+
+.preview-container {
+    background-color: #fff;
+    padding: 35px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .preview-header-actions {
     width: 100%;
-    max-width: 450px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-.save-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.whatsapp-btn {
-    background-color: #25D366; /* WhatsApp Green */
-    color: white;
-}
-
-.whatsapp-btn:hover {
-    background-color: #128C7E;
+.preview-header-actions h2 {
+    font-size: 20px;
+    color: var(--primary-color);
+    font-weight: 700;
 }
 
 .order-preview {
     width: 100%;
-    max-width: 450px;
+    max-width: 500px; /* Slightly wider than before */
+    margin: 0 auto; /* Center it */
     background: white;
     min-height: 600px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    padding: 30px;
-    border-radius: 2px; /* Paper feel */
+    box-shadow: 0 0 0 1px #e2e8f0, 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
-    flex-shrink: 0; /* Prevent shrinking when content overflows viewport */
+    flex-shrink: 0;
     height: auto;
 }
 
@@ -347,6 +398,12 @@ hr {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+}
+
+.preview-img-contain {
+    border-radius: 4px;
+    background-color: transparent;
+    flex-shrink: 0;
 }
 
 .preview-details {
@@ -454,37 +511,48 @@ hr {
 }
 
 /* Responsive adjustments */
-@media (max-width: 800px) {
-    body {
-        overflow: auto;
-    }
+@media (max-width: 1024px) {
     .container {
         flex-direction: column;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-    .left-panel, .right-panel {
-        width: 100%;
-        overflow: visible;
+        padding: 20px;
+        overflow: auto;
     }
     .left-panel {
-        min-width: 0;
-        padding: 20px 16px;
-    }
-    .form-row {
-        flex-wrap: wrap;
-    }
-    .form-row .form-group {
-        min-width: 0;
-    }
-    input[type="text"],
-    input[type="number"],
-    textarea,
-    select {
-        width: 100%;
         max-width: 100%;
+        overflow: visible;
+        padding: 25px;
     }
     .right-panel {
-        height: auto;
+        overflow: visible;
+    }
+    .form-row {
+        flex-wrap: wrap; /* Allow price and quantity to stack if needed */
+    }
+    .form-row .form-group {
+        min-width: 120px; /* Prevent shrinking too much */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    .left-panel {
+        padding: 20px;
+    }
+    .form-row .form-group {
+        flex: 1 1 100%; /* Stack price and quantity on very small screens */
+    }
+    .preview-header-actions {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    .save-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    .save-actions .btn {
+        width: 100%;
     }
 }
