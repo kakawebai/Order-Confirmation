@@ -437,18 +437,21 @@ hr {
 .preview-price-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center; /* 居中对齐，确保单价行和小计在一条线上 */
     margin-top: 8px;
     font-size: 13px;
+    flex-wrap: nowrap; /* 强制不换行 */
 }
 
 .preview-price-row .price {
     color: #333;
+    white-space: nowrap; /* 确保单价和数量不拆行 */
+    flex: 1; /* 占据剩余空间 */
 }
 
 .preview-price-row .subtotal {
-    font-weight: bold;
-    color: #e74c3c;
+    font-weight: 600;
+    color: #1a1a1a;
 }
 
 .empty-state {
@@ -474,8 +477,8 @@ hr {
 }
 
 .main-total {
-    font-size: 16px;
-    font-weight: 800;
+    font-size: 12px; /* Changed from 16px to 12px as requested */
+    font-weight: 600;
     color: #000;
     margin-top: 12px;
     padding-top: 10px;
@@ -544,12 +547,19 @@ hr {
     }
 }
 
-@media (max-width: 480px) {
+/* 响应式调整 */
+@media screen and (max-width: 480px) {
     .container {
         padding: 10px;
     }
-    .left-panel {
-        padding: 20px;
+    .left-panel, .right-panel {
+        padding: 10px; /* 进一步减小面板边距 */
+    }
+    .order-preview {
+        padding: 20px 20px; /* 增加左右内边距，使内容不紧贴边缘 */
+    }
+    .order-header h2 {
+        font-size: 15px; /* 手机端字体改为15 */
     }
     .form-row .form-group {
         flex: 1 1 100%; /* Stack price and quantity on very small screens */
@@ -565,5 +575,19 @@ hr {
     }
     .save-actions .btn {
         width: 100%;
+    }
+    .preview-item {
+        gap: 10px; /* 缩小间距给文字留空间 */
+    }
+    .preview-img-contain {
+        max-width: 130px; /* 手机端增加图片宽度到 130px */
+    }
+    .preview-price-row {
+        justify-content: flex-end; /* 将 $100.00 x 1 靠右对齐 */
+        text-align: right;
+    }
+    
+    .preview-price-row .subtotal {
+        display: none; /* 手机端删除（隐藏）后面的小计金额 */
     }
 }
