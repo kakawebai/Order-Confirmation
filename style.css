@@ -580,7 +580,7 @@ hr {
         gap: 10px; /* 缩小间距给文字留空间 */
     }
     .preview-img-contain {
-        max-width: 130px; /* 手机端增加图片宽度到 130px */
+        max-width: 160px; /* 手机端也改回 160px 宽度 */
     }
     .preview-price-row {
         justify-content: flex-end; /* 将 $100.00 x 1 靠右对齐 */
