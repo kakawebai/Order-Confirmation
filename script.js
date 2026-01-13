@@ -501,24 +501,35 @@ document.addEventListener('DOMContentLoaded', () => {
         // WhatsApp 专用格式使用更高的倍率 (5倍)，普通保存使用 getExportScale (4-6倍)
         const scale = isWhatsApp ? 5 : getExportScale();
         
+        // 记录原始样式以便恢复
+        const originalWidth = dom.captureArea.style.width;
+        const originalMaxWidth = dom.captureArea.style.maxWidth;
+        
+        // 在开始截图前，暂时固定宽度以确保布局一致性
+        dom.captureArea.style.width = '450px';
+        dom.captureArea.style.maxWidth = '450px';
+
         html2canvas(dom.captureArea, {
             scale: scale,
             useCORS: true, 
             backgroundColor: '#ffffff',
-            width: dom.captureArea.offsetWidth,
-            height: dom.captureArea.offsetHeight,
+            width: 450, // 明确指定截图宽度为 450px
+            windowWidth: 450, // 模拟窗口宽度
             onclone: (clonedDoc) => {
-                // 确保克隆的元素在导出时保持预览图的 100x100 比例
                 const clonedCaptureArea = clonedDoc.getElementById('captureArea');
                 if (clonedCaptureArea) {
                     clonedCaptureArea.style.width = '450px';
+                    clonedCaptureArea.style.maxWidth = '450px';
+                    clonedCaptureArea.style.boxShadow = 'none'; // 移除投影避免边框瑕疵
+                    clonedCaptureArea.style.borderRadius = '0'; // 移除圆角
                 }
             }
         }).then(canvas => {
-            // Create download link
+            // 恢复原始样式
+            dom.captureArea.style.width = originalWidth;
+            dom.captureArea.style.maxWidth = originalMaxWidth;
+
             const link = document.createElement('a');
-            
-            // Generate filename
             const customerName = dom.customerInput.value.trim() || 'Customer';
             const dateStr = dom.dateInput.value.trim() || new Date().toISOString().split('T')[0];
             const suffix = isWhatsApp ? '_WA' : '';
@@ -534,6 +545,10 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = false;
         }).catch(err => {
             console.error('Save failed:', err);
+            // 恢复原始样式
+            dom.captureArea.style.width = originalWidth;
+            dom.captureArea.style.maxWidth = originalMaxWidth;
+            
             alert('图片生成失败，请重试');
             btn.textContent = originalText;
             btn.disabled = false;

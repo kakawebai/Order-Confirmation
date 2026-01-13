@@ -330,43 +330,46 @@ hr {
 
 .order-preview {
     width: 100%;
-    max-width: 500px; /* Slightly wider than before */
-    margin: 0 auto; /* Center it */
+    max-width: 500px;
+    margin: 0 auto;
     background: white;
     min-height: 600px;
-    box-shadow: 0 0 0 1px #e2e8f0, 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    padding: 40px;
+    padding: 30px; /* Reduced from 40px for a more compact look */
     border-radius: 4px;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
     height: auto;
+    box-sizing: border-box; /* Ensure padding doesn't add to width */
 }
 
 .order-header {
     text-align: center;
-    border-bottom: 2px solid #333;
-    padding-bottom: 20px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 15px;
     margin-bottom: 20px;
 }
 
 .order-header h2 {
-    font-size: 18px;
-    margin-bottom: 15px;
+    font-size: 22px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #000;
 }
 
 .header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 14px;
-    color: #666;
+    font-size: 13px;
+    color: #333;
 }
 
 .header-row .customer {
     text-align: left;
     font-weight: 500;
-    visibility: hidden; /* Default hidden until input */
+    /* Removed visibility: hidden to ensure layout consistency */
 }
 
 .header-row .date {
@@ -379,10 +382,11 @@ hr {
 
 .preview-item {
     display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px dashed #eee;
-    padding-bottom: 15px;
+    gap: 12px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 12px;
+    align-items: flex-start;
 }
 
 .preview-item:last-child {
@@ -404,6 +408,8 @@ hr {
     border-radius: 4px;
     background-color: transparent;
     flex-shrink: 0;
+    max-width: 160px; /* Cap width to prevent excessive height */
+    height: auto;
 }
 
 .preview-details {
@@ -414,9 +420,10 @@ hr {
 }
 
 .preview-title {
-    font-weight: bold;
-    font-size: 13px;
+    font-weight: 600;
+    font-size: 15px;
     color: #000;
+    margin-bottom: 4px;
 }
 
 .preview-note {
@@ -430,8 +437,9 @@ hr {
 .preview-price-row {
     display: flex;
     justify-content: space-between;
-    margin-top: 5px;
-    font-size: 14px;
+    align-items: flex-end;
+    margin-top: 8px;
+    font-size: 13px;
 }
 
 .preview-price-row .price {
@@ -451,24 +459,27 @@ hr {
 }
 
 .order-footer {
-    border-top: 2px solid #333;
-    padding-top: 20px;
-    margin-top: auto;
+    border-top: 2px solid #000;
+    padding-top: 15px;
+    margin-top: 10px;
 }
 
 .total-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    align-items: center;
+    margin-bottom: 8px;
     font-size: 14px;
-    color: #555;
+    color: #333;
 }
 
 .main-total {
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 800;
     color: #000;
-    margin-top: 10px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
 }
 
 .total-price-group {
