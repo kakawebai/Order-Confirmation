@@ -1,0 +1,18 @@
+{
+  "name": "order-confirmation-tool",
+  "version": "1.0.0",
+  "description": "Order confirmation image generator",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./css/main.min.css --minify",
+    "build:js": "terser script.js -o script.min.js --compress --mangle",
+    "build": "npm run build:css && npm run build:js"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.1",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.19",
+    "terser": "^5.24.0"
+  }
+}
