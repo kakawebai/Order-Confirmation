@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook 广告投放全攻略</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            font-size: 16px;
+        }
+        .fb-gradient {
+            background: linear-gradient(135deg, #1877F2 0%, #064EAF 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hover-scale {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hover-scale:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .logic-line {
+            position: relative;
+        }
+        .logic-line::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            width: 20px;
+            height: 2px;
+            background: #cbd5e1;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .nav-item.active {
+            background-color: #1877F2;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(24, 119, 242, 0.4);
+            transform: scale(1.1);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background-color: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 40px;
+            display: flex;
+            justify-content: center;
+            height: 60px;
+            align-items: center;
+            gap: 40px;
+            flex-shrink: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-nav-item {
+            text-decoration: none;
+            color: #666;
+            font-size: 15px;
+            font-weight: 500;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .top-nav-item:hover {
+            color: #1877F2;
+        }
+
+        .top-nav-item.active {
+            color: #1877F2;
+            font-weight: 700;
+        }
+
+        .top-nav-item.active::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1877F2;
+            border-radius: 3px 3px 0 0;
+        }
+    </style>
+</head>
+<body class="text-gray-900 leading-relaxed">
+    <nav class="top-nav">
+        <a href="index.html" class="top-nav-item">订单清单</a>
+        <a href="Instagram-流量全解析.html" class="top-nav-item">Instagram 流量全解析</a>
+        <a href="facebook-广告.html" class="top-nav-item active">Facebook 广告</a>
+    </nav>
+
+    <!-- Fixed Left Navigation -->
+    <nav class="fixed left-6 top-1/2 -translate-y-1/2 z-50 hidden xl:block">
+        <div class="bg-white/80 backdrop-blur-md border border-gray-100 p-3 rounded-3xl shadow-2xl space-y-4">
+            <a href="#prerequisite" class="nav-item group flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 hover:bg-blue-600 hover:text-white text-gray-400 bg-gray-50">
+                <i class="fas fa-vial"></i>
+                <span class="absolute left-16 bg-gray-900 text-white px-3 py-1 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">前提条件</span>
+            </a>
+            <a href="#strategy" class="nav-item group flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 hover:bg-blue-600 hover:text-white text-gray-400 bg-gray-50">
+                <i class="fas fa-bullseye"></i>
+                <span class="absolute left-16 bg-gray-900 text-white px-3 py-1 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">投放策略</span>
+            </a>
+            <a href="#logic" class="nav-item group flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 hover:bg-blue-600 hover:text-white text-gray-400 bg-gray-50">
+                <i class="fas fa-sync-alt"></i>
+                <span class="absolute left-16 bg-gray-900 text-white px-3 py-1 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">推送系统</span>
+            </a>
+            <a href="#calculator" class="nav-item group flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 hover:bg-blue-600 hover:text-white text-gray-400 bg-gray-50">
+                <i class="fas fa-calculator"></i>
+                <span class="absolute left-16 bg-gray-900 text-white px-3 py-1 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">预算计算器</span>
+            </a>
+            <a href="#roi-calculator" class="nav-item group flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 hover:bg-emerald-600 hover:text-white text-gray-400 bg-gray-50">
+                <i class="fas fa-chart-line"></i>
+                <span class="absolute left-16 bg-gray-900 text-white px-3 py-1 rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">ROI 盈亏核算</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="fb-gradient text-white py-16 px-4 shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <i class="fab fa-facebook text-[300px] absolute -right-20 -top-20"></i>
+        </div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center bg-white/20 px-4 py-1 rounded-full text-sm font-bold mb-4 backdrop-blur-md">
+                <i class="fas fa-rocket mr-2"></i> 广告投放实战系列
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">Facebook 广告投放全攻略</h1>
+            <p class="text-xl md:text-2xl opacity-90 font-medium max-w-2xl mx-auto">预算分配逻辑 · 人群匹配机制 · 投放策略拆解</p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <span class="bg-white text-blue-700 px-4 py-2 rounded-xl font-bold text-sm shadow-sm">三九英雄出品</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-12">
+        
+        <!-- Prerequisite Section -->
+        <div id="prerequisite" class="bg-white rounded-3xl p-8 shadow-sm border border-blue-100 mb-12 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-2 h-full bg-blue-600"></div>
+            <h2 class="text-2xl font-extrabold text-blue-900 mb-4 flex items-center">
+                <i class="fas fa-vial mr-3"></i> # 前提条件
+            </h2>
+            <p class="text-lg text-blue-800 font-medium leading-relaxed bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
+                投放此策略前，必须确保 <span class="underline decoration-blue-400 decoration-2 underline-offset-4">前面已经测试好素材和人群</span>。
+                这是所有大规模预算投放的基石，严禁盲目冷启动。
+            </p>
+        </div>
+
+        <!-- Budget Strategy Grid -->
+        <div id="strategy" class="grid md:grid-cols-2 gap-8 mb-16">
+            
+            <!-- Single Ad Group -->
+            <div class="glass-card rounded-3xl p-8 hover-scale border border-gray-100 shadow-sm flex flex-col">
+                <div class="flex items-center mb-8">
+                    <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
+                        <i class="fas fa-bullseye text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-black text-gray-900 tracking-tight">## 单组广告预估预算</h3>
+                        <p class="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">Single Ad Set Strategy</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6 flex-grow">
+                    <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl">
+                        <h4 class="text-emerald-700 font-black text-sm mb-2 flex items-center">
+                            <i class="fas fa-plus-circle mr-2"></i> 优势组 (Pros)
+                        </h4>
+                        <p class="text-gray-800 font-bold text-lg">"优势人群不会重叠"</p>
+                        <p class="text-sm text-emerald-600 mt-2 italic">单一维度人群，数据反馈纯净。</p>
+                    </div>
+
+                    <div class="bg-rose-50 border border-rose-100 p-5 rounded-2xl">
+                        <h4 class="text-rose-700 font-black text-sm mb-2 flex items-center">
+                            <i class="fas fa-minus-circle mr-2"></i> 劣势组 (Cons)
+                        </h4>
+                        <p class="text-gray-800 leading-relaxed font-medium">
+                            初期需要大量的金额去匹配精准人群。
+                        </p>
+                        <div class="mt-3 p-3 bg-white/50 rounded-xl border border-rose-200 text-sm text-rose-800 italic">
+                            💡 如果不上精准人群，系统会一直消耗金额，直到从海量受众人群里匹配上为止。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multiple Ad Groups -->
+            <div class="glass-card rounded-3xl p-8 hover-scale border border-gray-100 shadow-sm flex flex-col">
+                <div class="flex items-center mb-8">
+                    <div class="w-14 h-14 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                        <i class="fas fa-layer-group text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-black text-gray-900 tracking-tight">## 多组广告预估预算</h3>
+                        <p class="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">Multi Ad Set Strategy</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6 flex-grow">
+                    <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl">
+                        <h4 class="text-emerald-700 font-black text-sm mb-2 flex items-center">
+                            <i class="fas fa-plus-circle mr-2"></i> 优势组 (Pros)
+                        </h4>
+                        <p class="text-gray-800 font-bold text-lg mb-2">更快去匹配人群</p>
+                        <p class="text-gray-700 leading-relaxed">
+                            "优势组越多、覆盖到精准人群的概率越大，可根据表现进行灵活调整。"
+                        </p>
+                    </div>
+
+                    <div class="bg-rose-50 border border-rose-100 p-5 rounded-2xl">
+                        <h4 class="text-rose-700 font-black text-sm mb-2 flex items-center">
+                            <i class="fas fa-minus-circle mr-2"></i> 劣势组 (Cons)
+                        </h4>
+                        <p class="text-gray-800 font-medium">
+                            "劣势人群覆盖可能重叠，导致消耗金额花的快。"
+                        </p>
+                        <p class="text-sm text-rose-600 mt-2 italic">
+                            💡 需密切关注频率 (Frequency) 指标，防止受众疲劳。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Logic Section -->
+        <section id="logic" class="mb-16">
+            <div class="flex items-center mb-8">
+                <div class="w-2 h-8 bg-blue-600 rounded-full mr-3"></div>
+                <h2 class="text-3xl font-black tracking-tight">Facebook 广告机智推送系统</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left: Logic Points -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center">
+                        <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shrink-0">1</div>
+                        <p class="font-bold text-gray-800">设置受众定向人群</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shrink-0">2</div>
+                            <p class="font-bold text-gray-800">关键词匹配核心机制</p>
+                        </div>
+                        <p class="text-gray-600 text-sm pl-14">
+                            Facebook 通过关键词匹配来帮助商家精准投放到目标受众。这是核心之一，能大幅提升广告转化率。
+                        </p>
+                    </div>
+                    <div class="bg-blue-600 text-white p-6 rounded-2xl shadow-md relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-20">
+                            <i class="fas fa-gem text-6xl"></i>
+                        </div>
+                        <div class="flex items-center mb-3">
+                            <div class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shrink-0 text-white">3</div>
+                            <p class="font-bold">实战案例：时尚搭配人群</p>
+                        </div>
+                        <p class="text-white/90 text-sm pl-14 italic">
+                            "例如我投放：时尚搭配人群。我的广告文案里有18K金项链。Facebook 会根据时尚搭配人群中用户行为有珠宝相关优先去推送。"
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center">
+                        <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shrink-0">4</div>
+                        <p class="font-bold text-gray-800">用户行为追踪：浏览、点赞、互动、购买</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shrink-0">5</div>
+                            <p class="font-bold text-gray-800">全受众信息匹配与学习记录</p>
+                        </div>
+                        <p class="text-gray-600 text-sm pl-14">
+                            还有一种 Facebook 向所有受众推送信息匹配、通过学习记录什么样用户产生行为、不断调整广告投放策略 —— <span class="text-blue-600 font-bold">广告系统能够根据用户的行为（例如点击、互动、观看视频、点赞、评论等）来分析其兴趣和偏好。</span>
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center">
+                        <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shrink-0">6</div>
+                        <p class="font-bold text-gray-800">像素抓取反馈：判定广告类型</p>
+                    </div>
+                </div>
+
+                <!-- Right: Summary Box -->
+                <div class="bg-gray-900 text-white p-8 rounded-3xl flex flex-col justify-center relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl"></div>
+                    <div class="relative z-10 text-center">
+                        <div class="text-amber-400 text-4xl mb-4">
+                            <i class="fas fa-sync-alt fa-spin"></i>
+                        </div>
+                        <h4 class="text-xl font-black mb-4 uppercase tracking-tighter">最终闭环</h4>
+                        <p class="text-sm opacity-80 leading-relaxed italic mb-4">
+                            "Facebook 也会通过像素抓取反馈这篇广告是什么类型广告。"
+                        </p>
+                        <p class="text-sm opacity-80 leading-relaxed italic">
+                            "最终通过像素反馈给广告系统、广告设置目标是否达成匹配。"
+                        </p>
+                        <div class="mt-6 pt-6 border-t border-white/10 text-xs opacity-50 font-medium">
+                            PIXEL DATA LOOPBACK SYSTEM
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Budget Calculator Section (Moved to Bottom & Redesigned) -->
+    <section class="max-w-5xl mx-auto px-4 pb-20" id="calculator">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden relative">
+            <!-- Header Decoration -->
+            <div class="bg-yellow-400 py-6 px-8 text-center relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10">
+                    <i class="fas fa-calculator text-[100px] absolute -right-4 -top-4 rotate-12"></i>
+                </div>
+                <h2 class="text-3xl font-black text-gray-900 relative z-10 flex items-center justify-center">
+                    <i class="fas fa-chart-pie mr-4"></i> <span id="calcTitle">单组广告预估预算计算器</span>
+                </h2>
+                <!-- Toggle Switch -->
+                <div class="mt-4 flex justify-center relative z-10">
+                    <div class="bg-gray-900/10 p-1 rounded-2xl backdrop-blur-md flex items-center shadow-inner">
+                        <button id="toggleSingle" class="px-6 py-2 rounded-xl text-sm font-black transition-all duration-300 bg-white text-gray-900 shadow-lg scale-105">
+                            <i class="fas fa-user mr-2"></i>单组模式
+                        </button>
+                        <button id="toggleMulti" class="px-6 py-2 rounded-xl text-sm font-black transition-all duration-300 text-gray-900/40 hover:text-gray-900">
+                            <i class="fas fa-users mr-2"></i>多组模式
+                        </button>
+                    </div>
+                </div>
+                <p class="text-gray-900/60 font-bold text-sm mt-3 uppercase tracking-widest relative z-10">Ad Set Budget Estimator</p>
+            </div>
+
+            <div class="p-8 md:p-12">
+                <!-- Grid Container -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    
+                    <!-- Left: Inputs (5 columns) -->
+                    <div class="lg:col-span-5 space-y-8">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-1 h-6 bg-blue-600 rounded-full"></div>
+                            <h3 class="font-black text-gray-900 text-lg">投放参数设定</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <!-- Audience Size -->
+                            <div class="group">
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">受众人群量</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-users text-blue-500"></i>
+                                    </div>
+                                    <input type="number" id="audienceSize" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl pl-11 pr-4 py-4 font-black text-blue-900 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all" value="1000000">
+                                </div>
+                            </div>
+
+                            <!-- Daily Budget -->
+                            <div class="group">
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1" id="budgetLabel">单组单日投放金额</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-dollar-sign text-emerald-500"></i>
+                                    </div>
+                                    <input type="number" id="dailyBudget" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl pl-11 pr-4 py-4 font-black text-blue-900 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all" value="100">
+                                </div>
+                            </div>
+
+                            <!-- Ad Groups Count (Hidden in Single Mode) -->
+                            <div id="groupCountSection" class="group hidden opacity-0 transition-all duration-500 transform -translate-y-4">
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">广告组数量</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-layer-group text-indigo-500"></i>
+                                    </div>
+                                    <input type="number" id="numGroups" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl pl-11 pr-4 py-4 font-black text-blue-900 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all" value="5">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- CTR -->
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">点击率 (CTR%)</label>
+                                    <input type="number" id="ctr" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-4 font-black text-blue-900 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all" value="1.5" step="0.1">
+                                </div>
+                                <!-- CVR -->
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">点击转化率 (%)</label>
+                                    <input type="number" id="cvr" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-4 font-black text-blue-900 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all" value="2" step="0.1">
+                                </div>
+                            </div>
+
+                            <!-- CPM -->
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">千展费用 (CPM)</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-eye text-amber-500"></i>
+                                    </div>
+                                    <input type="number" id="cpm" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl pl-11 pr-4 py-4 font-black text-blue-900 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 outline-none transition-all" value="20">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Results (7 columns) -->
+                    <div class="lg:col-span-7">
+                        <div class="flex items-center space-x-3 mb-8">
+                            <div class="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                            <h3 class="font-black text-gray-900 text-lg">预估效果反馈</h3>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Main Stats -->
+                            <div class="bg-blue-50 rounded-3xl p-6 border border-blue-100 hover-scale">
+                                <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">单次点击成本</p>
+                                <div class="flex items-baseline">
+                                    <span class="text-xs font-bold text-blue-600 mr-1">$</span>
+                                    <div id="resCPC" class="text-3xl font-black text-blue-700 tracking-tighter">-</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-indigo-50 rounded-3xl p-6 border border-indigo-100 hover-scale">
+                                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">预估日订单</p>
+                                <div class="flex items-baseline">
+                                    <div id="resOrders" class="text-3xl font-black text-indigo-700 tracking-tighter">-</div>
+                                    <span class="text-xs font-bold text-indigo-600 ml-1">单</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover-scale">
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">日展现次数</p>
+                                <div id="resDailyImpressions" class="text-2xl font-black text-gray-800 tracking-tighter">-</div>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover-scale">
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">日点击量</p>
+                                <div id="resClicks" class="text-2xl font-black text-gray-800 tracking-tighter">-</div>
+                            </div>
+
+                            <!-- Total Summary Stats -->
+                            <div class="col-span-2 bg-emerald-600 rounded-[2rem] p-8 text-white shadow-xl shadow-emerald-200 mt-4 relative overflow-hidden group">
+                                <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                                    <i class="fas fa-coins text-8xl"></i>
+                                </div>
+                                <div class="relative z-10 flex flex-col md:flex-row justify-between items-center">
+                                    <div class="text-center md:text-left mb-6 md:mb-0">
+                                        <p class="text-xs font-bold text-emerald-200 uppercase tracking-[0.2em] mb-2">全覆盖预估总成本</p>
+                                        <div class="flex items-baseline justify-center md:justify-start">
+                                            <span class="text-xl font-bold mr-1">$</span>
+                                            <div id="resTotalCost" class="text-5xl font-black tracking-tighter">-</div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white/10 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/20 text-center">
+                                        <p class="text-[10px] font-bold text-emerald-100 uppercase tracking-widest mb-1">所需覆盖时间</p>
+                                        <div class="flex items-baseline justify-center">
+                                            <div id="resDaysNeeded" class="text-3xl font-black text-white tracking-tighter">-</div>
+                                            <span class="text-sm font-bold ml-2">天</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Note -->
+                        <div class="mt-12 flex flex-wrap gap-4 justify-center">
+                            <span class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs font-bold border border-blue-100">
+                                <i class="fas fa-info-circle mr-2"></i> 蓝色背景为输入项
+                            </span>
+                            <span class="inline-flex items-center px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold border border-emerald-100">
+                                <i class="fas fa-check-circle mr-2"></i> 绿色区域为最终目标
+                            </span>
+                            <span class="inline-flex items-center px-4 py-2 bg-amber-50 text-amber-700 rounded-full text-xs font-bold border border-amber-100">
+                                <i class="fas fa-exclamation-triangle mr-2"></i> 数据受素材质量影响波动
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator Section -->
+    <section class="max-w-5xl mx-auto px-4 pb-20" id="roi-calculator">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden relative">
+            <!-- Header Decoration -->
+            <div class="bg-emerald-500 py-6 px-8 text-center relative overflow-hidden text-white">
+                <div class="absolute inset-0 opacity-10">
+                    <i class="fas fa-chart-line text-[100px] absolute -right-4 -top-4 rotate-12"></i>
+                </div>
+                <h2 class="text-3xl font-black relative z-10 flex items-center justify-center">
+                    <i class="fas fa-coins mr-4"></i> ROI 盈亏核算器
+                </h2>
+                <p class="text-white/60 font-bold text-sm mt-1 uppercase tracking-widest relative z-10">Profit & ROI Calculator</p>
+            </div>
+
+            <div class="p-8 md:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <!-- Left: Inputs -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                            <h3 class="font-black text-gray-900 text-lg">经营数据输入</h3>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">日期</label>
+                                    <input type="date" id="roiDate" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 font-bold text-gray-700 outline-none focus:border-emerald-500 transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">售价 ($)</label>
+                                    <input type="number" id="roiPrice" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 font-black text-emerald-700 outline-none focus:border-emerald-500 transition-all" value="50">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">实际销售额 ($)</label>
+                                <input type="number" id="roiSales" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 font-black text-emerald-700 outline-none focus:border-emerald-500 transition-all" value="1000">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">投入金额 (广告费)</label>
+                                    <input type="number" id="roiAdSpend" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 font-black text-rose-600 outline-none focus:border-emerald-500 transition-all" value="300">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">收款扣点 (%)</label>
+                                    <input type="number" id="roiFee" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 font-black text-gray-700 outline-none focus:border-emerald-500 transition-all" value="4.4" step="0.1">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">单件快递费 ($)</label>
+                                    <input type="number" id="roiShipping" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 font-black text-gray-700 outline-none focus:border-emerald-500 transition-all" value="8">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">产品拿货价 ($)</label>
+                                    <input type="number" id="roiProductCost" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 font-black text-gray-700 outline-none focus:border-emerald-500 transition-all" value="12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Results -->
+                    <div class="lg:col-span-7">
+                        <div class="flex items-center space-x-3 mb-8">
+                            <div class="w-1 h-6 bg-blue-500 rounded-full"></div>
+                            <h3 class="font-black text-gray-900 text-lg">盈亏分析报告</h3>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <!-- Main ROI Card -->
+                            <div class="col-span-2 bg-emerald-50 rounded-[2rem] p-8 border border-emerald-100 flex items-center justify-between hover-scale">
+                                <div>
+                                    <p class="text-sm font-black text-emerald-600 uppercase tracking-widest mb-2">当前产出 ROI</p>
+                                    <div id="resActualROI" class="text-6xl font-black text-emerald-700 tracking-tighter">0.00</div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-emerald-500 mb-1">保本 ROI 临界点</p>
+                                    <div id="resBreakEvenROI" class="text-2xl font-black text-gray-400 tracking-tight">0.00</div>
+                                </div>
+                            </div>
+
+                            <!-- Stats Cards -->
+                            <div class="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover-scale">
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">总成本 (含广告/拿货/物流/扣点)</p>
+                                <div class="flex items-baseline">
+                                    <span class="text-xs font-bold text-gray-500 mr-1">$</span>
+                                    <div id="resTotalROI" class="text-3xl font-black text-gray-800 tracking-tighter">0</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 rounded-3xl p-6 border border-blue-100 hover-scale">
+                                <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">净利润</p>
+                                <div class="flex items-baseline">
+                                    <span class="text-xs font-bold text-blue-600 mr-1">$</span>
+                                    <div id="resNetProfit" class="text-3xl font-black text-blue-700 tracking-tighter">0</div>
+                                </div>
+                            </div>
+
+                            <div class="col-span-2 bg-indigo-900 rounded-3xl p-8 text-white relative overflow-hidden hover-scale">
+                                <div class="absolute top-0 right-0 p-6 opacity-10">
+                                    <i class="fas fa-percent text-6xl"></i>
+                                </div>
+                                <div class="relative z-10 flex items-center justify-between">
+                                    <div>
+                                        <p class="text-xs font-black text-indigo-300 uppercase tracking-widest mb-2">综合利润率</p>
+                                        <div class="flex items-baseline">
+                                            <div id="resProfitMargin" class="text-5xl font-black tracking-tighter">0.0</div>
+                                            <span class="text-xl font-bold ml-1">%</span>
+                                        </div>
+                                    </div>
+                                    <div id="profitStatus" class="px-6 py-2 rounded-full font-black text-sm bg-white/10 border border-white/20">
+                                        计算中...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white py-12 border-t border-gray-100">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center px-4 text-gray-500 text-sm">
+            <p class="font-medium">© 2024 Facebook 广告投放指南 · 祝各位爆单 🚀</p>
+            <p class="mt-4 md:mt-0 font-bold flex items-center bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
+                <i class="fab fa-qq text-[#12B7F5] text-lg mr-2"></i> QQ: 3760079636
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        let currentMode = 'single'; // 'single' or 'multi'
+
+        function calculateBudget() {
+            const audienceSize = parseFloat(document.getElementById('audienceSize').value) || 0;
+            const budgetInput = parseFloat(document.getElementById('dailyBudget').value) || 0;
+            const ctr = parseFloat(document.getElementById('ctr').value) || 0;
+            const cvr = parseFloat(document.getElementById('cvr').value) || 0;
+            const cpm = parseFloat(document.getElementById('cpm').value) || 0;
+            const numGroups = currentMode === 'multi' ? (parseFloat(document.getElementById('numGroups').value) || 1) : 1;
+
+            // 在多组模式下，budgetInput 现在代表“广告系列金额”（总预算）
+            // 在单组模式下，budgetInput 代表“单组金额”
+            const totalDailyBudget = budgetInput; 
+
+            // 1. 一天展现次数 = (Total Budget / CPM) * 1000
+            const dailyImpressions = cpm > 0 ? (totalDailyBudget / cpm) * 1000 : 0;
+            document.getElementById('resDailyImpressions').innerText = Math.round(dailyImpressions).toLocaleString();
+
+            // 2. 点击量 = 一天展现次数 * (CTR / 100)
+            const clicks = dailyImpressions * (ctr / 100);
+            document.getElementById('resClicks').innerText = Math.round(clicks).toLocaleString();
+
+            // 3. 订单量 = 点击量 * (CVR / 100)
+            const orders = clicks * (cvr / 100);
+            document.getElementById('resOrders').innerText = Math.round(orders).toLocaleString();
+
+            // 4. CPC = Total Budget / 点击量
+            const cpc = clicks > 0 ? (totalDailyBudget / clicks).toFixed(2) : '-';
+            document.getElementById('resCPC').innerText = cpc;
+
+            // 5. 完全覆盖金额 = (受众人群量 / 1000) * CPM
+            const totalCost = (audienceSize / 1000) * cpm;
+            document.getElementById('resTotalCost').innerText = Math.round(totalCost).toLocaleString();
+
+            // 6. 所需时间/天 = 受众人群量 / 一天展现次数
+            const daysNeeded = dailyImpressions > 0 ? (audienceSize / dailyImpressions).toFixed(1) : '-';
+            document.getElementById('resDaysNeeded').innerText = daysNeeded;
+        }
+
+        // Toggle Logic
+        const toggleSingle = document.getElementById('toggleSingle');
+        const toggleMulti = document.getElementById('toggleMulti');
+        const groupCountSection = document.getElementById('groupCountSection');
+        const calcTitle = document.getElementById('calcTitle');
+        const budgetLabel = document.getElementById('budgetLabel');
+
+        toggleSingle.addEventListener('click', () => {
+            currentMode = 'single';
+            updateToggleUI();
+            calculateBudget();
+        });
+
+        toggleMulti.addEventListener('click', () => {
+            currentMode = 'multi';
+            updateToggleUI();
+            calculateBudget();
+        });
+
+        function updateToggleUI() {
+            if (currentMode === 'single') {
+                toggleSingle.classList.add('bg-white', 'text-gray-900', 'shadow-lg', 'scale-105');
+                toggleSingle.classList.remove('text-gray-900/40');
+                toggleMulti.classList.remove('bg-white', 'text-gray-900', 'shadow-lg', 'scale-105');
+                toggleMulti.classList.add('text-gray-900/40');
+                
+                groupCountSection.classList.add('hidden', 'opacity-0', '-translate-y-4');
+                groupCountSection.classList.remove('opacity-100', 'translate-y-0');
+                
+                calcTitle.innerText = '单组广告预估预算计算器';
+                budgetLabel.innerText = '单组单日投放金额';
+            } else {
+                toggleMulti.classList.add('bg-white', 'text-gray-900', 'shadow-lg', 'scale-105');
+                toggleMulti.classList.remove('text-gray-900/40');
+                toggleSingle.classList.remove('bg-white', 'text-gray-900', 'shadow-lg', 'scale-105');
+                toggleSingle.classList.add('text-gray-900/40');
+                
+                groupCountSection.classList.remove('hidden');
+                setTimeout(() => {
+                    groupCountSection.classList.add('opacity-100', 'translate-y-0');
+                    groupCountSection.classList.remove('opacity-0', '-translate-y-4');
+                }, 10);
+                
+                calcTitle.innerText = '多组广告预估预算计算器';
+                budgetLabel.innerText = '广告系列金额';
+            }
+        }
+
+        // Add event listeners to all inputs
+        ['audienceSize', 'dailyBudget', 'ctr', 'cvr', 'cpm', 'numGroups'].forEach(id => {
+            document.getElementById(id).addEventListener('input', calculateBudget);
+        });
+
+        // Initial calculation
+        calculateBudget();
+
+        function calculateROI() {
+            const price = parseFloat(document.getElementById('roiPrice').value) || 0;
+            const sales = parseFloat(document.getElementById('roiSales').value) || 0;
+            const adSpend = parseFloat(document.getElementById('roiAdSpend').value) || 0;
+            const feeRate = parseFloat(document.getElementById('roiFee').value) || 0;
+            const shipping = parseFloat(document.getElementById('roiShipping').value) || 0;
+            const productCost = parseFloat(document.getElementById('roiProductCost').value) || 0;
+
+            const orders = price > 0 ? (sales / price) : 0;
+            const platformFees = sales * (feeRate / 100);
+            const totalVariableCosts = platformFees + (orders * (shipping + productCost));
+            const totalCostWithAds = totalVariableCosts + adSpend;
+            const netProfit = sales - totalCostWithAds;
+            const profitMargin = sales > 0 ? (netProfit / sales) * 100 : 0;
+            const actualROI = adSpend > 0 ? (sales / adSpend) : 0;
+
+            // Break-even ROI calculation
+            // ROI = 1 / [ (1 - fee%) - (productCost + shipping) / Price ]
+            const marginPerUnit = (1 - (feeRate / 100)) - ((productCost + shipping) / price);
+            const breakEvenROI = marginPerUnit > 0 ? (1 / marginPerUnit) : 0;
+
+            // Update UI
+            document.getElementById('resActualROI').innerText = actualROI.toFixed(2);
+            document.getElementById('resBreakEvenROI').innerText = breakEvenROI.toFixed(2);
+            document.getElementById('resTotalROI').innerText = Math.round(totalCostWithAds).toLocaleString();
+            document.getElementById('resNetProfit').innerText = Math.round(netProfit).toLocaleString();
+            document.getElementById('resProfitMargin').innerText = profitMargin.toFixed(1);
+
+            const statusEl = document.getElementById('profitStatus');
+            if (netProfit > 0) {
+                statusEl.innerText = '盈利状态 💰';
+                statusEl.className = 'px-6 py-2 rounded-full font-black text-sm bg-emerald-500 text-white shadow-lg shadow-emerald-500/20';
+            } else if (netProfit < 0) {
+                statusEl.innerText = '亏损状态 📉';
+                statusEl.className = 'px-6 py-2 rounded-full font-black text-sm bg-rose-500 text-white shadow-lg shadow-rose-500/20';
+            } else {
+                statusEl.innerText = '保本状态 ⚖️';
+                statusEl.className = 'px-6 py-2 rounded-full font-black text-sm bg-gray-500 text-white';
+            }
+        }
+
+        // Add ROI event listeners
+        ['roiPrice', 'roiSales', 'roiAdSpend', 'roiFee', 'roiShipping', 'roiProductCost'].forEach(id => {
+            document.getElementById(id).addEventListener('input', calculateROI);
+        });
+
+        // Set default date to today
+        document.getElementById('roiDate').valueAsDate = new Date();
+
+        // Initial ROI calculation
+        calculateROI();
+
+        // Scroll Spy
+        const sections = document.querySelectorAll('div[id], section[id]');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').slice(1) === current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
