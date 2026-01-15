@@ -5,14 +5,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let tempImageBase64 = null;
     let currentCurrency = '$';
     let currentCurrencyCode = 'USD';
+    let activeMode = 'order';
+    let invoiceItems = [];
+    let invoice = {
+        number: '',
+        date: '',
+        dueDate: '',
+        fromName: '',
+        fromAddress: '',
+        fromPhone: '',
+        fromTaxId: '',
+        toName: '',
+        toAddress: '',
+        toPhone: '',
+        toTaxId: '',
+        taxRate: 0,
+        notes: ''
+    };
 
     // DOM Elements
     const dom = {
         // Form Inputs
         languageSelect: document.getElementById('languageSelector'),
         customerInput: document.getElementById('customerNameInput'),
+        orderCustomerGroup: document.getElementById('orderCustomerGroup'),
         customerNameDisplay: document.getElementById('customerNameDisplay'),
         dateInput: document.getElementById('orderDate'),
+        orderDateGroup: document.getElementById('orderDateGroup'),
         currencySelect: document.getElementById('currencySelector'),
         imageFitSelect: document.getElementById('imageFitSelector'),
         discountInput: document.getElementById('discountInput'),
@@ -42,6 +61,47 @@ document.addEventListener('DOMContentLoaded', () => {
         originalAmount: document.getElementById('originalAmount'),
         discountRow: document.getElementById('discountRow'),
         discountPercent: document.getElementById('discountPercent'),
+
+        orderEditor: document.getElementById('orderEditor'),
+        invoiceEditor: document.getElementById('invoiceEditor'),
+        invoiceNumberInput: document.getElementById('invoiceNumberInput'),
+        invoiceDateInput: document.getElementById('invoiceDateInput'),
+        invoiceDueDateInput: document.getElementById('invoiceDueDateInput'),
+        invoiceFromNameInput: document.getElementById('invoiceFromNameInput'),
+        invoiceFromAddressInput: document.getElementById('invoiceFromAddressInput'),
+        invoiceFromPhoneInput: document.getElementById('invoiceFromPhoneInput'),
+        invoiceFromTaxIdInput: document.getElementById('invoiceFromTaxIdInput'),
+        invoiceToNameInput: document.getElementById('invoiceToNameInput'),
+        invoiceToAddressInput: document.getElementById('invoiceToAddressInput'),
+        invoiceToPhoneInput: document.getElementById('invoiceToPhoneInput'),
+        invoiceToTaxIdInput: document.getElementById('invoiceToTaxIdInput'),
+        invoiceTaxRateInput: document.getElementById('invoiceTaxRateInput'),
+        invoiceNotesInput: document.getElementById('invoiceNotesInput'),
+        addInvoiceItemBtn: document.getElementById('addInvoiceItemBtn'),
+        invoiceItemsEditor: document.getElementById('invoiceItemsEditor'),
+
+        invoiceMeta: document.getElementById('invoiceMeta'),
+        invoiceMetaLabelNumber: document.getElementById('invoiceMetaLabelNumber'),
+        invoiceMetaLabelDate: document.getElementById('invoiceMetaLabelDate'),
+        invoiceMetaLabelDue: document.getElementById('invoiceMetaLabelDue'),
+        invoiceNumberDisplay: document.getElementById('invoiceNumberDisplay'),
+        invoiceDateDisplay: document.getElementById('invoiceDateDisplay'),
+        invoiceDueDateDisplay: document.getElementById('invoiceDueDateDisplay'),
+        invoiceParties: document.getElementById('invoiceParties'),
+        invoiceFromTitle: document.getElementById('invoiceFromTitle'),
+        invoiceToTitle: document.getElementById('invoiceToTitle'),
+        invoiceFromNameDisplay: document.getElementById('invoiceFromNameDisplay'),
+        invoiceFromAddressDisplay: document.getElementById('invoiceFromAddressDisplay'),
+        invoiceFromPhoneDisplay: document.getElementById('invoiceFromPhoneDisplay'),
+        invoiceFromTaxIdDisplay: document.getElementById('invoiceFromTaxIdDisplay'),
+        invoiceToNameDisplay: document.getElementById('invoiceToNameDisplay'),
+        invoiceToAddressDisplay: document.getElementById('invoiceToAddressDisplay'),
+        invoiceToPhoneDisplay: document.getElementById('invoiceToPhoneDisplay'),
+        invoiceToTaxIdDisplay: document.getElementById('invoiceToTaxIdDisplay'),
+        invoiceTaxRow: document.getElementById('invoiceTaxRow'),
+        invoiceTaxLabel: document.getElementById('invoiceTaxLabel'),
+        invoiceTaxAmount: document.getElementById('invoiceTaxAmount'),
+        invoiceNotesDisplay: document.getElementById('invoiceNotesDisplay'),
         
         // Buttons
         addBtn: document.getElementById('addProductBtn'),
@@ -50,6 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
         clearAllBtn: document.getElementById('clearAllBtn'),
         saveBtn: document.getElementById('saveBtn'),
         saveWhatsAppBtn: document.getElementById('saveWhatsAppBtn'),
+
+        invoiceToggleBtn: document.getElementById('invoiceToggleBtn'),
+        previewModeHeader: document.getElementById('previewModeHeader'),
 
         // Lists/Display
         productList: document.getElementById('productList'),
@@ -163,9 +226,95 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const invoiceTitles = {
+        'en': 'Invoice',
+        'zh-CN': '发票',
+        'zh-TW': '發票',
+        'ar': 'فاتورة',
+        'ja': '請求書',
+        'ko': '송장',
+        'ru': 'Счёт',
+        'fr': 'Facture',
+        'de': 'Rechnung',
+        'es': 'Factura',
+        'it': 'Fattura'
+    };
+
+    const previewModeHeaders = {
+        order: {
+            'en': 'Order Preview',
+            'zh-CN': '订单预览',
+            'zh-TW': '訂單預覽',
+            'ar': 'معاينة الطلب',
+            'ja': '注文プレビュー',
+            'ko': '주문 미리보기',
+            'ru': 'Предпросмотр заказа',
+            'fr': 'Aperçu de commande',
+            'de': 'Bestellvorschau',
+            'es': 'Vista previa del pedido',
+            'it': 'Anteprima ordine'
+        },
+        invoice: {
+            'en': 'Invoice Preview',
+            'zh-CN': '发票预览',
+            'zh-TW': '發票預覽',
+            'ar': 'معاينة الفاتورة',
+            'ja': '請求書プレビュー',
+            'ko': '송장 미리보기',
+            'ru': 'Предпросмотр счёта',
+            'fr': 'Aperçu de facture',
+            'de': 'Rechnungsvorschau',
+            'es': 'Vista previa de factura',
+            'it': 'Anteprima fattura'
+        }
+    };
+
+    const invoiceColumns = {
+        'en': { item: 'Item', qty: 'Qty', unit: 'Unit', amount: 'Amount' },
+        'zh-CN': { item: '商品', qty: '数量', unit: '单价', amount: '小计' },
+        'zh-TW': { item: '商品', qty: '數量', unit: '單價', amount: '小計' },
+        'ar': { item: 'الصنف', qty: 'الكمية', unit: 'سعر الوحدة', amount: 'المبلغ' },
+        'ja': { item: '商品', qty: '数量', unit: '単価', amount: '小計' },
+        'ko': { item: '상품', qty: '수량', unit: '단가', amount: '소계' },
+        'ru': { item: 'Товар', qty: 'Кол-во', unit: 'Цена', amount: 'Сумма' },
+        'fr': { item: 'Article', qty: 'Qté', unit: 'PU', amount: 'Montant' },
+        'de': { item: 'Artikel', qty: 'Menge', unit: 'Stückpreis', amount: 'Betrag' },
+        'es': { item: 'Artículo', qty: 'Cant.', unit: 'Unit.', amount: 'Importe' },
+        'it': { item: 'Articolo', qty: 'Qtà', unit: 'Unit.', amount: 'Importo' }
+    };
+
+    const invoiceMetaLabels = {
+        'en': { number: 'Number', date: 'Date', due: 'Due', tax: 'Tax', subtotal: 'Subtotal:', total: 'Total:' },
+        'zh-CN': { number: '编号', date: '日期', due: '到期', tax: '税费', subtotal: '小计:', total: '合计:' },
+        'zh-TW': { number: '編號', date: '日期', due: '到期', tax: '稅費', subtotal: '小計:', total: '合計:' },
+        'ar': { number: 'الرقم', date: 'التاريخ', due: 'الاستحقاق', tax: 'الضريبة', subtotal: 'المجموع الفرعي:', total: 'الإجمالي:' },
+        'ja': { number: '番号', date: '日付', due: '期日', tax: '税額', subtotal: '小計:', total: '合計:' },
+        'ko': { number: '번호', date: '날짜', due: '기한', tax: '세금', subtotal: '소계:', total: '합계:' },
+        'ru': { number: 'Номер', date: 'Дата', due: 'Срок', tax: 'Налог', subtotal: 'Промежуточный итог:', total: 'Итого:' },
+        'fr': { number: 'N°', date: 'Date', due: 'Échéance', tax: 'Taxe', subtotal: 'Sous-total:', total: 'Total:' },
+        'de': { number: 'Nr.', date: 'Datum', due: 'Fällig', tax: 'Steuer', subtotal: 'Zwischensumme:', total: 'Gesamt:' },
+        'es': { number: 'Núm.', date: 'Fecha', due: 'Vence', tax: 'Impuesto', subtotal: 'Subtotal:', total: 'Total:' },
+        'it': { number: 'N.', date: 'Data', due: 'Scadenza', tax: 'Imposta', subtotal: 'Subtotale:', total: 'Totale:' }
+    };
+
+    const invoicePartyLabels = {
+        'en': { from: 'From', to: 'To' },
+        'zh-CN': { from: '开票方', to: '收票方' },
+        'zh-TW': { from: '開票方', to: '收票方' },
+        'ar': { from: 'من', to: 'إلى' },
+        'ja': { from: '差出人', to: '宛先' },
+        'ko': { from: '보낸 사람', to: '받는 사람' },
+        'ru': { from: 'От', to: 'Кому' },
+        'fr': { from: 'De', to: 'À' },
+        'de': { from: 'Von', to: 'An' },
+        'es': { from: 'De', to: 'Para' },
+        'it': { from: 'Da', to: 'A' }
+    };
+
     // Initialize Date
     const now = new Date();
     dom.currentDate.textContent = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    initInvoiceDefaults();
 
     // Event Listeners
     dom.customerInput.addEventListener('input', () => {
@@ -198,9 +347,78 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.saveWhatsAppBtn.addEventListener('click', () => saveAsImage(true));
     dom.productList.addEventListener('click', handleListAction);
 
+    if (dom.addInvoiceItemBtn) {
+        dom.addInvoiceItemBtn.addEventListener('click', addInvoiceItem);
+    }
+    if (dom.invoiceItemsEditor) {
+        dom.invoiceItemsEditor.addEventListener('input', handleInvoiceItemChange);
+        dom.invoiceItemsEditor.addEventListener('click', handleInvoiceItemClick);
+    }
+    bindInvoiceField(dom.invoiceNumberInput, (v) => { invoice.number = v; });
+    bindInvoiceField(dom.invoiceFromNameInput, (v) => { invoice.fromName = v; });
+    bindInvoiceField(dom.invoiceFromAddressInput, (v) => { invoice.fromAddress = v; });
+    bindInvoiceField(dom.invoiceFromPhoneInput, (v) => { invoice.fromPhone = v; });
+    bindInvoiceField(dom.invoiceFromTaxIdInput, (v) => { invoice.fromTaxId = v; });
+    bindInvoiceField(dom.invoiceToNameInput, (v) => { invoice.toName = v; });
+    bindInvoiceField(dom.invoiceToAddressInput, (v) => { invoice.toAddress = v; });
+    bindInvoiceField(dom.invoiceToPhoneInput, (v) => { invoice.toPhone = v; });
+    bindInvoiceField(dom.invoiceToTaxIdInput, (v) => { invoice.toTaxId = v; });
+    bindInvoiceField(dom.invoiceNotesInput, (v) => { invoice.notes = v; });
+    if (dom.invoiceDateInput) {
+        dom.invoiceDateInput.addEventListener('input', () => {
+            invoice.date = dom.invoiceDateInput.value;
+            renderInvoicePreviewFields();
+        });
+    }
+    if (dom.invoiceDueDateInput) {
+        dom.invoiceDueDateInput.addEventListener('input', () => {
+            invoice.dueDate = dom.invoiceDueDateInput.value;
+            renderInvoicePreviewFields();
+        });
+    }
+    if (dom.invoiceTaxRateInput) {
+        dom.invoiceTaxRateInput.addEventListener('input', () => {
+            const raw = parseFloat(dom.invoiceTaxRateInput.value);
+            const rate = isNaN(raw) || raw < 0 ? 0 : Math.min(100, raw);
+            invoice.taxRate = rate;
+            updateTotals();
+        });
+    }
+
+    if (dom.invoiceToggleBtn) {
+        dom.invoiceToggleBtn.addEventListener('click', () => {
+            activeMode = activeMode === 'invoice' ? 'order' : 'invoice';
+            if (activeMode === 'invoice') {
+                if (invoiceItems.length === 0 && products.length > 0) {
+                    invoiceItems = products.map(p => ({
+                        id: p.id,
+                        description: p.title,
+                        qty: p.qty,
+                        unitPrice: p.price
+                    }));
+                }
+                if (!invoice.toName && dom.customerInput?.value?.trim()) {
+                    invoice.toName = dom.customerInput.value.trim();
+                    if (dom.invoiceToNameInput) dom.invoiceToNameInput.value = invoice.toName;
+                }
+                if (!invoice.date && dom.dateInput?.value?.trim()) {
+                    const val = dom.dateInput.value.trim();
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                        invoice.date = val;
+                        if (dom.invoiceDateInput) dom.invoiceDateInput.value = val;
+                    }
+                }
+                renderInvoiceItemsEditor();
+                renderInvoicePreviewFields();
+            }
+            applyModeUI();
+        });
+    }
+
     // Initial sync
     handleCurrencyChange();
     handleLanguageChange();
+    applyModeUI();
 
     // --- Functions ---
 
@@ -239,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = dom.languageSelect.value;
         const t = translations[lang] || translations['en'];
 
-        dom.previewTitle.textContent = t.title;
+        dom.previewTitle.textContent = activeMode === 'invoice' ? (invoiceTitles[lang] || invoiceTitles['en']) : t.title;
         dom.labelCustomer.textContent = t.customer;
         dom.labelDate.textContent = t.date;
         dom.labelTotalItems.textContent = t.totalItems;
@@ -248,6 +466,203 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.labelTotalAmount.textContent = t.totalAmount;
 
         document.documentElement.lang = lang;
+        applyModeUI();
+    }
+
+    function applyModeUI() {
+        const isInvoice = activeMode === 'invoice';
+
+        dom.captureArea.classList.toggle('invoice-mode', isInvoice);
+
+        if (dom.orderCustomerGroup) dom.orderCustomerGroup.style.display = isInvoice ? 'none' : 'flex';
+        if (dom.orderDateGroup) dom.orderDateGroup.style.display = isInvoice ? 'none' : 'flex';
+
+        if (dom.orderEditor) dom.orderEditor.style.display = isInvoice ? 'none' : 'block';
+        if (dom.invoiceEditor) dom.invoiceEditor.style.display = isInvoice ? 'block' : 'none';
+        if (dom.invoiceMeta) dom.invoiceMeta.style.display = isInvoice ? 'block' : 'none';
+        if (dom.invoiceParties) dom.invoiceParties.style.display = isInvoice ? 'grid' : 'none';
+        if (dom.invoiceTaxRow) dom.invoiceTaxRow.style.display = 'none';
+        if (dom.invoiceNotesDisplay) dom.invoiceNotesDisplay.style.display = isInvoice ? 'block' : 'none';
+
+        if (dom.previewModeHeader) {
+            const lang = dom.languageSelect?.value || 'en';
+            const modeKey = isInvoice ? 'invoice' : 'order';
+            dom.previewModeHeader.textContent = previewModeHeaders[modeKey]?.[lang] || previewModeHeaders[modeKey]?.['en'] || '';
+        }
+
+        if (dom.invoiceToggleBtn) {
+            dom.invoiceToggleBtn.setAttribute('aria-pressed', isInvoice ? 'true' : 'false');
+            dom.invoiceToggleBtn.classList.toggle('primary-btn', isInvoice);
+            dom.invoiceToggleBtn.classList.toggle('secondary-btn', !isInvoice);
+        }
+
+        const lang = dom.languageSelect?.value || 'en';
+        const t = translations[lang] || translations['en'];
+        if (dom.previewTitle) {
+            dom.previewTitle.textContent = isInvoice ? (invoiceTitles[lang] || invoiceTitles['en']) : t.title;
+        }
+
+        if (isInvoice) {
+            const labels = invoiceMetaLabels[lang] || invoiceMetaLabels['en'];
+            const partyLabels = invoicePartyLabels[lang] || invoicePartyLabels['en'];
+            if (dom.invoiceMetaLabelNumber) dom.invoiceMetaLabelNumber.textContent = labels.number;
+            if (dom.invoiceMetaLabelDate) dom.invoiceMetaLabelDate.textContent = labels.date;
+            if (dom.invoiceMetaLabelDue) dom.invoiceMetaLabelDue.textContent = labels.due;
+            if (dom.invoiceFromTitle) dom.invoiceFromTitle.textContent = partyLabels.from;
+            if (dom.invoiceToTitle) dom.invoiceToTitle.textContent = partyLabels.to;
+            if (dom.labelOriginalPrice) dom.labelOriginalPrice.textContent = labels.subtotal;
+            if (dom.labelTotalAmount) dom.labelTotalAmount.textContent = labels.total;
+            if (dom.invoiceTaxLabel) dom.invoiceTaxLabel.textContent = `${labels.tax} (${invoice.taxRate || 0}%):`;
+            renderInvoicePreviewFields();
+            renderInvoiceItemsEditor();
+        }
+
+        renderPreview();
+        updateTotals();
+    }
+
+    function initInvoiceDefaults() {
+        const today = new Date();
+        const due = new Date(today);
+        due.setDate(due.getDate() + 30);
+        const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        invoice.date = fmt(today);
+        invoice.dueDate = fmt(due);
+        if (dom.invoiceDateInput) dom.invoiceDateInput.value = invoice.date;
+        if (dom.invoiceDueDateInput) dom.invoiceDueDateInput.value = invoice.dueDate;
+    }
+
+    function bindInvoiceField(el, setter) {
+        if (!el) return;
+        el.addEventListener('input', () => {
+            setter(el.value);
+            renderInvoicePreviewFields();
+        });
+    }
+
+    function addInvoiceItem() {
+        invoiceItems.push({
+            id: `${Date.now()}_${Math.random().toString(16).slice(2)}`,
+            description: '',
+            qty: 1,
+            unitPrice: 0
+        });
+        renderInvoiceItemsEditor();
+        renderPreview();
+        updateTotals();
+    }
+
+    function renderInvoiceItemsEditor() {
+        if (!dom.invoiceItemsEditor) return;
+        if (activeMode !== 'invoice') return;
+
+        if (invoiceItems.length === 0) {
+            dom.invoiceItemsEditor.innerHTML = '<div class="empty-state" style="margin-top: 10px;">No items added</div>';
+            return;
+        }
+
+        const rowsHtml = invoiceItems.map((it) => {
+            const amount = (Number(it.qty) || 0) * (Number(it.unitPrice) || 0);
+            return `
+                <div class="invoice-edit-row" data-id="${it.id}">
+                    <input class="invoice-edit-desc" type="text" value="${escapeHtml(it.description)}" data-field="description" placeholder="Description">
+                    <input class="invoice-edit-qty" type="number" value="${escapeHtml(it.qty)}" data-field="qty" min="1">
+                    <input class="invoice-edit-unit" type="number" value="${escapeHtml(it.unitPrice)}" data-field="unitPrice" step="0.01" min="0">
+                    <div class="invoice-edit-amount">${currentCurrency}${amount.toFixed(2)}</div>
+                    <button type="button" class="btn text-btn invoice-edit-remove" data-action="remove">×</button>
+                </div>
+            `;
+        }).join('');
+
+        dom.invoiceItemsEditor.innerHTML = `
+            <div class="invoice-edit-head">
+                <div>描述</div>
+                <div style="text-align:right;">数量</div>
+                <div style="text-align:right;">单价</div>
+                <div style="text-align:right;">金额</div>
+                <div></div>
+            </div>
+            ${rowsHtml}
+        `;
+    }
+
+    function handleInvoiceItemChange(e) {
+        const target = e.target;
+        if (!(target instanceof HTMLElement)) return;
+        const row = target.closest('.invoice-edit-row');
+        if (!row) return;
+        const id = row.getAttribute('data-id');
+        if (!id) return;
+        const field = target.getAttribute('data-field');
+        if (!field) return;
+
+        const idx = invoiceItems.findIndex(it => it.id === id);
+        if (idx === -1) return;
+
+        if (field === 'description') {
+            invoiceItems[idx].description = target.value;
+        } else if (field === 'qty') {
+            const raw = parseInt(target.value, 10);
+            if (!isNaN(raw)) invoiceItems[idx].qty = raw;
+        } else if (field === 'unitPrice') {
+            const raw = parseFloat(target.value);
+            if (!isNaN(raw)) invoiceItems[idx].unitPrice = raw;
+        }
+
+        const qtyEl = row.querySelector('input[data-field="qty"]');
+        const unitEl = row.querySelector('input[data-field="unitPrice"]');
+        const qty = qtyEl ? parseFloat(qtyEl.value) : (Number(invoiceItems[idx].qty) || 0);
+        const unit = unitEl ? parseFloat(unitEl.value) : (Number(invoiceItems[idx].unitPrice) || 0);
+        const amount = (isNaN(qty) ? 0 : qty) * (isNaN(unit) ? 0 : unit);
+        const amountEl = row.querySelector('.invoice-edit-amount');
+        if (amountEl) amountEl.textContent = `${currentCurrency}${amount.toFixed(2)}`;
+
+        renderPreview();
+        updateTotals();
+    }
+
+    function handleInvoiceItemClick(e) {
+        const target = e.target;
+        if (!(target instanceof HTMLElement)) return;
+        const action = target.getAttribute('data-action');
+        if (action !== 'remove') return;
+        const row = target.closest('.invoice-edit-row');
+        if (!row) return;
+        const id = row.getAttribute('data-id');
+        if (!id) return;
+        invoiceItems = invoiceItems.filter(it => it.id !== id);
+        renderInvoiceItemsEditor();
+        renderPreview();
+        updateTotals();
+    }
+
+    function renderInvoicePreviewFields() {
+        if (activeMode !== 'invoice') return;
+        if (dom.invoiceNumberDisplay) dom.invoiceNumberDisplay.textContent = invoice.number || '';
+        if (dom.invoiceDateDisplay) dom.invoiceDateDisplay.textContent = invoice.date || '';
+        if (dom.invoiceDueDateDisplay) dom.invoiceDueDateDisplay.textContent = invoice.dueDate || '';
+
+        if (dom.invoiceFromNameDisplay) dom.invoiceFromNameDisplay.textContent = invoice.fromName || '';
+        if (dom.invoiceFromAddressDisplay) dom.invoiceFromAddressDisplay.textContent = invoice.fromAddress || '';
+        if (dom.invoiceFromPhoneDisplay) dom.invoiceFromPhoneDisplay.textContent = invoice.fromPhone ? `Tel: ${invoice.fromPhone}` : '';
+        if (dom.invoiceFromTaxIdDisplay) dom.invoiceFromTaxIdDisplay.textContent = invoice.fromTaxId ? `Tax: ${invoice.fromTaxId}` : '';
+
+        if (dom.invoiceToNameDisplay) dom.invoiceToNameDisplay.textContent = invoice.toName || '';
+        if (dom.invoiceToAddressDisplay) dom.invoiceToAddressDisplay.textContent = invoice.toAddress || '';
+        if (dom.invoiceToPhoneDisplay) dom.invoiceToPhoneDisplay.textContent = invoice.toPhone ? `Tel: ${invoice.toPhone}` : '';
+        if (dom.invoiceToTaxIdDisplay) dom.invoiceToTaxIdDisplay.textContent = invoice.toTaxId ? `Tax: ${invoice.toTaxId}` : '';
+
+        if (dom.invoiceNotesDisplay) {
+            const val = (invoice.notes || '').trim();
+            dom.invoiceNotesDisplay.textContent = val;
+            dom.invoiceNotesDisplay.style.display = val ? 'block' : 'none';
+        }
+
+        if (dom.invoiceTaxLabel) {
+            const lang = dom.languageSelect?.value || 'en';
+            const labels = invoiceMetaLabels[lang] || invoiceMetaLabels['en'];
+            dom.invoiceTaxLabel.textContent = `${labels.tax} (${invoice.taxRate || 0}%):`;
+        }
     }
 
     function handleCurrencyChange() {
@@ -447,9 +862,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPreview() {
         dom.previewItems.innerHTML = '';
-        
-        if (products.length === 0) {
+
+        const items = activeMode === 'invoice' ? invoiceItems : products;
+        if (items.length === 0) {
             dom.previewItems.innerHTML = '<div class="empty-state">No items added</div>';
+            return;
+        }
+
+        if (activeMode === 'invoice') {
+            const lang = dom.languageSelect?.value || 'en';
+            const cols = invoiceColumns[lang] || invoiceColumns['en'];
+
+            const head = document.createElement('div');
+            head.className = 'invoice-table-head';
+            head.innerHTML = `
+                <div class="c-item">${cols.item}</div>
+                <div class="c-qty">${cols.qty}</div>
+                <div class="c-unit">${cols.unit}</div>
+                <div class="c-amount">${cols.amount}</div>
+            `;
+            dom.previewItems.appendChild(head);
+
+            invoiceItems.forEach(p => {
+                const subtotal = p.unitPrice * p.qty;
+                const row = document.createElement('div');
+                row.className = 'invoice-line';
+                const safeTitle = escapeHtml(p.description);
+                row.innerHTML = `
+                    <div class="c-item" title="${safeTitle}">${safeTitle}</div>
+                    <div class="c-qty">${p.qty}</div>
+                    <div class="c-unit">${currentCurrency}${p.unitPrice.toFixed(2)}</div>
+                    <div class="c-amount">${currentCurrency}${subtotal.toFixed(2)}</div>
+                `;
+                dom.previewItems.appendChild(row);
+            });
+
             return;
         }
 
@@ -486,6 +933,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTotals() {
+        if (activeMode === 'invoice') {
+            const totalQty = invoiceItems.reduce((sum, p) => sum + (Number(p.qty) || 0), 0);
+            const subtotal = invoiceItems.reduce((sum, p) => sum + ((Number(p.unitPrice) || 0) * (Number(p.qty) || 0)), 0);
+            const rate = Number(invoice.taxRate) || 0;
+            const clampedRate = Math.max(0, Math.min(100, rate));
+            const taxAmt = subtotal * (clampedRate / 100);
+            const total = subtotal + taxAmt;
+
+            dom.totalCount.textContent = totalQty;
+            dom.originalAmount.textContent = subtotal.toFixed(2);
+            dom.totalAmount.textContent = total.toFixed(2);
+
+            dom.originalPriceRow.style.display = 'flex';
+            dom.discountRow.style.display = 'none';
+
+            const lang = dom.languageSelect?.value || 'en';
+            const labels = invoiceMetaLabels[lang] || invoiceMetaLabels['en'];
+
+            if (dom.invoiceTaxLabel) dom.invoiceTaxLabel.textContent = `${labels.tax} (${clampedRate}%):`;
+            if (dom.invoiceTaxAmount) dom.invoiceTaxAmount.textContent = `${currentCurrency}${taxAmt.toFixed(2)}`;
+
+            const shouldShowTax = clampedRate > 0 && taxAmt > 0;
+            if (dom.invoiceTaxRow) dom.invoiceTaxRow.style.display = shouldShowTax ? 'flex' : 'none';
+
+            return;
+        }
+
         const totalQty = products.reduce((sum, p) => sum + p.qty, 0);
         const totalAmt = products.reduce((sum, p) => sum + (p.price * p.qty), 0);
         const rawPercent = parseFloat(dom.discountInput.value);
@@ -558,14 +1032,19 @@ document.addEventListener('DOMContentLoaded', () => {
             dom.captureArea.style.maxWidth = originalMaxWidth;
 
             const link = document.createElement('a');
-            const customerName = dom.customerInput.value.trim() || 'Customer';
-            const dateStr = dom.dateInput.value.trim() || new Date().toISOString().split('T')[0];
+            const customerName = activeMode === 'invoice'
+                ? (invoice.toName || '').trim() || 'Customer'
+                : dom.customerInput.value.trim() || 'Customer';
+            const dateStr = activeMode === 'invoice'
+                ? (invoice.date || '').trim() || new Date().toISOString().split('T')[0]
+                : dom.dateInput.value.trim() || new Date().toISOString().split('T')[0];
             const suffix = isWhatsApp ? '_WA' : '';
+            const modeSuffix = activeMode === 'invoice' ? '_Invoice' : '';
             
             const safeCustomer = customerName.replace(/[\\/:*?"<>|]/g, '_');
             const safeDate = dateStr.replace(/[\\/:*?"<>|]/g, '_');
             
-            link.download = `${safeCustomer}_${safeDate}${suffix}.png`;
+            link.download = `${safeCustomer}_${safeDate}${modeSuffix}${suffix}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
             

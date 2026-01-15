@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>电话号码自动加区号 - WhatsApp 通讯录生成器</title>
+    <meta name="description" content="一键为手机号自动添加国家/地区区号，支持 + / 00 国际格式识别，批量导入导出 VCF/XLSX，快速生成 WhatsApp 可用通讯录。" />
+    <meta name="keywords" content="电话号码加区号,区号生成器,WhatsApp通讯录,VCF导出,手机号批量处理,外贸工具" />
+    <meta name="robots" content="index, follow" />
+
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="canonical" href="https://kakaciro.dpdns.org/dianhuahaoma.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kakaciro.dpdns.org/dianhuahaoma.html">
+    <meta property="og:title" content="电话号码自动加区号 - WhatsApp 通讯录生成器">
+    <meta property="og:description" content="支持国际格式识别、批量导入导出 VCF/XLSX，快速生成 WhatsApp 可用通讯录。">
+    <meta property="og:image" content="https://kakaciro.dpdns.org/og-image.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://kakaciro.dpdns.org/dianhuahaoma.html">
+    <meta property="twitter:title" content="电话号码自动加区号 - WhatsApp 通讯录生成器">
+    <meta property="twitter:description" content="支持国际格式识别、批量导入导出 VCF/XLSX，快速生成 WhatsApp 可用通讯录。">
+    <meta property="twitter:image" content="https://kakaciro.dpdns.org/og-image.jpg">
+
+    <meta name="theme-color" content="#0f172a">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2718%27%20fill%3D%27%234a90e2%27/%3E%3Ctext%20x%3D%2750%27%20y%3D%2768%27%20font-size%3D%2760%27%20text-anchor%3D%27middle%27%20fill%3D%27white%27%20font-family%3D%27Segoe%20UI%2C%20Arial%2C%20sans-serif%27%3E%E8%AE%A2%3C/text%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2718%27%20fill%3D%27%234a90e2%27/%3E%3Ctext%20x%3D%2750%27%20y%3D%2768%27%20font-size%3D%2760%27%20text-anchor%3D%27middle%27%20fill%3D%27white%27%20font-family%3D%27Segoe%20UI%2C%20Arial%2C%20sans-serif%27%3E%E8%AE%A2%3C/text%3E%3C/svg%3E" />
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"电话号码自动加区号","url":"https://kakaciro.dpdns.org/dianhuahaoma.html","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"一键为手机号自动添加国家/地区区号，支持 + / 00 国际格式识别，批量导入导出 VCF/XLSX，快速生成 WhatsApp 可用通讯录。"}</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .hover-scale { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hover-scale:hover { transform: translateY(-3px) scale(1.01); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 leading-relaxed">
+    <nav class="sticky top-0 z-50 bg-white border-b border-slate-200">
+        <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-start md:justify-center gap-4 md:gap-6 overflow-x-auto">
+            <a href="index.html" class="shrink-0 whitespace-nowrap text-sm font-bold text-slate-600 hover:text-blue-600">订单清单</a>
+            <a href="dianhuahaoma.html" class="shrink-0 whitespace-nowrap text-sm font-black text-blue-600">电话区号</a>
+            <a href="instagram-liuliang-quanjiexi.html" class="shrink-0 whitespace-nowrap text-sm font-bold text-slate-600 hover:text-blue-600">Instagram 流量全解析</a>
+            <a href="facebook-guanggao.html" class="shrink-0 whitespace-nowrap text-sm font-bold text-slate-600 hover:text-blue-600">Facebook 广告</a>
+            <a href="seo-kuaisu-paiming.html" class="shrink-0 whitespace-nowrap text-sm font-bold text-slate-600 hover:text-blue-600">SEO 快速排名</a>
+        </div>
+    </nav>
+    <main class="max-w-5xl mx-auto px-4 py-10 md:py-14">
+        <header class="text-center mb-10 md:mb-12">
+            <div class="inline-flex items-center space-x-2 bg-orange-50 border border-orange-100 px-4 py-2 rounded-full text-orange-600 text-xs md:text-sm font-black uppercase tracking-widest mb-5">
+                <span>手机通讯录生成器</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight">电话号码自动加区号</h1>
+            <p class="mt-3 text-slate-500 font-bold text-sm md:text-base">WhatsApp生成带区号号码外贸神器</p>
+        </header>
+
+        <section class="bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-xl overflow-hidden">
+            <div class="px-6 py-5 md:px-10 md:py-8 bg-slate-900 text-white">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-black">生成带区号手机号</h2>
+                        <p class="text-slate-300 font-bold text-xs md:text-sm mt-1">支持 + / 00 开头的国际格式自动识别</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <button id="copyBtn" type="button" class="w-full md:w-auto px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-orange-200 hover-scale disabled:opacity-50 disabled:cursor-not-allowed">复制带区号</button>
+                        <button id="exportVcfBtn" type="button" class="w-full md:w-auto px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-emerald-200 hover-scale disabled:opacity-50 disabled:cursor-not-allowed">导出 VCF</button>
+                        <button id="exportXlsxBtn" type="button" class="w-full md:w-auto px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-slate-800/20 hover-scale disabled:opacity-50 disabled:cursor-not-allowed">导出 XLSX</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-10">
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-6" onsubmit="return false;">
+                    <div>
+                        <label for="fullName" class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">名/姓</label>
+                        <input id="fullName" type="text" autocomplete="name" placeholder="例如：张三 / John Smith" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-4 py-3 md:py-4 font-bold text-slate-800 outline-none focus:border-orange-500 transition-all" />
+                    </div>
+
+                    <div>
+                        <label for="country" class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">国家/地区</label>
+                        <input id="countrySearch" type="text" placeholder="搜索国家/区号，例如：美国 / +1 / 86" class="mb-3 w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-4 py-3 font-bold text-slate-800 outline-none focus:border-orange-500 transition-all" />
+                        <select id="country" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-4 py-3 md:py-4 font-black text-slate-900 outline-none focus:border-orange-500 transition-all">
+                            <option value="" data-code="" selected disabled>请选择国家/地区</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="phone" class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">手机号码</label>
+                        <input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="例如：13800138000 或 +1 415 555 2671 或 0014155552671" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-4 py-3 md:py-4 font-bold text-slate-800 outline-none focus:border-orange-500 transition-all" />
+                        <p id="hint" class="mt-2 text-xs font-bold text-slate-400">将自动忽略空格/短横线/括号</p>
+                    </div>
+
+                    <div>
+                        <label for="fullPhone" class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">带区号</label>
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <input id="fullPhone" type="text" readonly class="flex-1 bg-white border-2 border-slate-100 rounded-2xl px-4 py-3 md:py-4 font-black text-slate-900 outline-none" />
+                            <span id="badge" class="shrink-0 w-full sm:w-auto text-center px-3 py-2 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-widest">Ready</span>
+                        </div>
+                        <p id="status" class="mt-2 text-xs font-bold text-slate-400">选择国家/地区并输入手机号后生成</p>
+                    </div>
+                </form>
+
+                <div class="mt-10 border-t border-slate-100 pt-8">
+                    <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 md:p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <div class="bg-white border border-slate-100 rounded-2xl p-4">
+                                <div class="text-xs font-black text-slate-400 uppercase tracking-widest">批量加行</div>
+                                <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <input id="batchCountrySearch" type="text" placeholder="搜索国家" class="sm:col-span-3 w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-3 py-3 font-bold text-slate-800 outline-none focus:border-orange-500 transition-all" />
+                                    <select id="batchCountry" class="sm:col-span-2 w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-3 py-3 font-black text-slate-900 outline-none focus:border-orange-500 transition-all"></select>
+                                    <input id="batchCount" type="number" min="1" value="10" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-3 py-3 font-black text-slate-900 outline-none focus:border-orange-500 transition-all" />
+                                </div>
+                                <button id="addRowsBtn" type="button" class="mt-3 w-full px-4 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-orange-200 hover-scale">添加空行</button>
+                            </div>
+
+                            <div class="bg-white border border-slate-100 rounded-2xl p-4">
+                                <div class="text-xs font-black text-slate-400 uppercase tracking-widest">粘贴导入</div>
+                                <textarea id="pasteArea" rows="4" placeholder="每行一条：\n手机号\n或 名/姓,手机号\n或 名/姓,国家/地区,手机号\n或 首行国家/地区，后续每行手机号\n分隔符支持 逗号 / Tab / |" class="mt-3 w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-3 py-3 font-bold text-slate-800 outline-none focus:border-orange-500 transition-all"></textarea>
+                                <button id="importPasteBtn" type="button" class="mt-3 w-full px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-emerald-200 hover-scale">导入粘贴</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 overflow-x-auto rounded-2xl border border-slate-100 shadow-sm">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-orange-500 text-white">
+                                    <th class="px-5 py-4 font-black uppercase tracking-widest text-xs">名/姓</th>
+                                    <th class="px-5 py-4 font-black uppercase tracking-widest text-xs">国家/地区</th>
+                                    <th class="px-5 py-4 font-black uppercase tracking-widest text-xs">手机号码</th>
+                                    <th class="px-5 py-4 font-black uppercase tracking-widest text-xs">带区号</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-50">
+                                <tr class="bg-white">
+                                    <td id="previewName" class="px-5 py-5 font-bold text-slate-800">-</td>
+                                    <td id="previewCountry" class="px-5 py-5 font-bold text-slate-800">-</td>
+                                    <td id="previewPhone" class="px-5 py-5 font-bold text-slate-800">-</td>
+                                    <td id="previewFull" class="px-5 py-5 font-black text-slate-900">-</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="rowsBody" class="divide-y divide-slate-50"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const fullNameEl = document.getElementById('fullName');
+        const countrySearchEl = document.getElementById('countrySearch');
+        const countryEl = document.getElementById('country');
+        const phoneEl = document.getElementById('phone');
+        const fullPhoneEl = document.getElementById('fullPhone');
+        const statusEl = document.getElementById('status');
+        const badgeEl = document.getElementById('badge');
+        const copyBtn = document.getElementById('copyBtn');
+        const exportVcfBtn = document.getElementById('exportVcfBtn');
+        const exportXlsxBtn = document.getElementById('exportXlsxBtn');
+
+        const batchCountrySearchEl = document.getElementById('batchCountrySearch');
+        const batchCountryEl = document.getElementById('batchCountry');
+        const batchCountEl = document.getElementById('batchCount');
+        const addRowsBtn = document.getElementById('addRowsBtn');
+        const pasteAreaEl = document.getElementById('pasteArea');
+        const importPasteBtn = document.getElementById('importPasteBtn');
+        const rowsBodyEl = document.getElementById('rowsBody');
+
+        const previewNameEl = document.getElementById('previewName');
+        const previewCountryEl = document.getElementById('previewCountry');
+        const previewPhoneEl = document.getElementById('previewPhone');
+        const previewFullEl = document.getElementById('previewFull');
+
+        const COUNTRY_PAIRS = [
+          [
+            "AD",
+            "376"
+          ],
+          [
+            "AE",
+            "971"
+          ],
+          [
+            "AF",
+            "93"
+          ],
+          [
+            "AG",
+            "1"
+          ],
+          [
+            "AI",
+            "1264"
+          ],
+          [
+            "AL",
+            "355"
+          ],
+          [
+            "AM",
+            "374"
+          ],
+          [
+            "AO",
+            "244"
+          ],
+          [
+            "AQ",
+            "672"
+          ],
+          [
+            "AR",
+            "54"
+          ],
+          [
+            "AS",
+            "1"
+          ],
+          [
+            "AT",
+            "43"
+          ],
+          [
+            "AU",
+            "61"
+          ],
+          [
+            "AW",
+            "297"
+          ],
+          [
+            "AX",
+            "358"
+          ],
+          [
+            "AZ",
+            "994"
+          ],
+          [
+            "BA",
+            "387"
+          ],
+          [
+            "BB",
+            "1"
+          ],
+          [
+            "BD",
+            "880"
+          ],
+          [
+            "BE",
+            "32"
+          ],
+          [
+            "BF",
+            "226"
+          ],
+          [
+            "BG",
+            "359"
+          ],
+          [
+            "BH",
+            "973"
+          ],
+          [
+            "BI",
+            "257"
+          ],
+          [
+            "BJ",
+            "229"
+          ],
+          [
+            "BL",
+            "590"
+          ],
+          [
+            "BM",
+            "1"
+          ],
+          [
+            "BN",
+            "673"
+          ],
+          [
+            "BO",
+            "591"
+          ],
+          [
+            "BQ",
+            "599"
+          ],
+          [
+            "BR",
+            "55"
+          ],
+          [
+            "BS",
+            "1"
+          ],
+          [
+            "BT",
+            "975"
+          ],
+          [
+            "BV",
+            "47"
+          ],
+          [
+            "BW",
+            "267"
+          ],
+          [
+            "BY",
+            "375"
+          ],
+          [
+            "BZ",
+            "501"
+          ],
+          [
+            "CA",
+            "1"
+          ],
+          [
+            "CC",
+            "61"
+          ],
+          [
+            "CD",
+            "243"
+          ],
+          [
+            "CF",
+            "236"
+          ],
+          [
+            "CG",
+            "242"
+          ],
+          [
+            "CH",
+            "41"
+          ],
+          [
+            "CI",
+            "225"
+          ],
+          [
+            "CK",
+            "682"
+          ],
+          [
+            "CL",
+            "56"
+          ],
+          [
+            "CM",
+            "237"
+          ],
+          [
+            "CN",
+            "86"
+          ],
+          [
+            "CO",
+            "57"
+          ],
+          [
+            "CR",
+            "506"
+          ],
+          [
+            "CU",
+            "53"
+          ],
+          [
+            "CV",
+            "238"
+          ],
+          [
+            "CW",
+            "599"
+          ],
+          [
+            "CX",
+            "61"
+          ],
+          [
+            "CY",
+            "357"
+          ],
+          [
+            "CZ",
+            "420"
+          ],
+          [
+            "DE",
+            "49"
+          ],
+          [
+            "DJ",
+            "253"
+          ],
+          [
+            "DK",
+            "45"
+          ],
+          [
+            "DM",
+            "1"
+          ],
+          [
+            "DO",
+            "1"
+          ],
+          [
+            "DZ",
+            "213"
+          ],
+          [
+            "EC",
+            "593"
+          ],
+          [
+            "EE",
+            "372"
+          ],
+          [
+            "EG",
+            "20"
+          ],
+          [
+            "EH",
+            "212"
+          ],
+          [
+            "ER",
+            "291"
+          ],
+          [
+            "ES",
+            "34"
+          ],
+          [
+            "ET",
+            "251"
+          ],
+          [
+            "FI",
+            "358"
+          ],
+          [
+            "FJ",
+            "679"
+          ],
+          [
+            "FK",
+            "500"
+          ],
+          [
+            "FM",
+            "691"
+          ],
+          [
+            "FO",
+            "298"
+          ],
+          [
+            "FR",
+            "33"
+          ],
+          [
+            "GA",
+            "241"
+          ],
+          [
+            "GB",
+            "44"
+          ],
+          [
+            "GD",
+            "1"
+          ],
+          [
+            "GE",
+            "995"
+          ],
+          [
+            "GF",
+            "594"
+          ],
+          [
+            "GG",
+            "44"
+          ],
+          [
+            "GH",
+            "233"
+          ],
+          [
+            "GI",
+            "350"
+          ],
+          [
+            "GL",
+            "299"
+          ],
+          [
+            "GM",
+            "220"
+          ],
+          [
+            "GN",
+            "224"
+          ],
+          [
+            "GP",
+            "590"
+          ],
+          [
+            "GQ",
+            "240"
+          ],
+          [
+            "GR",
+            "30"
+          ],
+          [
+            "GS",
+            "500"
+          ],
+          [
+            "GT",
+            "502"
+          ],
+          [
+            "GU",
+            "1"
+          ],
+          [
+            "GW",
+            "245"
+          ],
+          [
+            "GY",
+            "592"
+          ],
+          [
+            "HK",
+            "852"
+          ],
+          [
+            "HN",
+            "504"
+          ],
+          [
+            "HR",
+            "385"
+          ],
+          [
+            "HT",
+            "509"
+          ],
+          [
+            "HU",
+            "36"
+          ],
+          [
+            "ID",
+            "62"
+          ],
+          [
+            "IE",
+            "353"
+          ],
+          [
+            "IL",
+            "972"
+          ],
+          [
+            "IM",
+            "44"
+          ],
+          [
+            "IN",
+            "91"
+          ],
+          [
+            "IO",
+            "246"
+          ],
+          [
+            "IQ",
+            "964"
+          ],
+          [
+            "IR",
+            "98"
+          ],
+          [
+            "IS",
+            "354"
+          ],
+          [
+            "IT",
+            "39"
+          ],
+          [
+            "JE",
+            "44"
+          ],
+          [
+            "JM",
+            "1"
+          ],
+          [
+            "JO",
+            "962"
+          ],
+          [
+            "JP",
+            "81"
+          ],
+          [
+            "KE",
+            "254"
+          ],
+          [
+            "KG",
+            "996"
+          ],
+          [
+            "KH",
+            "855"
+          ],
+          [
+            "KI",
+            "686"
+          ],
+          [
+            "KM",
+            "269"
+          ],
+          [
+            "KN",
+            "1"
+          ],
+          [
+            "KP",
+            "850"
+          ],
+          [
+            "KR",
+            "82"
+          ],
+          [
+            "KW",
+            "965"
+          ],
+          [
+            "KY",
+            "1"
+          ],
+          [
+            "KZ",
+            "7"
+          ],
+          [
+            "LA",
+            "856"
+          ],
+          [
+            "LB",
+            "961"
+          ],
+          [
+            "LC",
+            "1"
+          ],
+          [
+            "LI",
+            "423"
+          ],
+          [
+            "LK",
+            "94"
+          ],
+          [
+            "LR",
+            "231"
+          ],
+          [
+            "LS",
+            "266"
+          ],
+          [
+            "LT",
+            "370"
+          ],
+          [
+            "LU",
+            "352"
+          ],
+          [
+            "LV",
+            "371"
+          ],
+          [
+            "LY",
+            "218"
+          ],
+          [
+            "MA",
+            "212"
+          ],
+          [
+            "MC",
+            "377"
+          ],
+          [
+            "MD",
+            "373"
+          ],
+          [
+            "ME",
+            "382"
+          ],
+          [
+            "MF",
+            "590"
+          ],
+          [
+            "MG",
+            "261"
+          ],
+          [
+            "MH",
+            "692"
+          ],
+          [
+            "MK",
+            "389"
+          ],
+          [
+            "ML",
+            "223"
+          ],
+          [
+            "MM",
+            "95"
+          ],
+          [
+            "MN",
+            "976"
+          ],
+          [
+            "MO",
+            "853"
+          ],
+          [
+            "MP",
+            "1"
+          ],
+          [
+            "MQ",
+            "596"
+          ],
+          [
+            "MR",
+            "222"
+          ],
+          [
+            "MS",
+            "1"
+          ],
+          [
+            "MT",
+            "356"
+          ],
+          [
+            "MU",
+            "230"
+          ],
+          [
+            "MV",
+            "960"
+          ],
+          [
+            "MW",
+            "265"
+          ],
+          [
+            "MX",
+            "52"
+          ],
+          [
+            "MY",
+            "60"
+          ],
+          [
+            "MZ",
+            "258"
+          ],
+          [
+            "NA",
+            "264"
+          ],
+          [
+            "NC",
+            "687"
+          ],
+          [
+            "NE",
+            "227"
+          ],
+          [
+            "NF",
+            "672"
+          ],
+          [
+            "NG",
+            "234"
+          ],
+          [
+            "NI",
+            "505"
+          ],
+          [
+            "NL",
+            "31"
+          ],
+          [
+            "NO",
+            "47"
+          ],
+          [
+            "NP",
+            "977"
+          ],
+          [
+            "NR",
+            "674"
+          ],
+          [
+            "NU",
+            "683"
+          ],
+          [
+            "NZ",
+            "64"
+          ],
+          [
+            "OM",
+            "968"
+          ],
+          [
+            "PA",
+            "507"
+          ],
+          [
+            "PE",
+            "51"
+          ],
+          [
+            "PF",
+            "689"
+          ],
+          [
+            "PG",
+            "675"
+          ],
+          [
+            "PH",
+            "63"
+          ],
+          [
+            "PK",
+            "92"
+          ],
+          [
+            "PL",
+            "48"
+          ],
+          [
+            "PM",
+            "508"
+          ],
+          [
+            "PN",
+            "870"
+          ],
+          [
+            "PR",
+            "1"
+          ],
+          [
+            "PS",
+            "970"
+          ],
+          [
+            "PT",
+            "351"
+          ],
+          [
+            "PW",
+            "680"
+          ],
+          [
+            "PY",
+            "595"
+          ],
+          [
+            "QA",
+            "974"
+          ],
+          [
+            "RE",
+            "262"
+          ],
+          [
+            "RO",
+            "40"
+          ],
+          [
+            "RS",
+            "381"
+          ],
+          [
+            "RU",
+            "7"
+          ],
+          [
+            "RW",
+            "250"
+          ],
+          [
+            "SA",
+            "966"
+          ],
+          [
+            "SB",
+            "677"
+          ],
+          [
+            "SC",
+            "248"
+          ],
+          [
+            "SD",
+            "249"
+          ],
+          [
+            "SE",
+            "46"
+          ],
+          [
+            "SG",
+            "65"
+          ],
+          [
+            "SH",
+            "290"
+          ],
+          [
+            "SI",
+            "386"
+          ],
+          [
+            "SJ",
+            "47"
+          ],
+          [
+            "SK",
+            "421"
+          ],
+          [
+            "SL",
+            "232"
+          ],
+          [
+            "SM",
+            "378"
+          ],
+          [
+            "SN",
+            "221"
+          ],
+          [
+            "SO",
+            "252"
+          ],
+          [
+            "SR",
+            "597"
+          ],
+          [
+            "SS",
+            "211"
+          ],
+          [
+            "ST",
+            "239"
+          ],
+          [
+            "SV",
+            "503"
+          ],
+          [
+            "SX",
+            "599"
+          ],
+          [
+            "SY",
+            "963"
+          ],
+          [
+            "SZ",
+            "268"
+          ],
+          [
+            "TC",
+            "1"
+          ],
+          [
+            "TD",
+            "235"
+          ],
+          [
+            "TF",
+            "262"
+          ],
+          [
+            "TG",
+            "228"
+          ],
+          [
+            "TH",
+            "66"
+          ],
+          [
+            "TJ",
+            "992"
+          ],
+          [
+            "TK",
+            "690"
+          ],
+          [
+            "TL",
+            "670"
+          ],
+          [
+            "TM",
+            "993"
+          ],
+          [
+            "TN",
+            "216"
+          ],
+          [
+            "TO",
+            "676"
+          ],
+          [
+            "TR",
+            "90"
+          ],
+          [
+            "TT",
+            "1"
+          ],
+          [
+            "TV",
+            "688"
+          ],
+          [
+            "TW",
+            "886"
+          ],
+          [
+            "TZ",
+            "255"
+          ],
+          [
+            "UA",
+            "380"
+          ],
+          [
+            "UG",
+            "256"
+          ],
+          [
+            "UM",
+            "1"
+          ],
+          [
+            "US",
+            "1"
+          ],
+          [
+            "UY",
+            "598"
+          ],
+          [
+            "UZ",
+            "998"
+          ],
+          [
+            "VA",
+            "379"
+          ],
+          [
+            "VC",
+            "1"
+          ],
+          [
+            "VE",
+            "58"
+          ],
+          [
+            "VG",
+            "1"
+          ],
+          [
+            "VI",
+            "1"
+          ],
+          [
+            "VN",
+            "84"
+          ],
+          [
+            "VU",
+            "678"
+          ],
+          [
+            "WF",
+            "681"
+          ],
+          [
+            "WS",
+            "685"
+          ],
+          [
+            "XK",
+            "383"
+          ],
+          [
+            "YE",
+            "967"
+          ],
+          [
+            "YT",
+            "262"
+          ],
+          [
+            "ZA",
+            "27"
+          ],
+          [
+            "ZM",
+            "260"
+          ],
+          [
+            "ZW",
+            "263"
+          ]
+        ];
+
+        const regionNamesZh = typeof Intl !== 'undefined' && Intl.DisplayNames ? new Intl.DisplayNames(['zh-CN'], { type: 'region' }) : null;
+        const regionNamesEn = typeof Intl !== 'undefined' && Intl.DisplayNames ? new Intl.DisplayNames(['en'], { type: 'region' }) : null;
+
+        let allCountryOptions = [];
+
+        let xlsxLibPromise = null;
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = src;
+                s.async = true;
+                s.onload = () => resolve();
+                s.onerror = () => reject(new Error('load-failed'));
+                document.head.appendChild(s);
+            });
+        }
+
+        function ensureXlsxLib() {
+            if (window.XLSX) return Promise.resolve(window.XLSX);
+            if (xlsxLibPromise) return xlsxLibPromise;
+
+            const sources = [
+                'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
+            ];
+
+            xlsxLibPromise = sources
+                .reduce((p, src) => p.catch(() => loadScript(src)), Promise.reject())
+                .then(() => {
+                    if (!window.XLSX) throw new Error('xlsx-missing');
+                    return window.XLSX;
+                });
+
+            return xlsxLibPromise;
+        }
+
+        function downloadBlob(filename, blob) {
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 0);
+        }
+
+        function escapeVCardText(value) {
+            return String(value || '')
+                .replace(/\\/g, '\\\\')
+                .replace(/\n/g, '\\n')
+                .replace(/\r/g, '')
+                .replace(/;/g, '\\;')
+                .replace(/,/g, '\\,');
+        }
+
+        function splitNameForVCard(name) {
+            const n = String(name || '').trim();
+            if (!n) return { family: '', given: '' };
+            const parts = n.split(/\s+/).filter(Boolean);
+            if (parts.length >= 2) {
+                return { family: parts[parts.length - 1], given: parts.slice(0, -1).join(' ') };
+            }
+            return { family: n, given: '' };
+        }
+
+        function collectExportRows() {
+            const rows = [];
+
+            const topName = (fullNameEl.value || '').trim();
+            const topCountry = getSelectedCountryLabel();
+            const topPhone = (phoneEl.value || '').trim();
+            const topFull = (fullPhoneEl.value || '').trim();
+            if (topFull) {
+                rows.push({ name: topName, country: topCountry, phone: topPhone, full: topFull });
+            }
+
+            Array.from(rowsBodyEl.querySelectorAll('tr')).forEach(tr => {
+                const nameInput = tr.querySelector('td:nth-child(1) input');
+                const countrySelect = tr.querySelector('td:nth-child(2) select');
+                const phoneInput = tr.querySelector('td:nth-child(3) input');
+                const fullInput = tr.querySelector('td:nth-child(4) input[readonly]');
+                if (!countrySelect || !phoneInput || !fullInput) return;
+
+                const name = (nameInput && nameInput.value ? nameInput.value : '').trim();
+                const country = countrySelect.options[countrySelect.selectedIndex] ? String(countrySelect.options[countrySelect.selectedIndex].textContent || '').trim() : '';
+                const phone = (phoneInput.value || '').trim();
+                const callingCode = getCallingCodeByCountryValue(countrySelect.value);
+                const computed = computeFullNumber(phone, callingCode);
+                const full = (computed.full || fullInput.value || '').trim();
+                if (!full) return;
+
+                rows.push({ name, country, phone, full });
+            });
+
+            return rows;
+        }
+
+        function buildVcfText(rows) {
+            const cards = rows
+                .filter(r => String(r.full || '').trim().startsWith('+'))
+                .map(r => {
+                    const n = (r.name || '').trim() || String(r.full || '').trim();
+                    const { family, given } = splitNameForVCard(n);
+                    const lines = [
+                        'BEGIN:VCARD',
+                        'VERSION:3.0',
+                        `N:${escapeVCardText(family)};${escapeVCardText(given)};;;`,
+                        `FN:${escapeVCardText(n)}`,
+                        `TEL;TYPE=CELL:${String(r.full || '').trim()}`,
+                        'END:VCARD'
+                    ];
+                    return lines.join('\r\n');
+                });
+            return cards.length ? `${cards.join('\r\n')}\r\n` : '';
+        }
+
+        function updateExportButtons() {
+            const rows = collectExportRows();
+            const vcfCount = rows.filter(r => String(r.full || '').trim().startsWith('+')).length;
+            exportVcfBtn.disabled = vcfCount === 0;
+            exportXlsxBtn.disabled = rows.length === 0;
+        }
+
+        function getRegionName(displayNames, iso2) {
+            if (!displayNames) return '';
+            try {
+                return String(displayNames.of(iso2) || '').trim();
+            } catch {
+                return '';
+            }
+        }
+
+        function buildAllCountryOptions() {
+            const options = [{ value: '', code: '', label: '请选择国家/地区', disabled: true }];
+            COUNTRY_PAIRS.forEach(([iso2, code]) => {
+                const en = getRegionName(regionNamesEn, iso2) || iso2;
+                const zh = getRegionName(regionNamesZh, iso2);
+                const label = zh && zh !== en ? `${zh} / ${en} (+${code})` : `${en} (+${code})`;
+                options.push({ value: iso2, code, label, disabled: false });
+            });
+            options.sort((a, b) => {
+                if (!a.value) return -1;
+                if (!b.value) return 1;
+                return a.label.localeCompare(b.label, 'zh-Hans');
+            });
+            return options;
+        }
+
+        function getSelectedCallingCode() {
+            const opt = countryEl.options[countryEl.selectedIndex];
+            if (!opt || !String(opt.value || '').trim()) return '';
+            const code = opt.getAttribute('data-code') || '';
+            return String(code).trim();
+        }
+
+        function getSelectedCountryLabel() {
+            const opt = countryEl.options[countryEl.selectedIndex];
+            if (!opt || !String(opt.value || '').trim()) return '';
+            return (opt && opt.textContent ? opt.textContent : '').trim();
+        }
+
+        function normalizeRawInput(raw) {
+            const value = String(raw || '').trim();
+            if (!value) return { type: 'empty', e164: '' };
+
+            const compact = value.replace(/[\s\-()]/g, '');
+            if (compact.startsWith('+')) {
+                const digits = compact.slice(1).replace(/\D/g, '');
+                return digits ? { type: 'intl', e164: `+${digits}` } : { type: 'invalid', e164: '' };
+            }
+            if (compact.startsWith('00')) {
+                const digits = compact.slice(2).replace(/\D/g, '');
+                return digits ? { type: 'intl', e164: `+${digits}` } : { type: 'invalid', e164: '' };
+            }
+
+            const digits = compact.replace(/\D/g, '');
+            return digits ? { type: 'national', e164: digits } : { type: 'invalid', e164: '' };
+        }
+
+        function computeFullNumber(rawPhone, callingCode) {
+            const normalized = normalizeRawInput(rawPhone);
+            if (normalized.type === 'empty') return { full: '', state: 'ready', message: '' };
+            if (normalized.type === 'invalid') return { full: '', state: 'warn', message: '' };
+            if (normalized.type === 'intl') return { full: normalized.e164, state: 'ok', message: '' };
+            return { full: callingCode ? `+${callingCode}${normalized.e164}` : normalized.e164, state: 'ok', message: '' };
+        }
+
+        function extractOptions(selectEl) {
+            return Array.from(selectEl.options).map(opt => ({
+                value: String(opt.value || '').trim(),
+                code: String(opt.getAttribute('data-code') || '').trim(),
+                label: String(opt.textContent || '').trim(),
+                disabled: opt.disabled
+            })).filter(o => o.label);
+        }
+
+        function filterOptions(options, query) {
+            const q = String(query || '').trim().toLowerCase();
+            if (!q) return options;
+            const qDigits = q.replace(/^\+/, '').replace(/^00/, '').replace(/\D/g, '');
+            const isNumericQuery = !!qDigits && !/[a-z\u4e00-\u9fff]/i.test(q);
+
+            if (isNumericQuery) {
+                return options.filter(o => {
+                    if (!o.value) return true;
+                    const code = String(o.code || '').trim();
+                    if (!code) return false;
+                    return code === qDigits || code.startsWith(qDigits);
+                });
+            }
+
+            return options.filter(o => {
+                if (!o.value) return true;
+                const label = o.label.toLowerCase();
+                const value = o.value.toLowerCase();
+                if (label.includes(q) || value.includes(q)) return true;
+                if (qDigits && String(o.code || '').startsWith(qDigits)) return true;
+                return false;
+            });
+        }
+
+        function renderSelectOptions(selectEl, options, selectedValue) {
+            const current = selectedValue || selectEl.value;
+            selectEl.innerHTML = '';
+            options.forEach(o => {
+                const opt = document.createElement('option');
+                opt.value = o.value;
+                if (o.code) opt.setAttribute('data-code', o.code);
+                opt.textContent = o.label;
+                if (!o.value && o.disabled) opt.disabled = true;
+                selectEl.appendChild(opt);
+            });
+            const stillExists = Array.from(selectEl.options).some(o => o.value === current);
+            if (stillExists) selectEl.value = current;
+        }
+
+        function buildCountryIndex(options) {
+            const valueMap = new Map();
+            const codeMap = new Map();
+            const labelMap = new Map();
+            options.forEach(o => {
+                const value = (o.value || '').trim();
+                const code = String(o.code || '').trim();
+                const label = (o.label || '').trim();
+                if (!value) return;
+                valueMap.set(value.toLowerCase(), value);
+                if (code) {
+                    if (!codeMap.has(code)) codeMap.set(code, value);
+                    else codeMap.set(code, '');
+                }
+                if (label) labelMap.set(label.replace(/\s+/g, '').toLowerCase(), value);
+            });
+            return { valueMap, codeMap, labelMap };
+        }
+
+        function resolveCountryValue(token, fallbackValue) {
+            const raw = String(token || '').trim();
+            if (!raw) return fallbackValue;
+            const normalized = raw.replace(/\s+/g, '').toLowerCase();
+            const { valueMap, codeMap, labelMap } = buildCountryIndex(allCountryOptions);
+
+            if (valueMap.has(normalized)) return valueMap.get(normalized);
+
+            const plusMatch = normalized.match(/^\+?(\d{1,4})$/);
+            if (plusMatch && codeMap.has(plusMatch[1]) && codeMap.get(plusMatch[1])) return codeMap.get(plusMatch[1]);
+
+            const digits = normalized.replace(/^\+/, '').replace(/^00/, '').replace(/\D/g, '');
+            if (digits && codeMap.has(digits) && codeMap.get(digits)) return codeMap.get(digits);
+
+            if (labelMap.has(normalized)) return labelMap.get(normalized);
+
+            for (const [k, v] of labelMap.entries()) {
+                if (k.includes(normalized)) return v;
+            }
+            return fallbackValue;
+        }
+
+        function getCallingCodeByCountryValue(countryValue) {
+            const hit = allCountryOptions.find(o => (o.value || '').trim() === String(countryValue || '').trim());
+            return hit ? String(hit.code || '').trim() : '';
+        }
+
+        function getLabelByCountryValue(countryValue) {
+            const hit = allCountryOptions.find(o => (o.value || '').trim() === String(countryValue || '').trim());
+            return hit ? String(hit.label || '').trim() : '';
+        }
+
+        function createRow({ name = '', countryValue = '', phone = '' }) {
+            const tr = document.createElement('tr');
+            tr.className = 'bg-white';
+
+            const nameTd = document.createElement('td');
+            nameTd.className = 'px-5 py-4';
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.value = name;
+            nameInput.placeholder = '名/姓';
+            nameInput.className = 'w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 font-bold text-slate-800 outline-none focus:border-orange-500 transition-all';
+            nameTd.appendChild(nameInput);
+
+            const countryTd = document.createElement('td');
+            countryTd.className = 'px-5 py-4';
+            const countrySelect = document.createElement('select');
+            countrySelect.className = 'w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 font-black text-slate-900 outline-none focus:border-orange-500 transition-all';
+            renderSelectOptions(countrySelect, allCountryOptions, resolveCountryValue(countryValue, countryEl.value));
+            countryTd.appendChild(countrySelect);
+
+            const phoneTd = document.createElement('td');
+            phoneTd.className = 'px-5 py-4';
+            const phoneInput = document.createElement('input');
+            phoneInput.type = 'tel';
+            phoneInput.inputMode = 'tel';
+            phoneInput.value = phone;
+            phoneInput.placeholder = '手机号码';
+            phoneInput.className = 'w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 font-bold text-slate-800 outline-none focus:border-orange-500 transition-all';
+            phoneTd.appendChild(phoneInput);
+
+            const fullTd = document.createElement('td');
+            fullTd.className = 'px-5 py-4';
+            const fullWrap = document.createElement('div');
+            fullWrap.className = 'flex items-center gap-2';
+            const fullInput = document.createElement('input');
+            fullInput.type = 'text';
+            fullInput.readOnly = true;
+            fullInput.placeholder = '带区号';
+            fullInput.className = 'flex-1 bg-white border border-slate-100 rounded-xl px-3 py-2 font-black text-slate-900 outline-none';
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'shrink-0 w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 font-black hover:bg-rose-100 transition-colors';
+            delBtn.textContent = '×';
+            fullWrap.appendChild(fullInput);
+            fullWrap.appendChild(delBtn);
+            fullTd.appendChild(fullWrap);
+
+            tr.appendChild(nameTd);
+            tr.appendChild(countryTd);
+            tr.appendChild(phoneTd);
+            tr.appendChild(fullTd);
+
+            function updateFull() {
+                const callingCode = getCallingCodeByCountryValue(countrySelect.value);
+                const { full } = computeFullNumber(phoneInput.value, callingCode);
+                fullInput.value = full;
+                updateExportButtons();
+            }
+
+            countrySelect.addEventListener('change', updateFull);
+            phoneInput.addEventListener('input', updateFull);
+            delBtn.addEventListener('click', () => {
+                tr.remove();
+                updateExportButtons();
+            });
+
+            updateFull();
+            return tr;
+        }
+
+        function addBlankRows() {
+            const count = Math.max(1, parseInt(batchCountEl.value, 10) || 1);
+            const countryValue = batchCountryEl.value || countryEl.value;
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < count; i += 1) {
+                frag.appendChild(createRow({ countryValue }));
+            }
+            rowsBodyEl.appendChild(frag);
+            updateExportButtons();
+        }
+
+        function parsePastedLines(text) {
+            return String(text || '')
+                .split(/\r?\n/)
+                .map(l => l.trim())
+                .filter(Boolean);
+        }
+
+        function splitLine(line) {
+            if (line.includes('\t')) return line.split('\t').map(s => s.trim()).filter(Boolean);
+            if (line.includes('|')) return line.split('|').map(s => s.trim()).filter(Boolean);
+            if (line.includes(',')) return line.split(',').map(s => s.trim()).filter(Boolean);
+            if (line.includes('，')) return line.split('，').map(s => s.trim()).filter(Boolean);
+            return [line.trim()].filter(Boolean);
+        }
+
+        function importPasted() {
+            const lines = parsePastedLines(pasteAreaEl.value);
+            if (!lines.length) return;
+            const fallbackCountry = batchCountryEl.value || countryEl.value;
+            let activeCountry = fallbackCountry;
+            const entries = [];
+
+            function looksLikePhoneToken(token) {
+                const n = normalizeRawInput(token);
+                if (n.type === 'intl') return n.e164.replace(/\D/g, '').length >= 6;
+                if (n.type === 'national') return String(n.e164 || '').length >= 6;
+                return false;
+            }
+
+            function resolveCountryToken(token) {
+                const v = resolveCountryValue(token, '');
+                return String(v || '').trim();
+            }
+
+            function resolveCountryHeader(token) {
+                const raw = String(token || '').trim();
+                if (!raw) return '';
+                if (looksLikePhoneToken(raw)) return '';
+                return resolveCountryToken(raw);
+            }
+
+            function pushEntry({ name, countryValue, phone }) {
+                const p = String(phone || '').trim();
+                if (!p || !looksLikePhoneToken(p)) return;
+                entries.push({
+                    name: String(name || '').trim(),
+                    countryValue: String(countryValue || '').trim(),
+                    phone: p
+                });
+            }
+
+            function isEmptyRow(tr) {
+                const nameInput = tr.querySelector('td:nth-child(1) input');
+                const phoneInput = tr.querySelector('td:nth-child(3) input');
+                const fullInput = tr.querySelector('td:nth-child(4) input[readonly]');
+                const name = (nameInput && nameInput.value ? nameInput.value : '').trim();
+                const phone = (phoneInput && phoneInput.value ? phoneInput.value : '').trim();
+                const full = (fullInput && fullInput.value ? fullInput.value : '').trim();
+                return !name && !phone && !full;
+            }
+
+            function fillRow(tr, entry) {
+                const nameInput = tr.querySelector('td:nth-child(1) input');
+                const countrySelect = tr.querySelector('td:nth-child(2) select');
+                const phoneInput = tr.querySelector('td:nth-child(3) input');
+                const fullInput = tr.querySelector('td:nth-child(4) input[readonly]');
+                if (!countrySelect || !phoneInput || !fullInput) return false;
+
+                if (nameInput) nameInput.value = String(entry.name || '').trim();
+                countrySelect.value = resolveCountryValue(entry.countryValue, countryEl.value);
+                phoneInput.value = String(entry.phone || '').trim();
+                const callingCode = getCallingCodeByCountryValue(countrySelect.value);
+                const computed = computeFullNumber(phoneInput.value, callingCode);
+                fullInput.value = String(computed.full || '').trim();
+                return true;
+            }
+
+            lines.forEach(line => {
+                const parts = splitLine(line);
+                if (!parts.length) return;
+                if (parts.length === 1) {
+                    const headerCountry = resolveCountryHeader(parts[0]);
+                    if (headerCountry) {
+                        activeCountry = headerCountry;
+                        return;
+                    }
+                    if (looksLikePhoneToken(parts[0])) {
+                        const phone = String(parts[0] || '').trim();
+                        pushEntry({ name: '', countryValue: activeCountry, phone });
+                    }
+                    return;
+                }
+                if (parts.length >= 3) {
+                    const countryFromFirst = resolveCountryToken(parts[0]);
+                    if (countryFromFirst && looksLikePhoneToken(parts[1])) {
+                        const phone = String(parts[1] || '').trim();
+                        pushEntry({ name: '', countryValue: countryFromFirst, phone });
+                        return;
+                    }
+
+                    const phoneToken = parts.slice(2).find(p => looksLikePhoneToken(p));
+                    if (!phoneToken) return;
+                    const phone = String(phoneToken || '').trim();
+                    const name = (parts[0] || '').trim() || phone;
+                    pushEntry({ name, countryValue: resolveCountryValue(parts[1], activeCountry), phone });
+                    return;
+                }
+                if (parts.length === 2) {
+                    const countryFromFirst = resolveCountryToken(parts[0]);
+                    if (countryFromFirst && looksLikePhoneToken(parts[1])) {
+                        const phone = parts[1];
+                        pushEntry({ name: '', countryValue: countryFromFirst, phone });
+                        return;
+                    }
+
+                    const countryFromSecond = resolveCountryToken(parts[1]);
+                    if (countryFromSecond && looksLikePhoneToken(parts[0])) {
+                        const phone = parts[0];
+                        pushEntry({ name: '', countryValue: countryFromSecond, phone });
+                        return;
+                    }
+
+                    if (!looksLikePhoneToken(parts[1])) return;
+
+                    const phone = parts[1];
+                    const name = (parts[0] || '').trim();
+                    pushEntry({ name, countryValue: activeCountry, phone });
+                    return;
+                }
+                if (!looksLikePhoneToken(parts[0])) return;
+                const phone = String(parts[0] || '').trim();
+                pushEntry({ name: '', countryValue: activeCountry, phone });
+            });
+
+            if (!entries.length) {
+                pasteAreaEl.value = '';
+                updateExportButtons();
+                return;
+            }
+
+            let nextIndex = 0;
+            const existingRows = Array.from(rowsBodyEl.querySelectorAll('tr'));
+            existingRows.forEach(tr => {
+                if (nextIndex >= entries.length) return;
+                if (!isEmptyRow(tr)) return;
+                if (fillRow(tr, entries[nextIndex])) nextIndex += 1;
+            });
+
+            const frag = document.createDocumentFragment();
+            for (let i = nextIndex; i < entries.length; i += 1) {
+                frag.appendChild(createRow(entries[i]));
+            }
+            rowsBodyEl.appendChild(frag);
+            pasteAreaEl.value = '';
+            updateExportButtons();
+        }
+
+        function buildFullNumber() {
+            const nameValue = (fullNameEl.value || '').trim();
+            const selectedLabel = getSelectedCountryLabel();
+            const callingCode = getSelectedCallingCode();
+
+            const rawPhone = phoneEl.value || '';
+            const normalized = normalizeRawInput(rawPhone);
+
+            let full = '';
+            let state = 'ready';
+            let message = '选择国家/地区并输入手机号后生成';
+
+            if (normalized.type === 'empty') {
+                state = 'ready';
+                message = '选择国家/地区并输入手机号后生成';
+                full = '';
+            } else if (normalized.type === 'invalid') {
+                state = 'warn';
+                message = '请输入有效的手机号数字';
+                full = '';
+            } else if (normalized.type === 'intl') {
+                state = 'ok';
+                message = '已识别国际区号格式';
+                full = normalized.e164;
+            } else {
+                state = 'ok';
+                message = '已自动添加所选国家/地区区号';
+                full = callingCode ? `+${callingCode}${normalized.e164}` : normalized.e164;
+            }
+
+            fullPhoneEl.value = full;
+            statusEl.textContent = message;
+            copyBtn.disabled = !full;
+
+            if (state === 'ok') {
+                badgeEl.textContent = 'OK';
+                badgeEl.className = 'shrink-0 px-3 py-2 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-widest';
+            } else if (state === 'warn') {
+                badgeEl.textContent = 'Check';
+                badgeEl.className = 'shrink-0 px-3 py-2 rounded-2xl bg-amber-50 border border-amber-100 text-amber-700 text-[10px] font-black uppercase tracking-widest';
+            } else {
+                badgeEl.textContent = 'Ready';
+                badgeEl.className = 'shrink-0 px-3 py-2 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-widest';
+            }
+
+            previewNameEl.textContent = nameValue || '-';
+            previewCountryEl.textContent = selectedLabel ? selectedLabel : '-';
+            previewPhoneEl.textContent = rawPhone.trim() || '-';
+            previewFullEl.textContent = full || '-';
+        }
+
+        async function copyFullNumber() {
+            const value = (fullPhoneEl.value || '').trim();
+            if (!value) return;
+            try {
+                await navigator.clipboard.writeText(value);
+                badgeEl.textContent = 'Copied';
+                badgeEl.className = 'shrink-0 px-3 py-2 rounded-2xl bg-blue-50 border border-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-widest';
+                setTimeout(buildFullNumber, 900);
+            } catch {
+                const tmp = document.createElement('textarea');
+                tmp.value = value;
+                document.body.appendChild(tmp);
+                tmp.select();
+                document.execCommand('copy');
+                tmp.remove();
+                badgeEl.textContent = 'Copied';
+                badgeEl.className = 'shrink-0 px-3 py-2 rounded-2xl bg-blue-50 border border-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-widest';
+                setTimeout(buildFullNumber, 900);
+            }
+        }
+
+        function exportVcf() {
+            const rows = collectExportRows();
+            const text = buildVcfText(rows);
+            if (!text) return;
+            const blob = new Blob([text], { type: 'text/vcard;charset=utf-8' });
+            downloadBlob('contacts.vcf', blob);
+        }
+
+        async function exportXlsx() {
+            const rows = collectExportRows();
+            if (!rows.length) return;
+            const XLSX = await ensureXlsxLib();
+            const header = ['名/姓', '国家/地区', '手机号码', '带区号'];
+            const data = [header].concat(
+                rows.map(r => [
+                    String(r.name || '').trim(),
+                    String(r.country || '').trim(),
+                    String(r.phone || '').trim(),
+                    String(r.full || '').trim()
+                ])
+            );
+
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Contacts');
+            const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            downloadBlob('contacts.xlsx', blob);
+        }
+
+        fullNameEl.addEventListener('input', buildFullNumber);
+        countryEl.addEventListener('change', buildFullNumber);
+        phoneEl.addEventListener('input', buildFullNumber);
+        copyBtn.addEventListener('click', copyFullNumber);
+        exportVcfBtn.addEventListener('click', exportVcf);
+        exportXlsxBtn.addEventListener('click', () => exportXlsx());
+
+        allCountryOptions = buildAllCountryOptions();
+        renderSelectOptions(countryEl, allCountryOptions, '');
+        renderSelectOptions(batchCountryEl, allCountryOptions, '');
+
+        countrySearchEl.addEventListener('input', () => {
+            const current = countryEl.value;
+            const filtered = filterOptions(allCountryOptions, countrySearchEl.value);
+            renderSelectOptions(countryEl, filtered, current);
+            buildFullNumber();
+        });
+
+        batchCountrySearchEl.addEventListener('input', () => {
+            const current = batchCountryEl.value;
+            const filtered = filterOptions(allCountryOptions, batchCountrySearchEl.value);
+            renderSelectOptions(batchCountryEl, filtered, current);
+        });
+
+        countryEl.addEventListener('change', () => {
+            batchCountryEl.value = countryEl.value;
+        });
+
+        addRowsBtn.addEventListener('click', addBlankRows);
+        importPasteBtn.addEventListener('click', importPasted);
+        pasteAreaEl.addEventListener('paste', () => setTimeout(importPasted, 0));
+
+        buildFullNumber();
+        updateExportButtons();
+    </script>
+</body>
+</html>
