@@ -964,8 +964,8 @@
                                         <i class="fas fa-info-circle text-xs"></i>
                                     </div>
                                     <div class="flex-1">
-                                        <h4 class="text-xs font-bold text-indigo-900 mb-1">为什么 API 结果与网页搜索不同？</h4>
-                                        <p class="text-[10px] text-indigo-800/80 leading-relaxed">
+                                        <h4 class="text-sm font-bold text-indigo-900 mb-1">为什么 API 结果与网页搜索不同？</h4>
+                                        <p class="text-xs text-indigo-800/80 leading-relaxed">
                                             1. <strong>估算机制差异</strong>：对于海量结果（如百万级），Google 网页端显示的是“约数”（Estimate），而 API 返回的是数据库分片的统计值，两者通常存在 20%-30% 的正常统计误差。
                                             <br>
                                             2. <strong>去重与精准度</strong>：API 数据更倾向于“严格匹配”，剔除了部分重复或低质量页面；网页搜索则包含更多泛匹配结果（包括 AI 概览触发的内容）。
