@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://trends.google.com">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -401,6 +402,7 @@
                         </h4>
                         <p class="text-slate-500 text-sm font-bold leading-relaxed">搜索引擎会考虑网站的历史和总体权威性。例如，拥有高权重的域名（老站、知名品牌）通常会在相关查询中获得更好的排名。</p>
                     </div>
+
                 </div>
             </div>
 
@@ -731,11 +733,14 @@
                             </div>
                         </div>
                         <div class="flex items-center space-x-2 md:space-x-3">
-                            <a href="https://trends.google.com/trends/explore?date=today%205-y&geo=US&q=seo&hl=zh-CN" target="_blank" class="flex-1 md:flex-none bg-blue-500 hover:bg-blue-600 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-200 flex items-center justify-center">
-                                <i class="fas fa-chart-line mr-2 text-sm"></i> Google 趋势
-                            </a>
+                            <button onclick="openImportModal()" class="flex-1 md:flex-none bg-indigo-500 hover:bg-indigo-600 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-indigo-200 flex items-center justify-center" title="批量导入关键词数据">
+                                <i class="fas fa-file-import mr-2 text-sm"></i> 导入
+                            </button>
                             <button onclick="exportToXLSX()" class="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-200 flex items-center justify-center">
                                 <i class="fas fa-file-excel mr-2 text-sm"></i> 导出
+                            </button>
+                            <button onclick="openAllintitleConfigModal()" class="flex-1 md:flex-none bg-slate-900 hover:bg-slate-800 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-slate-200 flex items-center justify-center" title="配置 Allintitle 自动获取">
+                                <i class="fas fa-gear mr-2"></i> Allintitle API
                             </button>
                             <button onclick="addTableRow()" class="flex-1 md:flex-none bg-orange-500 hover:bg-orange-600 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-orange-200 flex items-center justify-center">
                                 <i class="fas fa-plus mr-2"></i> 添加
@@ -752,7 +757,12 @@
                                     <th class="px-6 py-5 font-black uppercase tracking-widest text-xs text-center">搜索意图</th>
                                     <th class="px-6 py-5 font-black uppercase tracking-widest text-xs text-center">CPC</th>
                                     <th class="px-6 py-5 font-black uppercase tracking-widest text-xs text-center">KD %</th>
-                                    <th class="px-6 py-5 font-black uppercase tracking-widest text-xs text-center">Allintitle 结果数</th>
+                                    <th class="px-6 py-5 font-black uppercase tracking-widest text-xs text-center">
+                                        Allintitle 结果数
+                                        <span class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 text-blue-600 text-[8px] cursor-help" title="数据来源：Google Official Custom Search API (实时/严格去重)">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                    </th>
                                     <th class="px-6 py-5 font-black uppercase tracking-widest text-xs text-center">KGR</th>
                                     <th class="px-6 py-5 font-black uppercase tracking-widest text-xs text-center">操作</th>
                                 </tr>
@@ -769,13 +779,27 @@
                             <span class="px-3 py-1 bg-emerald-500 text-white rounded-lg text-[10px] font-black">0.06</span>
                         </td>
                         <td class="px-6 py-5 text-center">
-                            <button onclick="confirmDelete(this)" class="text-rose-400 hover:text-rose-600 transition-colors">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
+                    <div class="flex items-center justify-center space-x-2">
+                        <button onclick="openGoogleSearchForRow(this)" class="text-indigo-400 hover:text-indigo-600 transition-colors" title="Google 搜索验证">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button onclick="openGoogleTrendsForRow(this)" class="text-sky-500 hover:text-sky-700 transition-colors" title="Google 趋势">
+                            <i class="fas fa-chart-line"></i>
+                        </button>
+                        <button onclick="confirmDelete(this)" class="text-rose-400 hover:text-rose-600 transition-colors" title="删除">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </td>
                     </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="mt-3 text-right px-1">
+                        <p class="text-xs font-bold text-slate-500 flex items-center justify-end">
+                            <i class="fas fa-server mr-2"></i>
+                            Allintitle 结果数 是直接通过代码向 Google 官方的 Custom Search JSON API ( googleapis.com ) 发起请求获取的。
+                        </p>
                     </div>
                 </div>
             </div>
@@ -897,8 +921,129 @@
         </div>
     </section>
 
+    <div id="allintitleConfigModal" class="fixed inset-0 z-[100] hidden" style="z-index: 1900;" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeAllintitleConfigModal()"></div>
+        <div class="absolute inset-0" style="overflow-y:auto;">
+            <div class="min-h-full flex items-start justify-center p-4 md:p-6">
+                <div class="w-11/12 max-w-md">
+                    <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
+                        <div class="flex items-center justify-between gap-4 px-6 py-5 border-b border-slate-100">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-magnifying-glass text-white"></i>
+                                </div>
+                                <div class="leading-tight">
+                                    <div class="text-sm font-black text-slate-900">Google 官方数据配置 (Allintitle)</div>
+                                    <div class="text-[11px] font-bold text-slate-500">密钥仅保存到本机浏览器</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="google_API_Key.html" target="_blank" rel="noreferrer" class="h-10 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[10px] uppercase tracking-widest transition-all inline-flex items-center justify-center">获取key</a>
+                                <button type="button" onclick="closeAllintitleConfigModal()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black transition-all" aria-label="关闭">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <label class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3">
+                                <input id="allintitleEnabledInput" type="checkbox" class="w-4 h-4" />
+                                <span class="text-xs font-black text-slate-700 uppercase tracking-widest">启用关键词输入后自动获取</span>
+                            </label>
+                            <div>
+                                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Google API Key</div>
+                                <input id="allintitleApiKeyInput" type="password" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-4 py-3 font-black text-slate-900 outline-none focus:border-slate-900 transition-all text-sm" placeholder="粘贴你的 API Key" autocomplete="off" />
+                            </div>
+                            <div>
+                                <div class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Programmable Search Engine ID (cx)</div>
+                                <input id="allintitleCxInput" type="text" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-4 py-3 font-black text-slate-900 outline-none focus:border-slate-900 transition-all text-sm" placeholder="例如：012345678901234567890:abcdefg_hij" autocomplete="off" />
+                            </div>
+
+                            <div class="mt-4 p-3 bg-indigo-50/50 rounded-lg border border-indigo-100/50">
+                                <div class="flex items-start space-x-2">
+                                    <div class="mt-0.5 text-indigo-500">
+                                        <i class="fas fa-info-circle text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="text-xs font-bold text-indigo-900 mb-1">为什么 API 结果与网页搜索不同？</h4>
+                                        <p class="text-[10px] text-indigo-800/80 leading-relaxed">
+                                            1. <strong>估算机制差异</strong>：对于海量结果（如百万级），Google 网页端显示的是“约数”（Estimate），而 API 返回的是数据库分片的统计值，两者通常存在 20%-30% 的正常统计误差。
+                                            <br>
+                                            2. <strong>去重与精准度</strong>：API 数据更倾向于“严格匹配”，剔除了部分重复或低质量页面；网页搜索则包含更多泛匹配结果（包括 AI 概览触发的内容）。
+                                            <br>
+                                            3. <strong>判断标准</strong>：只要两者在<strong>同一数量级</strong>（例如都是百万级，或都是十万级），即代表配置正确。
+                                            <br>
+                                            4. <strong>异常情况</strong>：如果差异达到“数量级”悬殊（例如 API 仅个位数 vs 网页百万级），请务必检查 CX 配置是否开启了“Search the entire web”。
+                                            <br>
+                                            <span class="opacity-75">* 系统已自动添加 hl=zh-CN 参数以尽量对齐中文搜索环境。</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="allintitleConfigHint" class="hidden text-rose-600 text-sm font-bold"></div>
+                        </div>
+                        <div class="px-6 pb-8">
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <button type="button" onclick="closeAllintitleConfigModal()" class="flex-1 px-6 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-xs uppercase tracking-widest transition-all">取消</button>
+                                <button type="button" onclick="saveAllintitleConfigModal()" class="flex-1 px-6 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-slate-200">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="fixed inset-0 z-[100] hidden" style="z-index: 1900;" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeImportModal()"></div>
+        <div class="absolute inset-0" style="overflow-y:auto;">
+            <div class="min-h-full flex items-start justify-center p-4 md:p-6">
+                <div class="w-11/12 max-w-2xl">
+                    <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
+                        <div class="flex items-center justify-between gap-4 px-6 py-5 border-b border-slate-100">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-indigo-500 rounded-2xl flex items-center justify-center">
+                                    <i class="fas fa-file-import text-white"></i>
+                                </div>
+                                <div class="leading-tight">
+                                    <div class="text-sm font-black text-slate-900">批量导入关键词</div>
+                                    <div class="text-[11px] font-bold text-slate-500">快速填充多行数据</div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="closeImportModal()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black transition-all" aria-label="关闭">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div class="bg-indigo-50 rounded-2xl p-4 border border-indigo-100">
+                                <div class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2">预期数据格式 (每行一个关键词)</div>
+                                <div class="text-xs font-bold text-indigo-900 leading-relaxed">
+                                    关键词 [空格/逗号] 搜索量 [空格/逗号] 搜索意图 [空格/逗号] CPC [空格/逗号] KD%
+                                </div>
+                                <div class="text-[10px] font-bold text-indigo-500 mt-2 opacity-60">
+                                    提示：支持使用逗号或空格分隔数据。
+                                </div>
+                            </div>
+                            
+                            <textarea id="importTextarea" rows="10" class="w-full bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] px-4 py-4 font-bold text-slate-800 outline-none focus:border-indigo-500 transition-all text-sm leading-relaxed" placeholder="在此粘贴数据..."></textarea>
+                            
+                            <div id="importStatus" class="hidden text-xs font-bold px-4 py-2 rounded-lg"></div>
+                        </div>
+                        <div class="px-6 pb-8">
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <button type="button" onclick="closeImportModal()" class="flex-1 px-6 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-black text-xs uppercase tracking-widest transition-all">取消</button>
+                                <button type="button" onclick="processImport()" class="flex-1 px-6 py-4 rounded-2xl bg-indigo-500 hover:bg-indigo-600 text-white font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-indigo-200">开始导入</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Custom Modal -->
-    <div id="deleteModal" class="fixed inset-0 z-[100] hidden">
+    <div id="deleteModal" class="fixed inset-0 z-[100] hidden" style="z-index: 1900;">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-6">
             <div class="bg-white rounded-[2rem] shadow-2xl p-8 text-center border border-slate-100 scale-95 transition-transform duration-300 ease-out" id="modalContent">
@@ -914,6 +1059,53 @@
                     <button id="confirmDeleteBtn" class="flex-1 px-6 py-4 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-rose-200">
                         确认删除
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="trendsModal" class="fixed inset-0 z-[110] hidden" style="z-index: 2000;" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeTrendsModal()"></div>
+        <div class="absolute inset-0" style="overflow-y:auto;">
+            <div class="min-h-full flex items-start justify-center p-4 md:p-6">
+                <div class="w-full max-w-6xl">
+                    <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden" id="trendsModalContent">
+                <div class="sticky top-0 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-6 py-5 border-b border-slate-100 z-10">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-sky-50 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-chart-line text-sky-600"></i>
+                        </div>
+                        <div class="leading-tight">
+                            <div class="text-sm font-black text-slate-900">Google 趋势</div>
+                            <div class="text-[11px] font-bold text-slate-500" id="trendsKeywordLabel">-</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <input id="trendsGeoInput" list="trendsGeoList" class="h-10 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[10px] tracking-widest transition-all outline-none" placeholder="选择地区（输入搜索）" autocomplete="off" />
+                        <datalist id="trendsGeoList"></datalist>
+                        <select id="trendsTimeSelect" class="h-10 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[10px] uppercase tracking-widest transition-all outline-none">
+                            <option value="now 1-H">过去 1 小时</option>
+                            <option value="now 4-H">过去 4 小时</option>
+                            <option value="now 1-d">过去 1 天</option>
+                            <option value="now 7-d">过去 7 天</option>
+                            <option value="today 1-m">过去 30 天</option>
+                            <option value="today 3-m">过去 90 天</option>
+                            <option value="today 12-m" selected>过去 12 个月</option>
+                            <option value="today 5-y">过去 5 年</option>
+                            <option value="all">2004 至今</option>
+                        </select>
+                        <button type="button" onclick="closeTrendsModal()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black transition-all" aria-label="关闭">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div id="trendsLoading" class="text-slate-500 text-sm font-bold">加载中…</div>
+                    <div id="trendsWidgetTimeseries" class="mt-4 rounded-2xl overflow-hidden border border-slate-100"></div>
+                    <div id="trendsWidgetSubregion" class="mt-6 rounded-2xl overflow-hidden border border-slate-100"></div>
+                    <div id="trendsError" class="hidden mt-4 text-rose-600 text-sm font-bold"></div>
+                </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -995,29 +1187,408 @@
         });
 
         // Table Functions
-        function addTableRow() {
+        function addTableRow(data = {}) {
             const tbody = document.querySelector('#kgrTable tbody');
             const newRow = document.createElement('tr');
             newRow.className = 'hover:bg-slate-50 transition-colors';
+            
+            const keyword = data.keyword || '新关键词';
+            const volume = data.volume || '0';
+            const intent = data.intent || '-';
+            const cpc = data.cpc || '-';
+            const kd = data.kd || '0%';
+            const allintitle = data.allintitle || '0';
+
             newRow.innerHTML = `
-                <td contenteditable="true" class="px-6 py-5 font-bold text-slate-700 outline-none focus:bg-orange-50 focus:text-orange-600 transition-all">新关键词</td>
-                <td contenteditable="true" class="px-6 py-5 font-black text-slate-900 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all table-volume">0</td>
-                <td contenteditable="true" class="px-6 py-5 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all">-</td>
-                <td contenteditable="true" class="px-6 py-5 font-black text-slate-900 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all">-</td>
-                <td contenteditable="true" class="px-6 py-5 font-black text-slate-900 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all">0%</td>
-                <td contenteditable="true" class="px-6 py-5 font-black text-slate-900 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all table-allintitle">0</td>
+                <td contenteditable="true" class="px-6 py-5 font-bold text-slate-700 outline-none focus:bg-orange-50 focus:text-orange-600 transition-all">${keyword}</td>
+                <td contenteditable="true" class="px-6 py-5 font-black text-slate-900 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all table-volume">${volume}</td>
+                <td contenteditable="true" class="px-6 py-5 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all">${intent}</td>
+                <td contenteditable="true" class="px-6 py-5 font-black text-slate-900 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all">${cpc}</td>
+                <td contenteditable="true" class="px-6 py-5 font-black text-slate-900 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all">${kd}</td>
+                <td contenteditable="true" class="px-6 py-5 font-black text-slate-900 text-center outline-none focus:bg-orange-50 focus:text-orange-600 transition-all table-allintitle">${allintitle}</td>
                 <td class="px-6 py-5 text-center table-kgr">
                     <span class="px-3 py-1 bg-slate-400 text-white rounded-lg text-[10px] font-black">0.00</span>
                 </td>
                 <td class="px-6 py-5 text-center">
-                    <button onclick="confirmDelete(this)" class="text-rose-400 hover:text-rose-600 transition-colors">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
+                    <div class="flex items-center justify-center space-x-2">
+                        <button onclick="openGoogleSearchForRow(this)" class="text-indigo-400 hover:text-indigo-600 transition-colors" title="Google 搜索验证">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button onclick="openGoogleTrendsForRow(this)" class="text-sky-500 hover:text-sky-700 transition-colors" title="Google 趋势">
+                            <i class="fas fa-chart-line"></i>
+                        </button>
+                        <button onclick="confirmDelete(this)" class="text-rose-400 hover:text-rose-600 transition-colors" title="删除">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(newRow);
             bindTableEvents();
+            calculateTableKGR(newRow);
+
+            // If it's a new keyword and Allintitle API is enabled, trigger fetch
+            if (data.keyword && allintitleConfig.enabled) {
+                scheduleRowAllintitleUpdate(newRow, data.keyword);
+            }
         }
+
+        let lastFocusedEl = null;
+        const trendsRegionCodes = ['AD','AE','AF','AG','AI','AL','AM','AO','AQ','AR','AS','AT','AU','AW','AX','AZ','BA','BB','BD','BE','BF','BG','BH','BI','BJ','BL','BM','BN','BO','BQ','BR','BS','BT','BV','BW','BY','BZ','CA','CC','CD','CF','CG','CH','CI','CK','CL','CM','CN','CO','CR','CU','CV','CW','CX','CY','CZ','DE','DJ','DK','DM','DO','DZ','EC','EE','EG','EH','ER','ES','ET','FI','FJ','FK','FM','FO','FR','GA','GB','GD','GE','GF','GG','GH','GI','GL','GM','GN','GP','GQ','GR','GS','GT','GU','GW','GY','HK','HM','HN','HR','HT','HU','ID','IE','IL','IM','IN','IO','IQ','IR','IS','IT','JE','JM','JO','JP','KE','KG','KH','KI','KM','KN','KP','KR','KW','KY','KZ','LA','LB','LC','LI','LK','LR','LS','LT','LU','LV','LY','MA','MC','MD','ME','MF','MG','MH','MK','ML','MM','MN','MO','MP','MQ','MR','MS','MT','MU','MV','MW','MX','MY','MZ','NA','NC','NE','NF','NG','NI','NL','NO','NP','NR','NU','NZ','OM','PA','PE','PF','PG','PH','PK','PL','PM','PN','PR','PS','PT','PW','PY','QA','RE','RO','RS','RU','RW','SA','SB','SC','SD','SE','SG','SH','SI','SJ','SK','SL','SM','SN','SO','SR','SS','ST','SV','SX','SY','SZ','TC','TD','TF','TG','TH','TJ','TK','TL','TM','TN','TO','TR','TT','TV','TW','TZ','UA','UG','UM','US','UY','UZ','VA','VC','VE','VG','VI','VN','VU','WF','WS','YE','YT','ZA','ZM','ZW','XK'];
+        let trendsGeoLabelByCode = {};
+        let trendsGeoCodeByLabel = {};
+        let trendsGeoDatalistBuilt = false;
+        let trendsState = { geo: 'US', time: 'today 12-m' };
+        let currentTrendsKeyword = 'seo';
+        let trendsControlsInited = false;
+        let trendsRenderDebounceTimer = null;
+        let trendsSubregionObserver = null;
+        let trendsSubregionMountTimer = null;
+
+        function scheduleRenderTrends() {
+            if (trendsRenderDebounceTimer) window.clearTimeout(trendsRenderDebounceTimer);
+            trendsRenderDebounceTimer = window.setTimeout(() => {
+                trendsRenderDebounceTimer = null;
+                renderTrends();
+            }, 250);
+        }
+
+        function getRowKeyword(btn) {
+            const row = btn ? btn.closest('tr') : null;
+            const keywordCell = row ? row.querySelector('td[contenteditable="true"]') : null;
+            const keyword = keywordCell ? keywordCell.innerText.trim() : '';
+            return keyword || 'seo';
+        }
+
+        function openGoogleSearchForRow(btn) {
+            const keyword = getRowKeyword(btn);
+            if (!keyword) return;
+            const q = buildAllintitleQuery(keyword);
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, '_blank');
+        }
+
+        function getActiveKeyword() {
+            const activeEl = document.activeElement;
+            const activeCell = activeEl && activeEl.closest ? activeEl.closest('#kgrTable td[contenteditable="true"]') : null;
+            if (activeCell) {
+                const row = activeCell.closest('tr');
+                const keywordCell = row ? row.querySelector('td[contenteditable="true"]') : null;
+                const keyword = keywordCell ? keywordCell.innerText.trim() : '';
+                return keyword || 'seo';
+            }
+            const firstKeywordCell = document.querySelector('#kgrTable tbody tr td[contenteditable="true"]');
+            const keyword = firstKeywordCell ? firstKeywordCell.innerText.trim() : '';
+            return keyword || 'seo';
+        }
+
+        function openTrendsModalFromActive() {
+            openTrendsModal(getActiveKeyword());
+        }
+
+        function openGoogleTrendsForRow(btn) {
+            openTrendsModal(getRowKeyword(btn));
+        }
+
+        function buildTrendsEmbedUrl(view, keyword, geo, time) {
+            const tz = new Date().getTimezoneOffset();
+            const req = {
+                comparisonItem: [{ keyword, geo, time }],
+                category: 0,
+                property: ''
+            };
+            const reqParam = encodeURIComponent(JSON.stringify(req));
+            const type = view === 'subregion' ? 'GEO_MAP' : 'TIMESERIES';
+            return `https://trends.google.com/trends/embed/explore/${type}?req=${reqParam}&tz=${tz}&hl=zh-CN`;
+        }
+
+        function buildTrendsExploreUrl(keyword, geo, time) {
+            const params = new URLSearchParams();
+            params.set('hl', 'zh-CN');
+            params.set('q', keyword);
+            params.set('date', time);
+            if (geo) params.set('geo', geo);
+            return `https://trends.google.com/trends/explore?${params.toString()}`;
+        }
+
+        function initTrendsControls() {
+            if (trendsControlsInited) return;
+            trendsControlsInited = true;
+
+            const geoInput = document.getElementById('trendsGeoInput');
+            const timeSelect = document.getElementById('trendsTimeSelect');
+
+            buildTrendsGeoDatalist();
+
+            if (geoInput) {
+                const onGeoChange = () => {
+                    const next = parseTrendsGeoInput(geoInput.value);
+                    trendsState.geo = next;
+                    geoInput.value = formatTrendsGeoLabel(next);
+                    scheduleRenderTrends();
+                };
+                geoInput.addEventListener('change', onGeoChange);
+                geoInput.addEventListener('blur', onGeoChange);
+            }
+
+            if (timeSelect) {
+                timeSelect.addEventListener('change', () => {
+                    trendsState.time = timeSelect.value;
+                    scheduleRenderTrends();
+                });
+            }
+        }
+
+        function buildTrendsGeoDatalist() {
+            if (trendsGeoDatalistBuilt) return;
+            trendsGeoDatalistBuilt = true;
+
+            const datalist = document.getElementById('trendsGeoList');
+            if (!datalist) return;
+
+            const displayNames = (typeof Intl !== 'undefined' && Intl.DisplayNames) ? new Intl.DisplayNames(['zh-CN'], { type: 'region' }) : null;
+
+            const items = [];
+            const globalLabel = '全球';
+            trendsGeoLabelByCode[''] = globalLabel;
+            trendsGeoCodeByLabel[globalLabel] = '';
+            items.push({ code: '', label: globalLabel });
+
+            trendsRegionCodes.forEach((code) => {
+                const name = displayNames ? (displayNames.of(code) || code) : code;
+                const label = `${name} (${code})`;
+                trendsGeoLabelByCode[code] = label;
+                trendsGeoCodeByLabel[label] = code;
+                if (!trendsGeoCodeByLabel[name]) trendsGeoCodeByLabel[name] = code;
+                items.push({ code, label, name });
+            });
+
+            items.sort((a, b) => {
+                if (a.code === '') return -1;
+                if (b.code === '') return 1;
+                return (a.name || a.label).localeCompare((b.name || b.label), 'zh-Hans-CN');
+            });
+
+            const frag = document.createDocumentFragment();
+            items.forEach((item) => {
+                const option = document.createElement('option');
+                option.value = item.code === '' ? item.label : item.label;
+                frag.appendChild(option);
+            });
+            datalist.appendChild(frag);
+        }
+
+        function parseTrendsGeoInput(value) {
+            const v = (value || '').trim();
+            if (!v || v === '全球') return '';
+
+            const parenMatch = v.match(/\(([A-Za-z]{2})\)\s*$/);
+            if (parenMatch) return parenMatch[1].toUpperCase();
+            if (/^[A-Za-z]{2}$/.test(v)) return v.toUpperCase();
+            if (trendsGeoCodeByLabel[v]) return trendsGeoCodeByLabel[v];
+            return trendsState.geo;
+        }
+
+        function formatTrendsGeoLabel(code) {
+            if (!code) return '全球';
+            return trendsGeoLabelByCode[code] || code;
+        }
+
+        function renderTrends() {
+            const keywordLabel = document.getElementById('trendsKeywordLabel');
+            const loading = document.getElementById('trendsLoading');
+            const widgetTimeseries = document.getElementById('trendsWidgetTimeseries');
+            const widgetSubregion = document.getElementById('trendsWidgetSubregion');
+            const error = document.getElementById('trendsError');
+            const geoInput = document.getElementById('trendsGeoInput');
+            const timeSelect = document.getElementById('trendsTimeSelect');
+
+            const isSmallScreen = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+            const subregionHeight = isSmallScreen ? 520 : 560;
+
+            if (!widgetTimeseries || !widgetSubregion || !loading || !error || !keywordLabel) return;
+
+            keywordLabel.textContent = currentTrendsKeyword;
+            if (geoInput) geoInput.value = formatTrendsGeoLabel(trendsState.geo);
+            if (timeSelect) timeSelect.value = trendsState.time;
+
+            error.classList.add('hidden');
+            error.textContent = '';
+            loading.classList.remove('hidden');
+
+            if (trendsSubregionObserver) {
+                trendsSubregionObserver.disconnect();
+                trendsSubregionObserver = null;
+            }
+
+            if (trendsSubregionMountTimer) {
+                window.clearTimeout(trendsSubregionMountTimer);
+                trendsSubregionMountTimer = null;
+            }
+
+            widgetTimeseries.innerHTML = '';
+            widgetSubregion.innerHTML = '';
+
+            widgetTimeseries.style.minHeight = '420px';
+            widgetSubregion.style.minHeight = `${subregionHeight}px`;
+
+            let remaining = 1;
+            let timeseriesLoaded = false;
+
+            const slowTimer = window.setTimeout(() => {
+                if (!loading.classList.contains('hidden')) {
+                    error.textContent = '加载较慢或被网络拦截，请稍后重试。';
+                    error.classList.remove('hidden');
+                }
+            }, 6000);
+
+            let subregionMounted = false;
+            let subregionShouldMountOnTimeseriesLoad = false;
+
+            const handleSubregionError = () => {
+                error.textContent = '子区域热度加载失败，请稍后重试。';
+                error.classList.remove('hidden');
+            };
+
+            const subregionWrap = document.createElement('div');
+            subregionWrap.style.width = '100%';
+            subregionWrap.style.overflowX = 'auto';
+            subregionWrap.style.overflowY = 'hidden';
+            subregionWrap.style.background = '#fff';
+            widgetSubregion.appendChild(subregionWrap);
+
+            const mountSubregion = () => {
+                if (subregionWrap.querySelector('iframe')) return;
+                const iframeSubregion = document.createElement('iframe');
+                iframeSubregion.src = buildTrendsEmbedUrl('subregion', currentTrendsKeyword, trendsState.geo, trendsState.time);
+                iframeSubregion.width = '100%';
+                iframeSubregion.height = String(subregionHeight);
+                iframeSubregion.loading = 'lazy';
+                iframeSubregion.referrerPolicy = 'no-referrer-when-downgrade';
+                iframeSubregion.style.border = '0';
+                iframeSubregion.style.display = 'block';
+                iframeSubregion.style.background = '#fff';
+                iframeSubregion.style.minWidth = '980px';
+                iframeSubregion.setAttribute('scrolling', 'yes');
+                iframeSubregion.addEventListener('error', handleSubregionError);
+                subregionWrap.appendChild(iframeSubregion);
+            };
+
+            const ensureSubregionMounted = (force) => {
+                if (subregionMounted) return;
+                if (!force && !timeseriesLoaded) return;
+                subregionMounted = true;
+                mountSubregion();
+            };
+
+            const handleTimeseriesLoaded = () => {
+                timeseriesLoaded = true;
+                remaining = Math.max(0, remaining - 1);
+                if (remaining === 0) {
+                    window.clearTimeout(slowTimer);
+                    loading.classList.add('hidden');
+                    error.classList.add('hidden');
+                    error.textContent = '';
+                }
+
+                if (subregionShouldMountOnTimeseriesLoad) ensureSubregionMounted(false);
+            };
+
+            const handleTimeseriesError = () => {
+                window.clearTimeout(slowTimer);
+                loading.classList.add('hidden');
+                error.textContent = '趋势图加载失败，请检查网络后重试。';
+                error.classList.remove('hidden');
+
+                if (subregionShouldMountOnTimeseriesLoad) ensureSubregionMounted(true);
+            };
+
+            const iframeTimeseries = document.createElement('iframe');
+            iframeTimeseries.src = buildTrendsEmbedUrl('timeseries', currentTrendsKeyword, trendsState.geo, trendsState.time);
+            iframeTimeseries.width = '100%';
+            iframeTimeseries.height = '460';
+            iframeTimeseries.loading = 'lazy';
+            iframeTimeseries.referrerPolicy = 'no-referrer-when-downgrade';
+            iframeTimeseries.style.border = '0';
+            iframeTimeseries.style.display = 'block';
+            iframeTimeseries.style.background = '#fff';
+            iframeTimeseries.setAttribute('scrolling', 'no');
+            iframeTimeseries.addEventListener('load', handleTimeseriesLoaded);
+            iframeTimeseries.addEventListener('error', handleTimeseriesError);
+
+            widgetTimeseries.appendChild(iframeTimeseries);
+
+            const rect = widgetSubregion.getBoundingClientRect();
+            const inView = rect.top < window.innerHeight * 0.6 && rect.bottom > 0;
+            subregionShouldMountOnTimeseriesLoad = inView;
+
+            if (inView) {
+                trendsSubregionMountTimer = window.setTimeout(() => {
+                    trendsSubregionMountTimer = null;
+                    ensureSubregionMounted(true);
+                }, 1500);
+            } else if ('IntersectionObserver' in window) {
+                trendsSubregionObserver = new IntersectionObserver((entries) => {
+                    if (entries.some((e) => e.isIntersecting)) {
+                        ensureSubregionMounted(true);
+                        if (trendsSubregionObserver) {
+                            trendsSubregionObserver.disconnect();
+                            trendsSubregionObserver = null;
+                        }
+                    }
+                }, { threshold: 0.1, rootMargin: '0px 0px -35% 0px' });
+                trendsSubregionObserver.observe(widgetSubregion);
+            } else {
+                window.setTimeout(() => ensureSubregionMounted(true), 900);
+            }
+        }
+
+        async function openTrendsModal(keyword) {
+            const modal = document.getElementById('trendsModal');
+            const keywordLabel = document.getElementById('trendsKeywordLabel');
+            const loading = document.getElementById('trendsLoading');
+            const widgetTimeseries = document.getElementById('trendsWidgetTimeseries');
+            const widgetSubregion = document.getElementById('trendsWidgetSubregion');
+            const error = document.getElementById('trendsError');
+            const geoInput = document.getElementById('trendsGeoInput');
+            const timeSelect = document.getElementById('trendsTimeSelect');
+
+            lastFocusedEl = document.activeElement;
+
+            initTrendsControls();
+
+            const safeKeyword = (keyword || 'seo').trim() || 'seo';
+            currentTrendsKeyword = safeKeyword;
+            keywordLabel.textContent = safeKeyword;
+            if (geoInput) geoInput.value = formatTrendsGeoLabel(trendsState.geo);
+            if (timeSelect) timeSelect.value = trendsState.time;
+
+            error.classList.add('hidden');
+            error.textContent = '';
+            loading.classList.remove('hidden');
+            if (widgetTimeseries) widgetTimeseries.innerHTML = '';
+            if (widgetSubregion) widgetSubregion.innerHTML = '';
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            renderTrends();
+        }
+
+        function closeTrendsModal() {
+            const modal = document.getElementById('trendsModal');
+            const widgetTimeseries = document.getElementById('trendsWidgetTimeseries');
+            const widgetSubregion = document.getElementById('trendsWidgetSubregion');
+            if (!modal || modal.classList.contains('hidden')) return;
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            if (widgetTimeseries) widgetTimeseries.innerHTML = '';
+            if (widgetSubregion) widgetSubregion.innerHTML = '';
+            if (lastFocusedEl && lastFocusedEl.focus) lastFocusedEl.focus();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeTrendsModal();
+        });
 
         // Modal Logic
         let rowToDelete = null;
@@ -1083,8 +1654,11 @@
         }
 
         function calculateTableKGR(row) {
-            const volume = parseFloat(row.querySelector('.table-volume').innerText) || 0;
-            const allintitle = parseFloat(row.querySelector('.table-allintitle').innerText) || 0;
+            const volumeText = row.querySelector('.table-volume').innerText.replace(/,/g, '');
+            const allintitleText = row.querySelector('.table-allintitle').innerText.replace(/,/g, '');
+            
+            const volume = parseFloat(volumeText) || 0;
+            const allintitle = parseFloat(allintitleText) || 0;
             const kgrCell = row.querySelector('.table-kgr');
             
             if (volume === 0) {
@@ -1100,9 +1674,280 @@
             kgrCell.innerHTML = `<span class="px-3 py-1 ${bgColor} text-white rounded-lg text-[10px] font-black">${kgr.toFixed(2)}</span>`;
         }
 
+        const ALLINTITLE_CONFIG_STORAGE_KEY = 'kgr_allintitle_config_v1';
+        let allintitleConfig = null;
+        const allintitleRowTimers = new WeakMap();
+        const allintitleCache = new Map();
+        const allintitleInFlight = new Map();
+        let allintitleQueue = Promise.resolve();
+
+        function loadAllintitleConfig() {
+            try {
+                const raw = window.localStorage.getItem(ALLINTITLE_CONFIG_STORAGE_KEY);
+                if (!raw) return { enabled: false, apiKey: '', cx: '' };
+                const parsed = JSON.parse(raw);
+                return {
+                    enabled: !!parsed.enabled,
+                    apiKey: typeof parsed.apiKey === 'string' ? parsed.apiKey : '',
+                    cx: typeof parsed.cx === 'string' ? parsed.cx : ''
+                };
+            } catch {
+                return { enabled: false, apiKey: '', cx: '' };
+            }
+        }
+
+        function saveAllintitleConfig(next) {
+            allintitleConfig = { enabled: !!next.enabled, apiKey: next.apiKey || '', cx: next.cx || '' };
+            try {
+                window.localStorage.setItem(ALLINTITLE_CONFIG_STORAGE_KEY, JSON.stringify(allintitleConfig));
+            } catch {
+            }
+        }
+
+        function openAllintitleConfigModal() {
+            const modal = document.getElementById('allintitleConfigModal');
+            const enabledInput = document.getElementById('allintitleEnabledInput');
+            const apiKeyInput = document.getElementById('allintitleApiKeyInput');
+            const cxInput = document.getElementById('allintitleCxInput');
+            const hint = document.getElementById('allintitleConfigHint');
+            if (!modal || !enabledInput || !apiKeyInput || !cxInput || !hint) return;
+
+            allintitleConfig = allintitleConfig || loadAllintitleConfig();
+            enabledInput.checked = !!allintitleConfig.enabled;
+            apiKeyInput.value = allintitleConfig.apiKey || '';
+            cxInput.value = allintitleConfig.cx || '';
+            hint.classList.add('hidden');
+            hint.textContent = '';
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            window.setTimeout(() => apiKeyInput.focus(), 30);
+        }
+
+        function closeAllintitleConfigModal() {
+            const modal = document.getElementById('allintitleConfigModal');
+            if (!modal || modal.classList.contains('hidden')) return;
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Import Modal
+        function openImportModal() {
+            const modal = document.getElementById('importModal');
+            if (!modal) return;
+            document.getElementById('importTextarea').value = '';
+            document.getElementById('importStatus').classList.add('hidden');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImportModal() {
+            const modal = document.getElementById('importModal');
+            if (!modal || modal.classList.contains('hidden')) return;
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function processImport() {
+            const textarea = document.getElementById('importTextarea');
+            const status = document.getElementById('importStatus');
+            const text = textarea.value.trim();
+            
+            if (!text) {
+                status.textContent = '请输入要导入的数据';
+                status.className = 'text-xs font-bold px-4 py-2 rounded-lg bg-rose-50 text-rose-600';
+                status.classList.remove('hidden');
+                return;
+            }
+
+            const lines = text.split('\n');
+            let successCount = 0;
+
+            lines.forEach(line => {
+                const rowText = line.trim();
+                if (!rowText) return;
+
+                // Split by comma or multiple spaces
+                let parts = [];
+                if (rowText.includes(',')) {
+                    parts = rowText.split(',');
+                } else {
+                    parts = rowText.split(/\s{2,}/); // Two or more spaces
+                    if (parts.length <= 1) parts = rowText.split(' '); // Fallback to single space
+                }
+
+                const data = {
+                    keyword: parts[0]?.trim() || '新关键词',
+                    volume: parts[1]?.trim() || '0',
+                    intent: parts[2]?.trim() || '-',
+                    cpc: parts[3]?.trim() || '-',
+                    kd: parts[4]?.trim() || '0%'
+                };
+
+                addTableRow(data);
+                successCount++;
+            });
+
+            status.textContent = `成功导入 ${successCount} 条数据！`;
+            status.className = 'text-xs font-bold px-4 py-2 rounded-lg bg-emerald-50 text-emerald-600';
+            status.classList.remove('hidden');
+
+            setTimeout(() => {
+                closeImportModal();
+            }, 1000);
+        }
+
+        function saveAllintitleConfigModal() {
+            const enabledInput = document.getElementById('allintitleEnabledInput');
+            const apiKeyInput = document.getElementById('allintitleApiKeyInput');
+            const cxInput = document.getElementById('allintitleCxInput');
+            const hint = document.getElementById('allintitleConfigHint');
+            if (!enabledInput || !apiKeyInput || !cxInput || !hint) return;
+
+            const enabled = enabledInput.checked;
+            const apiKey = (apiKeyInput.value || '').trim();
+            const cx = (cxInput.value || '').trim();
+
+            if (enabled && (!apiKey || !cx)) {
+                hint.textContent = '启用自动获取需要同时填写 API Key 和 cx。';
+                hint.classList.remove('hidden');
+                return;
+            }
+
+            saveAllintitleConfig({ enabled, apiKey, cx });
+            closeAllintitleConfigModal();
+
+            if (enabled) {
+                document.querySelectorAll('#kgrTable tbody tr').forEach((row) => {
+                    const keywordCell = row.querySelector('td[contenteditable="true"]');
+                    const keyword = keywordCell ? keywordCell.innerText.trim() : '';
+                    if (keyword) scheduleRowAllintitleUpdate(row, keyword);
+                });
+            }
+        }
+
+        function buildAllintitleQuery(keyword) {
+            // 1. 去除首尾空格并强制移除所有双引号，确保始终使用宽泛匹配
+            const trimmed = (keyword || '').trim().replace(/"/g, '');
+            
+            if (!trimmed) return '';
+            
+            // 2. 针对普通带空格的词，直接拼接
+            // 注意：不要在 ${trimmed} 外面加引号，这样 Google 才会做宽泛匹配
+            return `allintitle:${trimmed}`;
+        }
+
+        function setAllintitleCell(row, text) {
+            const cell = row.querySelector('.table-allintitle');
+            if (!cell) return;
+            cell.innerText = String(text);
+            calculateTableKGR(row);
+        }
+
+        function setAllintitleLoading(row) {
+            const cell = row.querySelector('.table-allintitle');
+            if (!cell) return;
+            cell.innerText = '…';
+        }
+
+        function fetchAllintitleCount(keyword) {
+            allintitleConfig = allintitleConfig || loadAllintitleConfig();
+            if (!allintitleConfig.enabled) return Promise.resolve(null);
+            if (!allintitleConfig.apiKey || !allintitleConfig.cx) return Promise.resolve(null);
+
+            const q = buildAllintitleQuery(keyword);
+            if (!q) return Promise.resolve(null);
+
+            const cacheKey = q;
+            const cached = allintitleCache.get(cacheKey);
+            if (cached && (Date.now() - cached.ts) < 6 * 60 * 60 * 1000) return Promise.resolve(cached.value);
+
+            if (allintitleInFlight.has(cacheKey)) return allintitleInFlight.get(cacheKey);
+
+            const task = () => {
+                const controller = new AbortController();
+                const timer = window.setTimeout(() => controller.abort(), 12000);
+
+                const url = new URL('https://www.googleapis.com/customsearch/v1');
+                url.searchParams.set('key', allintitleConfig.apiKey);
+                url.searchParams.set('cx', allintitleConfig.cx);
+                url.searchParams.set('q', q);
+                url.searchParams.set('num', '1');
+                url.searchParams.set('filter', '0'); // Turn off duplicate content filter for more accurate count
+                url.searchParams.set('fields', 'searchInformation(totalResults)');
+                // 强制指定中文环境，以减少因服务器位置不同导致的结果差异
+                url.searchParams.set('hl', 'zh-CN');
+                url.searchParams.set('gl', 'CN');
+
+                return fetch(url.toString(), { signal: controller.signal })
+                    .then(async (res) => {
+                        if (!res.ok) throw new Error(`http-${res.status}`);
+                        const data = await res.json();
+                        const raw = data && data.searchInformation ? data.searchInformation.totalResults : null;
+                        const value = raw == null ? null : Number(raw);
+                        if (!Number.isFinite(value)) return null;
+                        allintitleCache.set(cacheKey, { ts: Date.now(), value });
+                        return value;
+                    })
+                    .finally(() => {
+                        window.clearTimeout(timer);
+                    });
+            };
+
+            const chained = allintitleQueue = allintitleQueue
+                .catch(() => null)
+                .then(() => task())
+                .finally(() => new Promise((r) => window.setTimeout(r, 450)));
+
+            allintitleInFlight.set(cacheKey, chained);
+            chained.finally(() => allintitleInFlight.delete(cacheKey));
+            return chained;
+        }
+
+        function scheduleRowAllintitleUpdate(row, keyword) {
+            allintitleConfig = allintitleConfig || loadAllintitleConfig();
+            if (!allintitleConfig.enabled) return;
+
+            const prev = allintitleRowTimers.get(row);
+            if (prev) window.clearTimeout(prev);
+
+            const timer = window.setTimeout(async () => {
+                allintitleRowTimers.delete(row);
+
+                allintitleConfig = allintitleConfig || loadAllintitleConfig();
+                if (!allintitleConfig.enabled) return;
+
+                if (!allintitleConfig.apiKey || !allintitleConfig.cx) {
+                    openAllintitleConfigModal();
+                    return;
+                }
+
+                setAllintitleLoading(row);
+                const value = await fetchAllintitleCount(keyword).catch(() => null);
+                if (value == null) {
+                    setAllintitleCell(row, '-');
+                    return;
+                }
+                setAllintitleCell(row, value);
+            }, 600);
+
+            allintitleRowTimers.set(row, timer);
+        }
+
         function bindTableEvents() {
             document.querySelectorAll('#kgrTable tbody tr').forEach(row => {
+                const keywordCell = row.querySelector('td[contenteditable="true"]');
+                if (keywordCell && keywordCell.dataset.kgrBound !== '1') {
+                    keywordCell.dataset.kgrBound = '1';
+                    keywordCell.addEventListener('input', () => {
+                        const keyword = keywordCell.innerText.trim();
+                        if (keyword) scheduleRowAllintitleUpdate(row, keyword);
+                    });
+                }
+
                 row.querySelectorAll('[contenteditable="true"]').forEach(cell => {
+                    if (cell.dataset.kgrBound === '1') return;
+                    cell.dataset.kgrBound = '1';
                     cell.addEventListener('input', () => {
                         if (cell.classList.contains('table-volume') || cell.classList.contains('table-allintitle')) {
                             calculateTableKGR(row);
@@ -1113,6 +1958,7 @@
         }
 
         // Initialize table events
+        allintitleConfig = loadAllintitleConfig();
         bindTableEvents();
     </script>
 </body>
