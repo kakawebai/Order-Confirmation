@@ -7,10 +7,11 @@
     <meta name="description" content="利用 Keyword Golden Ratio (KGR) 关键词黄金比例实现新站快速排名。包含 SEO 全链路流程解析、KGR 自动计算器及关键词竞争度分析工具。">
     <meta name="keywords" content="SEO快速排名, KGR公式, 关键词黄金比例, 谷歌SEO工具, 搜索排名优化">
     
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.bootcdn.net">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://trends.google.com">
+    <link rel="preconnect" href="https://ssl.gstatic.com">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -28,7 +29,7 @@
 
     <link rel="canonical" href="https://kakaciro.dpdns.org/seo-kuaisu-paiming.html">
     <meta name="robots" content="index, follow">
-    <link rel="stylesheet" href="css/main.min.css">
+    <link rel="stylesheet" href="css/main.min.css" fetchpriority="high">
     <script src="https://cdn.bootcdn.net/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -38,6 +39,8 @@
         .hover-scale { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-scale:hover { transform: translateY(-5px) scale(1.02); }
         .nav-item.active { background-color: #2563eb; color: white; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4); }
+
+        section { content-visibility: auto; contain-intrinsic-size: 1200px 800px; }
         
         /* Top Navigation */
         .top-nav {
@@ -1097,6 +1100,9 @@
                             <option value="today 5-y">过去 5 年</option>
                             <option value="all">2004 至今</option>
                         </select>
+                        <button type="button" onclick="trendsLastRenderKey='';renderTrends()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black transition-all" title="刷新图表">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
                         <button type="button" onclick="closeTrendsModal()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black transition-all" aria-label="关闭">
                             <i class="fas fa-times"></i>
                         </button>
@@ -1120,7 +1126,7 @@
                 © 2024 SEO 快速排名指南 · 三九英雄出品 🚀
             </div>
             <div class="flex items-center space-x-4 bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
-                <img src="assets/qq.png" alt="QQ" class="w-5 h-5 object-contain shrink-0">
+                <img src="assets/qq.png" alt="QQ" class="w-5 h-5 object-contain shrink-0" loading="lazy" decoding="async">
                 <span class="font-black text-slate-700">QQ 3760079636</span>
             </div>
         </div>
@@ -1354,6 +1360,7 @@
         }
 
         let trendsLibraryPromise = null;
+        let trendsLastRenderKey = '';
         function loadTrendsLibrary() {
             if (trendsLibraryPromise) return trendsLibraryPromise;
             trendsLibraryPromise = new Promise((resolve, reject) => {
@@ -1386,13 +1393,58 @@
             return trendsLibraryPromise;
         }
 
-        function buildTrendsExploreUrl(keyword, geo, time) {
-            const params = new URLSearchParams();
-            params.set('hl', 'zh-CN');
-            params.set('q', keyword);
-            params.set('date', time);
-            if (geo) params.set('geo', geo);
-            return `https://trends.google.com/trends/explore?${params.toString()}`;
+        function getTrendsRenderKey() {
+            return `${currentTrendsKeyword}__${trendsState.geo}__${trendsState.time}`;
+        }
+
+        function renderTrendsTimeseries(trendsApi, container) {
+            trendsApi.embed.renderExploreWidgetTo(container, "TIMESERIES", {
+                comparisonItem: [{ keyword: currentTrendsKeyword, geo: trendsState.geo, time: trendsState.time }],
+                category: 0,
+                property: ''
+            }, {
+                exploreQuery: `date=${trendsState.time}&geo=${trendsState.geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`,
+                guestPath: "https://trends.google.com:443/trends/embed/"
+            });
+        }
+
+        function renderTrendsSubregion(trendsApi, container) {
+            trendsApi.embed.renderExploreWidgetTo(container, "GEO_MAP", {
+                comparisonItem: [{ keyword: currentTrendsKeyword, geo: trendsState.geo, time: trendsState.time }],
+                category: 0,
+                property: ''
+            }, {
+                exploreQuery: `date=${trendsState.time}&geo=${trendsState.geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`,
+                guestPath: "https://trends.google.com:443/trends/embed/"
+            });
+        }
+
+        function setupTrendsSubregionLazyRender(trendsApi) {
+            const widgetSubregion = document.getElementById('trendsWidgetSubregion');
+            if (!widgetSubregion) return;
+            if (widgetSubregion.dataset.trendsRendered === '1') return;
+
+            const renderNow = () => {
+                if (widgetSubregion.dataset.trendsRendered === '1') return;
+                widgetSubregion.dataset.trendsRendered = '1';
+                renderTrendsSubregion(trendsApi, widgetSubregion);
+            };
+
+            if (!('IntersectionObserver' in window)) {
+                window.setTimeout(renderNow, 50);
+                return;
+            }
+
+            if (trendsSubregionObserver) trendsSubregionObserver.disconnect();
+            trendsSubregionObserver = new IntersectionObserver((entries) => {
+                const hit = entries && entries.some((e) => e.isIntersecting);
+                if (!hit) return;
+                if (trendsSubregionObserver) trendsSubregionObserver.disconnect();
+                trendsSubregionObserver = null;
+                renderNow();
+            }, { threshold: 0.05 });
+
+            trendsSubregionObserver.observe(widgetSubregion);
         }
 
         function initTrendsControls() {
@@ -1500,15 +1552,29 @@
             error.textContent = '';
             loading.classList.remove('hidden');
 
-            // Clear previous content
+            const nextKey = getTrendsRenderKey();
+
+            if (trendsLastRenderKey === nextKey && widgetTimeseries.childNodes.length > 0) {
+                loading.classList.add('hidden');
+                error.classList.add('hidden');
+                error.textContent = '';
+                return;
+            }
+
+            trendsLastRenderKey = nextKey;
+
             widgetTimeseries.innerHTML = '';
             widgetSubregion.innerHTML = '';
+            widgetSubregion.dataset.trendsRendered = '0';
             widgetTimeseries.style.minHeight = '420px';
             widgetSubregion.style.minHeight = `${subregionHeight}px`;
 
             try {
                 await loadTrendsLibrary();
                 
+                // Add a small delay to ensure container stability
+                await new Promise(resolve => setTimeout(resolve, 50));
+
                 // Safety check: ensure trends object is actually available
                 const trendsApi = window.trends || (typeof trends !== 'undefined' ? trends : null);
                 
@@ -1519,31 +1585,14 @@
 
                 loading.classList.add('hidden'); // Library loaded, ready to render
 
-                // Render Timeseries
-                trendsApi.embed.renderExploreWidgetTo(widgetTimeseries, "TIMESERIES", {
-                    comparisonItem: [{ keyword: currentTrendsKeyword, geo: trendsState.geo, time: trendsState.time }],
-                    category: 0,
-                    property: ''
-                }, {
-                    exploreQuery: `date=${trendsState.time}&geo=${trendsState.geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`,
-                    guestPath: "https://trends.google.com:443/trends/embed/"
-                });
-
-                // Render Subregion
-                trendsApi.embed.renderExploreWidgetTo(widgetSubregion, "GEO_MAP", {
-                    comparisonItem: [{ keyword: currentTrendsKeyword, geo: trendsState.geo, time: trendsState.time }],
-                    category: 0,
-                    property: ''
-                }, {
-                    exploreQuery: `date=${trendsState.time}&geo=${trendsState.geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`,
-                    guestPath: "https://trends.google.com:443/trends/embed/"
-                });
+                renderTrendsTimeseries(trendsApi, widgetTimeseries);
+                setupTrendsSubregionLazyRender(trendsApi);
 
             } catch (err) {
                 console.error(err);
                 loading.classList.add('hidden');
                 error.classList.remove('hidden');
-                error.textContent = `无法加载 Google Trends 组件: ${err.message || '未知错误'} (请检查网络/翻墙)`;
+                error.textContent = `无法加载 Google Trends 组件: ${err.message || '未知错误'} (可能是 Google 接口限流 429 或网络连接问题，请检查是否已开启科学上网并稍后再试)`;
             }
         }
 
@@ -1576,7 +1625,9 @@
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
 
-            renderTrends();
+            const nextKey = getTrendsRenderKey();
+            const hasRendered = widgetTimeseries && widgetTimeseries.childNodes.length > 0 && trendsLastRenderKey === nextKey;
+            if (!hasRendered) renderTrends();
         }
 
         function closeTrendsModal() {
@@ -1586,8 +1637,10 @@
             if (!modal || modal.classList.contains('hidden')) return;
             modal.classList.add('hidden');
             document.body.style.overflow = '';
-            if (widgetTimeseries) widgetTimeseries.innerHTML = '';
-            if (widgetSubregion) widgetSubregion.innerHTML = '';
+            if (trendsSubregionObserver) {
+                trendsSubregionObserver.disconnect();
+                trendsSubregionObserver = null;
+            }
             if (lastFocusedEl && lastFocusedEl.focus) lastFocusedEl.focus();
         }
 
@@ -1962,12 +2015,24 @@
             });
         }
 
-        // Initialize table events
-        allintitleConfig = loadAllintitleConfig();
-        bindTableEvents();
-        
-        // Preload Google Trends library for faster modal opening
-        setTimeout(() => loadTrendsLibrary().catch(() => {}), 1000);
+        function runWhenIdle(fn, timeoutMs) {
+            if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(fn, { timeout: timeoutMs || 2000 });
+                return;
+            }
+            window.setTimeout(fn, 0);
+        }
+
+        window.requestAnimationFrame(() => {
+            runWhenIdle(() => {
+                allintitleConfig = loadAllintitleConfig();
+                bindTableEvents();
+            }, 2000);
+
+            runWhenIdle(() => {
+                loadTrendsLibrary().catch(() => {});
+            }, 5000);
+        });
     </script>
 </body>
 </html>
