@@ -1542,7 +1542,7 @@
                 console.error(err);
                 loading.classList.add('hidden');
                 error.classList.remove('hidden');
-                error.textContent = '无法加载 Google Trends 组件，请检查网络连接 (需翻墙)';
+                error.textContent = `无法加载 Google Trends 组件: ${err.message || '未知错误'} (请检查网络/翻墙)`;
             }
         }
 
