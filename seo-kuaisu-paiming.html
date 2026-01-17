@@ -1965,6 +1965,9 @@
         // Initialize table events
         allintitleConfig = loadAllintitleConfig();
         bindTableEvents();
+        
+        // Preload Google Trends library for faster modal opening
+        setTimeout(() => loadTrendsLibrary().catch(() => {}), 1000);
     </script>
 </body>
 </html>
