@@ -1178,33 +1178,46 @@
         function calculateKGR() {
             const allintitle = parseFloat(document.getElementById('allintitle').value) || 0;
             const volume = parseFloat(document.getElementById('volume').value) || 0;
+            const kgrResultEl = document.getElementById('kgrResult');
             
             if (volume === 0) {
-                document.getElementById('kgrResult').innerText = '-';
+                kgrResultEl.innerText = '-';
                 return;
             }
 
             const kgr = allintitle / volume;
-            document.getElementById('kgrResult').innerText = kgr.toFixed(2);
+            const kgrText = kgr.toFixed(2);
+            kgrResultEl.innerText = kgrText;
+
+            // 动态调整字体大小以防止溢出
+            let sizeClass = 'text-6xl md:text-8xl';
+            if (kgrText.length > 8) {
+                sizeClass = 'text-4xl md:text-6xl';
+            } else if (kgrText.length > 5) {
+                sizeClass = 'text-5xl md:text-7xl';
+            }
 
             const statusEl = document.getElementById('kgrStatus');
             const adviceEl = document.getElementById('kgrAdvice');
 
+            // 保持响应式类名一致
+            const statusBaseClass = 'px-6 md:px-8 py-2 md:py-3 rounded-full font-black text-xs md:text-sm text-white shadow-lg mb-4 md:mb-6';
+
             if (kgr < 0.25) {
                 statusEl.innerText = '潜力极佳 - 立即行动！';
-                statusEl.className = 'px-8 py-3 rounded-full font-black text-sm bg-emerald-500 text-white shadow-lg shadow-emerald-200 mb-6';
+                statusEl.className = `${statusBaseClass} bg-emerald-500 shadow-emerald-200`;
                 adviceEl.innerText = '该关键词竞争非常小，只要内容质量过关，排名指日可待。';
-                document.getElementById('kgrResult').className = 'text-8xl font-black text-emerald-600 tracking-tighter mb-4';
+                kgrResultEl.className = `${sizeClass} font-black text-emerald-600 tracking-tighter mb-4`;
             } else if (kgr <= 1.00) {
                 statusEl.innerText = '潜力良好 - 建议尝试';
-                statusEl.className = 'px-8 py-3 rounded-full font-black text-sm bg-amber-500 text-white shadow-lg shadow-amber-200 mb-6';
+                statusEl.className = `${statusBaseClass} bg-amber-500 shadow-amber-200`;
                 adviceEl.innerText = '有一定竞争，但对于优质内容仍有很大机会进入搜索前列。';
-                document.getElementById('kgrResult').className = 'text-8xl font-black text-amber-600 tracking-tighter mb-4';
+                kgrResultEl.className = `${sizeClass} font-black text-amber-600 tracking-tighter mb-4`;
             } else {
                 statusEl.innerText = '竞争激烈 - 慎重选择';
-                statusEl.className = 'px-8 py-3 rounded-full font-black text-sm bg-rose-500 text-white shadow-lg shadow-rose-200 mb-6';
+                statusEl.className = `${statusBaseClass} bg-rose-500 shadow-rose-200`;
                 adviceEl.innerText = '该词已被高度优化，建议寻找更细分的 KGR 词汇以避开竞争。';
-                document.getElementById('kgrResult').className = 'text-8xl font-black text-rose-600 tracking-tighter mb-4';
+                kgrResultEl.className = `${sizeClass} font-black text-rose-600 tracking-tighter mb-4`;
             }
         }
 
