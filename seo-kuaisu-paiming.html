@@ -29,8 +29,8 @@
     <link rel="canonical" href="https://kakaciro.dpdns.org/seo-kuaisu-paiming.html">
     <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="css/main.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <script src="https://cdn.bootcdn.net/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -1353,16 +1353,36 @@
             openTrendsModal(getRowKeyword(btn));
         }
 
-        function buildTrendsEmbedUrl(view, keyword, geo, time) {
-            const tz = new Date().getTimezoneOffset();
-            const req = {
-                comparisonItem: [{ keyword, geo, time }],
-                category: 0,
-                property: ''
-            };
-            const reqParam = encodeURIComponent(JSON.stringify(req));
-            const type = view === 'subregion' ? 'GEO_MAP' : 'TIMESERIES';
-            return `https://trends.google.com/trends/embed/explore/${type}?req=${reqParam}&tz=${tz}&hl=zh-CN`;
+        let trendsLibraryPromise = null;
+        function loadTrendsLibrary() {
+            if (trendsLibraryPromise) return trendsLibraryPromise;
+            trendsLibraryPromise = new Promise((resolve, reject) => {
+                if (window.trends && window.trends.embed) return resolve();
+                const script = document.createElement('script');
+                script.src = 'https://ssl.gstatic.com/trends_nrtr/4284_RC01/embed_loader.js';
+                script.onload = () => {
+                    // Poll for window.trends to be ready
+                    let checks = 0;
+                    const timer = setInterval(() => {
+                        if (window.trends && window.trends.embed) {
+                            clearInterval(timer);
+                            resolve();
+                        } else {
+                            checks++;
+                            if (checks > 50) { // 5 seconds timeout
+                                clearInterval(timer);
+                                trendsLibraryPromise = null;
+                                reject(new Error('Google Trends library loaded but trends object not initialized'));
+                            }
+                        }
+                    }, 100);
+                };
+                script.onerror = () => {
+                    trendsLibraryPromise = null;
+                    reject(new Error('Failed to load Google Trends library'));
+                };
+                document.head.appendChild(script);
+            });
         }
 
         function buildTrendsExploreUrl(keyword, geo, time) {
@@ -1457,7 +1477,7 @@
             return trendsGeoLabelByCode[code] || code;
         }
 
-        function renderTrends() {
+        async function renderTrends() {
             const keywordLabel = document.getElementById('trendsKeywordLabel');
             const loading = document.getElementById('trendsLoading');
             const widgetTimeseries = document.getElementById('trendsWidgetTimeseries');
@@ -1479,130 +1499,50 @@
             error.textContent = '';
             loading.classList.remove('hidden');
 
-            if (trendsSubregionObserver) {
-                trendsSubregionObserver.disconnect();
-                trendsSubregionObserver = null;
-            }
-
-            if (trendsSubregionMountTimer) {
-                window.clearTimeout(trendsSubregionMountTimer);
-                trendsSubregionMountTimer = null;
-            }
-
+            // Clear previous content
             widgetTimeseries.innerHTML = '';
             widgetSubregion.innerHTML = '';
-
             widgetTimeseries.style.minHeight = '420px';
             widgetSubregion.style.minHeight = `${subregionHeight}px`;
 
-            let remaining = 1;
-            let timeseriesLoaded = false;
-
-            const slowTimer = window.setTimeout(() => {
-                if (!loading.classList.contains('hidden')) {
-                    error.textContent = '加载较慢或被网络拦截，请稍后重试。';
-                    error.classList.remove('hidden');
-                }
-            }, 6000);
-
-            let subregionMounted = false;
-            let subregionShouldMountOnTimeseriesLoad = false;
-
-            const handleSubregionError = () => {
-                error.textContent = '子区域热度加载失败，请稍后重试。';
-                error.classList.remove('hidden');
-            };
-
-            const subregionWrap = document.createElement('div');
-            subregionWrap.style.width = '100%';
-            subregionWrap.style.overflowX = 'auto';
-            subregionWrap.style.overflowY = 'hidden';
-            subregionWrap.style.background = '#fff';
-            widgetSubregion.appendChild(subregionWrap);
-
-            const mountSubregion = () => {
-                if (subregionWrap.querySelector('iframe')) return;
-                const iframeSubregion = document.createElement('iframe');
-                iframeSubregion.src = buildTrendsEmbedUrl('subregion', currentTrendsKeyword, trendsState.geo, trendsState.time);
-                iframeSubregion.width = '100%';
-                iframeSubregion.height = String(subregionHeight);
-                iframeSubregion.loading = 'lazy';
-                iframeSubregion.referrerPolicy = 'no-referrer-when-downgrade';
-                iframeSubregion.style.border = '0';
-                iframeSubregion.style.display = 'block';
-                iframeSubregion.style.background = '#fff';
-                iframeSubregion.style.minWidth = '980px';
-                iframeSubregion.setAttribute('scrolling', 'yes');
-                iframeSubregion.addEventListener('error', handleSubregionError);
-                subregionWrap.appendChild(iframeSubregion);
-            };
-
-            const ensureSubregionMounted = (force) => {
-                if (subregionMounted) return;
-                if (!force && !timeseriesLoaded) return;
-                subregionMounted = true;
-                mountSubregion();
-            };
-
-            const handleTimeseriesLoaded = () => {
-                timeseriesLoaded = true;
-                remaining = Math.max(0, remaining - 1);
-                if (remaining === 0) {
-                    window.clearTimeout(slowTimer);
-                    loading.classList.add('hidden');
-                    error.classList.add('hidden');
-                    error.textContent = '';
+            try {
+                await loadTrendsLibrary();
+                
+                // Safety check: ensure trends object is actually available
+                const trendsApi = window.trends || (typeof trends !== 'undefined' ? trends : null);
+                
+                if (!trendsApi || !trendsApi.embed) {
+                    trendsLibraryPromise = null; // Reset for retry
+                    throw new Error('Google Trends object not found after loading');
                 }
 
-                if (subregionShouldMountOnTimeseriesLoad) ensureSubregionMounted(false);
-            };
+                loading.classList.add('hidden'); // Library loaded, ready to render
 
-            const handleTimeseriesError = () => {
-                window.clearTimeout(slowTimer);
+                // Render Timeseries
+                trendsApi.embed.renderExploreWidgetTo(widgetTimeseries, "TIMESERIES", {
+                    comparisonItem: [{ keyword: currentTrendsKeyword, geo: trendsState.geo, time: trendsState.time }],
+                    category: 0,
+                    property: ''
+                }, {
+                    exploreQuery: `date=${trendsState.time}&geo=${trendsState.geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`,
+                    guestPath: "https://trends.google.com:443/trends/embed/"
+                });
+
+                // Render Subregion
+                trendsApi.embed.renderExploreWidgetTo(widgetSubregion, "GEO_MAP", {
+                    comparisonItem: [{ keyword: currentTrendsKeyword, geo: trendsState.geo, time: trendsState.time }],
+                    category: 0,
+                    property: ''
+                }, {
+                    exploreQuery: `date=${trendsState.time}&geo=${trendsState.geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`,
+                    guestPath: "https://trends.google.com:443/trends/embed/"
+                });
+
+            } catch (err) {
+                console.error(err);
                 loading.classList.add('hidden');
-                error.textContent = '趋势图加载失败，请检查网络后重试。';
                 error.classList.remove('hidden');
-
-                if (subregionShouldMountOnTimeseriesLoad) ensureSubregionMounted(true);
-            };
-
-            const iframeTimeseries = document.createElement('iframe');
-            iframeTimeseries.src = buildTrendsEmbedUrl('timeseries', currentTrendsKeyword, trendsState.geo, trendsState.time);
-            iframeTimeseries.width = '100%';
-            iframeTimeseries.height = '460';
-            iframeTimeseries.loading = 'lazy';
-            iframeTimeseries.referrerPolicy = 'no-referrer-when-downgrade';
-            iframeTimeseries.style.border = '0';
-            iframeTimeseries.style.display = 'block';
-            iframeTimeseries.style.background = '#fff';
-            iframeTimeseries.setAttribute('scrolling', 'no');
-            iframeTimeseries.addEventListener('load', handleTimeseriesLoaded);
-            iframeTimeseries.addEventListener('error', handleTimeseriesError);
-
-            widgetTimeseries.appendChild(iframeTimeseries);
-
-            const rect = widgetSubregion.getBoundingClientRect();
-            const inView = rect.top < window.innerHeight * 0.6 && rect.bottom > 0;
-            subregionShouldMountOnTimeseriesLoad = inView;
-
-            if (inView) {
-                trendsSubregionMountTimer = window.setTimeout(() => {
-                    trendsSubregionMountTimer = null;
-                    ensureSubregionMounted(true);
-                }, 1500);
-            } else if ('IntersectionObserver' in window) {
-                trendsSubregionObserver = new IntersectionObserver((entries) => {
-                    if (entries.some((e) => e.isIntersecting)) {
-                        ensureSubregionMounted(true);
-                        if (trendsSubregionObserver) {
-                            trendsSubregionObserver.disconnect();
-                            trendsSubregionObserver = null;
-                        }
-                    }
-                }, { threshold: 0.1, rootMargin: '0px 0px -35% 0px' });
-                trendsSubregionObserver.observe(widgetSubregion);
-            } else {
-                window.setTimeout(() => ensureSubregionMounted(true), 900);
+                error.textContent = '无法加载 Google Trends 组件，请检查网络连接 (需翻墙)';
             }
         }
 
