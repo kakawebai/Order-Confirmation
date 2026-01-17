@@ -694,17 +694,22 @@
                         
                         <div>
                             <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">关键词 (可选)</label>
-                            <input type="text" placeholder="输入你要分析的关键词..." class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl md:rounded-2xl px-4 py-3 md:py-4 font-bold text-slate-700 outline-none focus:border-blue-500 transition-all text-sm md:text-base">
+                            <input type="text" id="kgrKeyword" placeholder="输入你要分析的关键词..." class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl md:rounded-2xl px-4 py-3 md:py-4 font-bold text-slate-700 outline-none focus:border-blue-500 transition-all text-sm md:text-base">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Allintitle 结果数</label>
-                                <input type="number" id="allintitle" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl md:rounded-2xl px-4 py-3 md:py-4 font-black text-slate-900 outline-none focus:border-blue-500 transition-all text-sm md:text-base" value="10">
+                                <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 flex justify-between items-center">
+                                    Allintitle 结果数
+                                    <button type="button" onclick="fetchKgrAllintitle(this)" class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-lg hover:bg-blue-100 transition-colors font-bold shadow-sm border border-blue-100">
+                                        <i class="fas fa-cloud-download-alt mr-1"></i> 获取数据
+                                    </button>
+                                </label>
+                                <input type="number" id="allintitle" oninput="calculateKGR()" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl md:rounded-2xl px-4 py-3 md:py-4 font-black text-slate-900 outline-none focus:border-blue-500 transition-all text-sm md:text-base" value="10">
                             </div>
                             <div>
                                 <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">月搜索量 (Max 250)</label>
-                                <input type="number" id="volume" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl md:rounded-2xl px-4 py-3 md:py-4 font-black text-slate-900 outline-none focus:border-blue-500 transition-all text-sm md:text-base" value="200">
+                                <input type="number" id="volume" oninput="calculateKGR()" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl md:rounded-2xl px-4 py-3 md:py-4 font-black text-slate-900 outline-none focus:border-blue-500 transition-all text-sm md:text-base" value="200">
                             </div>
                         </div>
                     </div>
@@ -1124,6 +1129,59 @@
     </footer>
 
     <script>
+        async function fetchKgrAllintitle(btn) {
+            const keywordInput = document.getElementById('kgrKeyword');
+            const allintitleInput = document.getElementById('allintitle');
+            const keyword = keywordInput.value.trim();
+
+            if (!keyword) {
+                alert('请先输入关键词');
+                keywordInput.focus();
+                return;
+            }
+
+            allintitleConfig = allintitleConfig || loadAllintitleConfig();
+            if (!allintitleConfig.apiKey || !allintitleConfig.cx) {
+                openAllintitleConfigModal();
+                return;
+            }
+
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> 获取中...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            try {
+                // Temporarily enable if disabled, or just force fetch?
+                // fetchAllintitleCount checks .enabled, so we must ensure it's enabled or bypass check?
+                // Actually fetchAllintitleCount logic: if (!allintitleConfig.enabled) return Promise.resolve(null);
+                // We should assume if user clicks this button, they want to use it. 
+                // But we can't easily change the config state without saving.
+                // Let's modify fetchAllintitleCount to accept an optional 'force' param?
+                // Or just manually set enabled=true in memory if keys exist?
+                if (!allintitleConfig.enabled) {
+                     allintitleConfig.enabled = true; // Temporary enable for this session if keys exist
+                }
+
+                const count = await fetchAllintitleCount(keyword);
+                
+                if (count !== null) {
+                    allintitleInput.value = count;
+                    calculateKGR();
+                } else {
+                    // Check if it was null due to error or config
+                    alert('获取失败：可能是 API 配额耗尽、网络错误或配置未启用。');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('发生错误，请查看控制台');
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+        }
+
         function calculateKGR() {
             const allintitle = parseFloat(document.getElementById('allintitle').value) || 0;
             const volume = parseFloat(document.getElementById('volume').value) || 0;
