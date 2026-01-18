@@ -10,8 +10,8 @@
     <link rel="preconnect" href="https://cdn.bootcdn.net">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://trends.google.com">
-    <link rel="preconnect" href="https://ssl.gstatic.com">
+    <link rel="dns-prefetch" href="//trends.google.com">
+    <link rel="dns-prefetch" href="//ssl.gstatic.com">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -29,10 +29,10 @@
 
     <link rel="canonical" href="https://kakaciro.dpdns.org/seo-kuaisu-paiming.html">
     <meta name="robots" content="index, follow">
+    <link rel="preload" href="css/main.min.css" as="style" fetchpriority="high">
     <link rel="stylesheet" href="css/main.min.css" fetchpriority="high">
-    <script src="https://cdn.bootcdn.net/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" fetchpriority="low" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" fetchpriority="low" media="print" onload="this.media='all'">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
@@ -929,7 +929,7 @@
 
     <div id="allintitleConfigModal" class="fixed inset-0 z-[100] hidden" style="z-index: 1900;" role="dialog" aria-modal="true">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeAllintitleConfigModal()"></div>
-        <div class="absolute inset-0" style="overflow-y:auto;">
+        <div id="trendsModalScroller" class="absolute inset-0" style="overflow-y:auto;">
             <div class="min-h-full flex items-start justify-center p-4 md:p-6">
                 <div class="w-11/12 max-w-md">
                     <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
@@ -1086,7 +1086,7 @@
 
     <div id="trendsModal" class="fixed inset-0 z-[110] hidden" style="z-index: 2000;" role="dialog" aria-modal="true">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeTrendsModal()"></div>
-        <div class="absolute inset-0" style="overflow-y:auto;">
+        <div class="absolute inset-0" style="overflow-y:auto;" id="trendsModalScroller">
             <div class="min-h-full flex items-start justify-center p-4 md:p-6">
                 <div class="w-full max-w-6xl">
                     <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden" id="trendsModalContent">
@@ -1110,8 +1110,8 @@
                             <option value="now 7-d">过去 7 天</option>
                             <option value="today 1-m">过去 30 天</option>
                             <option value="today 3-m">过去 90 天</option>
-                            <option value="today 12-m" selected>过去 12 个月</option>
-                            <option value="today 5-y">过去 5 年</option>
+                            <option value="today 12-m">过去 12 个月</option>
+                            <option value="today 5-y" selected>过去 5 年</option>
                             <option value="all">2004 至今</option>
                         </select>
                         <button type="button" onclick="trendsLastRenderKey='';renderTrends()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black transition-all" title="刷新图表">
@@ -1125,6 +1125,7 @@
                 <div class="p-6">
                     <div id="trendsLoading" class="text-slate-500 text-sm font-bold">加载中…</div>
                     <div id="trendsWidgetTimeseries" class="mt-4 rounded-2xl overflow-hidden border border-slate-100"></div>
+                    <div id="trendsWidgetLeaderboard" class="mt-6 rounded-2xl overflow-hidden border border-slate-100"></div>
                     <div id="trendsWidgetSubregion" class="mt-6 rounded-2xl overflow-hidden border border-slate-100"></div>
                     <div id="trendsError" class="hidden mt-4 text-rose-600 text-sm font-bold"></div>
                 </div>
@@ -1328,7 +1329,7 @@
         let trendsGeoLabelByCode = {};
         let trendsGeoCodeByLabel = {};
         let trendsGeoDatalistBuilt = false;
-        let trendsState = { geo: 'US', time: 'today 12-m' };
+        let trendsState = { geo: '', time: 'today 5-y' };
         let currentTrendsKeyword = 'seo';
         let trendsControlsInited = false;
         let trendsRenderDebounceTimer = null;
@@ -1379,12 +1380,34 @@
             openTrendsModal(getRowKeyword(btn));
         }
 
+        function scrollTrendsTo(id) {
+            const scroller = document.getElementById('trendsModalScroller');
+            const target = document.getElementById(id);
+            if (!scroller || !target) return;
+            const scrollerRect = scroller.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+            const top = Math.max(0, targetRect.top - scrollerRect.top + scroller.scrollTop - 12);
+            scroller.scrollTo({ top, behavior: 'smooth' });
+        }
+
+        function warmupTrendsConnections() {
+            const targets = ['https://ssl.gstatic.com', 'https://trends.google.com'];
+            targets.forEach(href => {
+                if (document.querySelector(`link[rel="preconnect"][href="${href}"]`)) return;
+                const link = document.createElement('link');
+                link.rel = 'preconnect';
+                link.href = href;
+                document.head.appendChild(link);
+            });
+        }
+
         let trendsLibraryPromise = null;
         let trendsLastRenderKey = '';
         function loadTrendsLibrary() {
             if (trendsLibraryPromise) return trendsLibraryPromise;
             trendsLibraryPromise = new Promise((resolve, reject) => {
                 if (window.trends && window.trends.embed) return resolve();
+                warmupTrendsConnections();
                 const script = document.createElement('script');
                 script.src = 'https://ssl.gstatic.com/trends_nrtr/4284_RC01/embed_loader.js';
                 script.onload = () => {
@@ -1417,13 +1440,85 @@
             return `${currentTrendsKeyword}__${trendsState.geo}__${trendsState.time}`;
         }
 
+        function buildTrendsExploreQuery() {
+            const geo = trendsState.geo || '';
+            return `date=${trendsState.time}&geo=${geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`;
+        }
+
+        function syncTrendsContainerHeightToIframe(container, fallbackPx, fixedHeightPx) {
+            if (!container) return;
+            const fallback = Number.isFinite(fallbackPx) ? fallbackPx : 0;
+            const fixed = Number.isFinite(fixedHeightPx) ? fixedHeightPx : 0;
+            if (fallback > 0) container.style.minHeight = `${Math.ceil(fallback)}px`;
+
+            let tries = 0;
+            let resizeTimer = null;
+            let iframeObserver = null;
+            let containerObserver = null;
+            let boundIframe = null;
+
+            const readIframeHeight = (iframe) => {
+                if (!iframe) return 0;
+                const fromStyle = parseFloat(iframe.style.height || '');
+                if (Number.isFinite(fromStyle) && fromStyle > 0) return fromStyle;
+                const computed = window.getComputedStyle ? window.getComputedStyle(iframe).height : '';
+                const fromComputed = parseFloat(computed || '');
+                if (Number.isFinite(fromComputed) && fromComputed > 0) return fromComputed;
+                return 0;
+            };
+
+            const update = () => {
+                const iframe = container.querySelector('iframe');
+                if (!iframe) return;
+                if (fixed > 0) {
+                    if (iframe.style.height !== `${fixed}px`) iframe.style.height = `${fixed}px`;
+                    if (container.style.minHeight !== `${fixed}px`) container.style.minHeight = `${fixed}px`;
+                    return;
+                }
+
+                const h = readIframeHeight(iframe);
+                if (h > 0) container.style.minHeight = `${Math.ceil(h)}px`;
+            };
+
+            const tick = () => {
+                const iframe = container.querySelector('iframe');
+                if (iframe) {
+                    iframe.style.display = 'block';
+                    if (boundIframe !== iframe) {
+                        boundIframe = iframe;
+                        if (iframeObserver) iframeObserver.disconnect();
+                        iframeObserver = null;
+                        if ('MutationObserver' in window) {
+                            iframeObserver = new MutationObserver(() => update());
+                            iframeObserver.observe(iframe, { attributes: true, attributeFilter: ['style'] });
+                        }
+                    }
+                    update();
+
+                    if (!containerObserver && 'MutationObserver' in window) {
+                        containerObserver = new MutationObserver(() => update());
+                        containerObserver.observe(container, { childList: true, subtree: true });
+                    }
+
+                    window.addEventListener('resize', () => {
+                        if (resizeTimer) window.clearTimeout(resizeTimer);
+                        resizeTimer = window.setTimeout(() => update(), 120);
+                    }, { passive: true });
+                    return;
+                }
+                tries += 1;
+                if (tries < 300) window.requestAnimationFrame(tick);
+            };
+            window.requestAnimationFrame(tick);
+        }
+
         function renderTrendsTimeseries(trendsApi, container) {
             trendsApi.embed.renderExploreWidgetTo(container, "TIMESERIES", {
                 comparisonItem: [{ keyword: currentTrendsKeyword, geo: trendsState.geo, time: trendsState.time }],
                 category: 0,
                 property: ''
             }, {
-                exploreQuery: `date=${trendsState.time}&geo=${trendsState.geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`,
+                exploreQuery: buildTrendsExploreQuery(),
                 guestPath: "https://trends.google.com:443/trends/embed/"
             });
         }
@@ -1434,7 +1529,18 @@
                 category: 0,
                 property: ''
             }, {
-                exploreQuery: `date=${trendsState.time}&geo=${trendsState.geo}&q=${encodeURIComponent(currentTrendsKeyword)}&hl=zh-CN`,
+                exploreQuery: buildTrendsExploreQuery(),
+                guestPath: "https://trends.google.com:443/trends/embed/"
+            });
+        }
+
+        function renderTrendsLeaderboard(trendsApi, container) {
+            trendsApi.embed.renderExploreWidgetTo(container, "RELATED_QUERIES", {
+                comparisonItem: [{ keyword: currentTrendsKeyword, geo: trendsState.geo, time: trendsState.time }],
+                category: 0,
+                property: ''
+            }, {
+                exploreQuery: buildTrendsExploreQuery(),
                 guestPath: "https://trends.google.com:443/trends/embed/"
             });
         }
@@ -1444,10 +1550,15 @@
             if (!widgetSubregion) return;
             if (widgetSubregion.dataset.trendsRendered === '1') return;
 
+            const isSmallScreen = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+            const fallbackHeight = isSmallScreen ? 520 : 560;
+
             const renderNow = () => {
                 if (widgetSubregion.dataset.trendsRendered === '1') return;
                 widgetSubregion.dataset.trendsRendered = '1';
+                const fixedHeight = 415;
                 renderTrendsSubregion(trendsApi, widgetSubregion);
+                syncTrendsContainerHeightToIframe(widgetSubregion, fallbackHeight, fixedHeight);
             };
 
             if (!('IntersectionObserver' in window)) {
@@ -1554,6 +1665,7 @@
             const keywordLabel = document.getElementById('trendsKeywordLabel');
             const loading = document.getElementById('trendsLoading');
             const widgetTimeseries = document.getElementById('trendsWidgetTimeseries');
+            const widgetLeaderboard = document.getElementById('trendsWidgetLeaderboard');
             const widgetSubregion = document.getElementById('trendsWidgetSubregion');
             const error = document.getElementById('trendsError');
             const geoInput = document.getElementById('trendsGeoInput');
@@ -1561,8 +1673,11 @@
 
             const isSmallScreen = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
             const subregionHeight = isSmallScreen ? 520 : 560;
+            const fixedHeightTimeseries = 420;
+            const fixedHeightLeaderboard = 375;
+            const fixedHeightSubregion = 415;
 
-            if (!widgetTimeseries || !widgetSubregion || !loading || !error || !keywordLabel) return;
+            if (!widgetTimeseries || !widgetLeaderboard || !widgetSubregion || !loading || !error || !keywordLabel) return;
 
             keywordLabel.textContent = currentTrendsKeyword;
             if (geoInput) geoInput.value = formatTrendsGeoLabel(trendsState.geo);
@@ -1584,28 +1699,31 @@
             trendsLastRenderKey = nextKey;
 
             widgetTimeseries.innerHTML = '';
+            widgetLeaderboard.innerHTML = '';
             widgetSubregion.innerHTML = '';
             widgetSubregion.dataset.trendsRendered = '0';
-            widgetTimeseries.style.minHeight = '420px';
-            widgetSubregion.style.minHeight = `${subregionHeight}px`;
+            widgetTimeseries.style.minHeight = `${fixedHeightTimeseries}px`;
+            widgetLeaderboard.style.minHeight = `${fixedHeightLeaderboard}px`;
+            widgetSubregion.style.minHeight = `${fixedHeightSubregion}px`;
 
             try {
                 await loadTrendsLibrary();
-                
-                // Add a small delay to ensure container stability
+
                 await new Promise(resolve => setTimeout(resolve, 50));
 
-                // Safety check: ensure trends object is actually available
                 const trendsApi = window.trends || (typeof trends !== 'undefined' ? trends : null);
                 
                 if (!trendsApi || !trendsApi.embed) {
-                    trendsLibraryPromise = null; // Reset for retry
+                    trendsLibraryPromise = null;
                     throw new Error('Google Trends object not found after loading');
                 }
 
-                loading.classList.add('hidden'); // Library loaded, ready to render
+                loading.classList.add('hidden');
 
                 renderTrendsTimeseries(trendsApi, widgetTimeseries);
+                syncTrendsContainerHeightToIframe(widgetTimeseries, 420, fixedHeightTimeseries);
+                renderTrendsLeaderboard(trendsApi, widgetLeaderboard);
+                syncTrendsContainerHeightToIframe(widgetLeaderboard, 380, fixedHeightLeaderboard);
                 setupTrendsSubregionLazyRender(trendsApi);
 
             } catch (err) {
@@ -1618,9 +1736,11 @@
 
         async function openTrendsModal(keyword) {
             const modal = document.getElementById('trendsModal');
+            const scroller = document.getElementById('trendsModalScroller');
             const keywordLabel = document.getElementById('trendsKeywordLabel');
             const loading = document.getElementById('trendsLoading');
             const widgetTimeseries = document.getElementById('trendsWidgetTimeseries');
+            const widgetLeaderboard = document.getElementById('trendsWidgetLeaderboard');
             const widgetSubregion = document.getElementById('trendsWidgetSubregion');
             const error = document.getElementById('trendsError');
             const geoInput = document.getElementById('trendsGeoInput');
@@ -1640,10 +1760,12 @@
             error.textContent = '';
             loading.classList.remove('hidden');
             if (widgetTimeseries) widgetTimeseries.innerHTML = '';
+            if (widgetLeaderboard) widgetLeaderboard.innerHTML = '';
             if (widgetSubregion) widgetSubregion.innerHTML = '';
 
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            if (scroller) scroller.scrollTop = 0;
 
             const nextKey = getTrendsRenderKey();
             const hasRendered = widgetTimeseries && widgetTimeseries.childNodes.length > 0 && trendsLastRenderKey === nextKey;
@@ -1699,36 +1821,64 @@
             }
         });
 
-        function exportToXLSX() {
-            const table = document.getElementById('kgrTable');
-            const rows = Array.from(table.querySelectorAll('tr'));
-            
-            // Prepare data for SheetJS
-            const data = rows.map((row, index) => {
-                const cells = Array.from(row.querySelectorAll('th, td'));
-                // Skip the last column (Actions)
-                return cells.slice(0, -1).map(cell => {
-                    // For KGR cell, get the text inside the span
-                    if (cell.classList.contains('table-kgr')) {
-                        return cell.querySelector('span') ? cell.querySelector('span').innerText : cell.innerText;
-                    }
-                    return cell.innerText;
-                });
+        let xlsxLibraryPromise = null;
+        let isExportingXlsx = false;
+        function ensureXlsxLoaded() {
+            if (window.XLSX) return Promise.resolve();
+            if (xlsxLibraryPromise) return xlsxLibraryPromise;
+            xlsxLibraryPromise = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.bootcdn.net/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+                script.async = true;
+                script.onload = () => {
+                    if (window.XLSX) resolve();
+                    else reject(new Error('XLSX loaded but window.XLSX is missing'));
+                };
+                script.onerror = () => reject(new Error('Failed to load XLSX library'));
+                document.head.appendChild(script);
+            }).catch(err => {
+                xlsxLibraryPromise = null;
+                throw err;
             });
+            return xlsxLibraryPromise;
+        }
 
-            // Create worksheet
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            
-            // Create workbook
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "KGR 关键词研究");
+        async function exportToXLSX() {
+            if (isExportingXlsx) return;
+            isExportingXlsx = true;
+            try {
+                await ensureXlsxLoaded();
+            } catch {
+                showCenteredAlert('导出失败', 'XLSX 依赖加载失败，请检查网络后重试。');
+                isExportingXlsx = false;
+                return;
+            }
 
-            // Generate filename with date
-            const date = new Date().toISOString().split('T')[0];
-            const filename = `KGR_Keywords_${date}.xlsx`;
+            try {
+                const table = document.getElementById('kgrTable');
+                const rows = Array.from(table.querySelectorAll('tr'));
+                
+                const data = rows.map(row => {
+                    const cells = Array.from(row.querySelectorAll('th, td'));
+                    return cells.slice(0, -1).map(cell => {
+                        if (cell.classList.contains('table-kgr')) {
+                            return cell.querySelector('span') ? cell.querySelector('span').innerText : cell.innerText;
+                        }
+                        return cell.innerText;
+                    });
+                });
 
-            // Download
-            XLSX.writeFile(wb, filename);
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "KGR 关键词研究");
+
+                const date = new Date().toISOString().split('T')[0];
+                const filename = `KGR_Keywords_${date}.xlsx`;
+
+                XLSX.writeFile(wb, filename);
+            } finally {
+                isExportingXlsx = false;
+            }
         }
 
         function calculateTableKGR(row) {
