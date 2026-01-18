@@ -972,15 +972,29 @@
                                     <div class="flex-1">
                                         <h4 class="text-sm font-bold text-indigo-900 mb-1">为什么 API 结果与网页搜索不同？</h4>
                                         <p class="text-xs text-indigo-800/80 leading-relaxed">
-                                            1. <strong>估算机制差异</strong>：对于海量结果（如百万级），Google 网页端显示的是“约数”（Estimate），而 API 返回的是数据库分片的统计值，两者通常存在 20%-30% 的正常统计误差。
+                                            1. <strong>网页端严重虚高</strong>：Google 网页搜索顶部的 "About X results" 是极不准确的估算值。您可以尝试在网页端翻页到最后一页，通常会发现实际结果远少于显示的估算值（例如显示 121 条，翻页后实际只有 40 条）。
                                             <br>
-                                            2. <strong>去重与精准度</strong>：API 数据更倾向于“严格匹配”，剔除了部分重复或低质量页面；网页搜索则包含更多泛匹配结果（包括 AI 概览触发的内容）。
+                                            2. <strong>API 更精准</strong>：API 返回的数据剔除了大量重复、无效和“省略的结果”，代表了<strong>真实的有效索引量</strong>。对于 KGR 计算，API 数据更具参考价值，因为它反映了真正的竞争对手数量。
                                             <br>
-                                            3. <strong>判断标准</strong>：只要两者在<strong>同一数量级</strong>（例如都是百万级，或都是十万级），即代表配置正确。
+                                            3. <strong>关键配置</strong>：如果 API 结果极少（个位数），请务必检查 CSE 控制台中是否开启了 "Search the entire web"（搜索整个网络）。
                                             <br>
-                                            4. <strong>异常情况</strong>：如果差异达到“数量级”悬殊（例如 API 仅个位数 vs 网页百万级），请务必检查 CX 配置是否开启了“Search the entire web”。
+                                            <span class="opacity-75">* 本工具已配置为全球无过滤搜索 (safe=off)，以获取尽可能多的结果。</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-2 p-3 bg-amber-50/50 rounded-lg border border-amber-100/50">
+                                <div class="flex items-start space-x-2">
+                                    <div class="mt-0.5 text-amber-500">
+                                        <i class="fas fa-exclamation-triangle text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="text-sm font-bold text-amber-900 mb-1">关于 API 配额限制</h4>
+                                        <p class="text-xs text-amber-800/80 leading-relaxed">
+                                            Google Custom Search API 免费版通常限制每天 <strong>100 次</strong>查询。
                                             <br>
-                                            <span class="opacity-75">* 系统已自动添加 hl=zh-CN 参数以尽量对齐中文搜索环境。</span>
+                                            如果遇到 "Quota exceeded" 或 "Quota Limit" 错误，说明今日配额已用完。您可以更换新的 API Key 或等待次日重置。
                                         </p>
                                     </div>
                                 </div>
@@ -1172,10 +1186,15 @@
                 
                 if (count !== null) {
                     allintitleInput.value = count;
+                    allintitleInput.classList.remove('text-rose-500');
+                    allintitleInput.title = '';
                     calculateKGR();
                 }
             } catch (e) {
                 console.error(e);
+                const info = describeAllintitleError(e);
+                allintitleInput.title = info.detail || (e.message || '获取失败');
+                allintitleInput.classList.add('text-rose-500');
             } finally {
                 if(loadingIcon) loadingIcon.classList.add('hidden');
             }
@@ -1298,6 +1317,7 @@
             calculateTableKGR(newRow);
 
             // If it's a new keyword and Allintitle API is enabled, trigger fetch
+            allintitleConfig = allintitleConfig || loadAllintitleConfig();
             if (data.keyword && allintitleConfig.enabled) {
                 scheduleRowAllintitleUpdate(newRow, data.keyword);
             }
@@ -1855,7 +1875,142 @@
             }, 1000);
         }
 
-        function saveAllintitleConfigModal() {
+        function normalizeAllintitleApiKeyInput(raw) {
+            let value = (raw || '').trim();
+            if (!value) return '';
+
+            value = value.replace(/^key\s*[:=]\s*/i, '').replace(/["'`\s]+/g, '');
+
+            try {
+                if (/^https?:\/\//i.test(value)) {
+                    const u = new URL(value);
+                    const k = u.searchParams.get('key');
+                    if (k) return k.trim();
+                }
+            } catch {
+            }
+
+            const m = value.match(/[?&]key=([^&]+)/i);
+            if (m && m[1]) {
+                try {
+                    return decodeURIComponent(m[1]).trim();
+                } catch {
+                    return m[1].trim();
+                }
+            }
+
+            return value;
+        }
+
+        function normalizeAllintitleCxInput(raw) {
+            let value = (raw || '').trim();
+            if (!value) return '';
+
+            value = value.replace(/^cx\s*[:=]\s*/i, '').replace(/["'`\s;]+/g, '');
+
+            try {
+                if (/^https?:\/\//i.test(value)) {
+                    const u = new URL(value);
+                    const cx = u.searchParams.get('cx');
+                    if (cx) return cx.trim();
+                }
+            } catch {
+            }
+
+            const m = value.match(/[?&]cx=([^&]+)/i);
+            if (m && m[1]) {
+                try {
+                    return decodeURIComponent(m[1]).trim();
+                } catch {
+                    return m[1].trim();
+                }
+            }
+
+            return value;
+        }
+
+        function describeAllintitleError(e) {
+            const msg = (e && e.message) ? String(e.message) : '未知错误';
+            const lower = msg.toLowerCase();
+            const status = e && typeof e.httpStatus === 'number' ? e.httpStatus : null;
+            const isFile = (window.location && window.location.protocol === 'file:');
+
+            if (lower.includes('quota') || lower.includes('daily limit') || status === 429) {
+                return {
+                    code: 'Quota Limit',
+                    title: '配额已耗尽',
+                    detail: 'Google Custom Search API 免费版通常每天 100 次查询，今日配额已用完。\n\n解决：更换 API Key 或等待次日重置。\n\n(错误信息: ' + msg + ')'
+                };
+            }
+
+            if (lower.includes('requested entity was not found')) {
+                return {
+                    code: 'Bad cx',
+                    title: 'cx 无效或找不到搜索引擎',
+                    detail: '当前 cx 看起来不是有效的 Programmable Search Engine ID，或该搜索引擎不存在/未公开。\n\n解决：\n1) 进入 Programmable Search Engine 控制台复制 “Search engine ID”。\n2) 仅粘贴形如 0123...:abcd... 的 ID，不要粘贴整段脚本/URL。\n3) 确认已开启 “Search the entire web”。\n\n(错误信息: ' + msg + ')'
+                };
+            }
+
+            if (lower.includes('api key not valid') || lower.includes('invalid api key') || lower.includes('keyinvalid')) {
+                return {
+                    code: 'Bad key',
+                    title: 'API Key 无效',
+                    detail: 'API Key 不正确或已失效。\n\n解决：\n1) 确认已在 Google Cloud 创建 API Key。\n2) 确认已启用 “Custom Search API”。\n\n(错误信息: ' + msg + ')'
+                };
+            }
+
+            if (lower.includes('referer') || lower.includes('referrer') || lower.includes('origin') || lower.includes('referer <empty>')) {
+                return {
+                    code: 'Ref Err',
+                    title: 'Key 限制导致请求被拦截',
+                    detail: (isFile
+                        ? '你正在用 file:// 方式打开页面，浏览器的 Origin/Referer 可能是空值，若 API Key 开启了 HTTP referrer 限制会被拦截。\n\n解决：\n1) 将页面通过 http://localhost 打开（用任意本地静态服务器）。\n2) 或在 Google Cloud 控制台放开/正确配置 API Key 的网站来源限制。\n\n(错误信息: ' + msg + ')'
+                        : 'API Key 开启了来源(Referrer/Origin)限制，当前页面域名不在允许列表内。\n\n解决：在 Google Cloud 控制台把当前域名加入允许列表，或放开限制。\n\n(错误信息: ' + msg + ')')
+                };
+            }
+
+            if (lower.includes('has not been used') || lower.includes('is disabled') || lower.includes('access not configured') || (status === 403 && lower.includes('custom search api'))) {
+                return {
+                    code: 'API Off',
+                    title: 'Custom Search API 未启用',
+                    detail: 'Google Cloud 项目里未启用 Custom Search API，或权限未配置。\n\n解决：在 Google Cloud 控制台启用 “Custom Search API”，稍等几分钟再试。\n\n(错误信息: ' + msg + ')'
+                };
+            }
+
+            if (lower.includes('billing')) {
+                return {
+                    code: 'Billing',
+                    title: '计费/账单限制',
+                    detail: '该项目可能需要启用计费或受账单策略影响。\n\n(错误信息: ' + msg + ')'
+                };
+            }
+
+            if (lower.includes('failed to fetch') || lower.includes('networkerror') || lower.includes('load failed')) {
+                return {
+                    code: 'Net Err',
+                    title: '网络请求失败',
+                    detail: (isFile
+                        ? '请求失败（可能是网络、代理、或 file:// 场景下的限制）。\n\n建议：用 http://localhost 打开页面后重试。\n\n(错误信息: ' + msg + ')'
+                        : '请求失败（可能是网络、代理、或浏览器阻止）。\n\n(错误信息: ' + msg + ')')
+                };
+            }
+
+            if (typeof status === 'number') {
+                return {
+                    code: `Err ${status}`,
+                    title: '获取 Allintitle 失败',
+                    detail: '请求返回错误状态码：' + status + '\n\n(错误信息: ' + msg + ')'
+                };
+            }
+
+            return {
+                code: 'Error',
+                title: '获取 Allintitle 失败',
+                detail: msg
+            };
+        }
+
+        async function saveAllintitleConfigModal() {
             const enabledInput = document.getElementById('allintitleEnabledInput');
             const apiKeyInput = document.getElementById('allintitleApiKeyInput');
             const cxInput = document.getElementById('allintitleCxInput');
@@ -1863,8 +2018,11 @@
             if (!enabledInput || !apiKeyInput || !cxInput || !hint) return;
 
             const enabled = enabledInput.checked;
-            const apiKey = (apiKeyInput.value || '').trim();
-            const cx = (cxInput.value || '').trim();
+            const apiKey = normalizeAllintitleApiKeyInput(apiKeyInput.value);
+            const cx = normalizeAllintitleCxInput(cxInput.value);
+
+            apiKeyInput.value = apiKey;
+            cxInput.value = cx;
 
             if (enabled && (!apiKey || !cx)) {
                 hint.textContent = '启用自动获取需要同时填写 API Key 和 cx。';
@@ -1873,6 +2031,19 @@
             }
 
             saveAllintitleConfig({ enabled, apiKey, cx });
+
+            if (enabled) {
+                hint.textContent = '正在验证配置...';
+                hint.classList.remove('hidden');
+                try {
+                    await fetchAllintitleCount('test');
+                } catch (e) {
+                    const info = describeAllintitleError(e);
+                    hint.textContent = `${info.code}: ${info.detail}`;
+                    return;
+                }
+            }
+
             closeAllintitleConfigModal();
 
             if (enabled) {
@@ -1898,7 +2069,33 @@
         function setAllintitleCell(row, text) {
             const cell = row.querySelector('.table-allintitle');
             if (!cell) return;
-            cell.innerText = String(text);
+            
+            // 如果是数字，添加验证链接
+            if (!isNaN(text) && text !== '-') {
+                const keyword = row.querySelector('td[contenteditable="true"]')?.innerText?.trim() || '';
+                const q = buildAllintitleQuery(keyword);
+                // 构造 Google 验证链接：使用 filter=0 显示省略结果，hl=en 避免本地化干扰
+                const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(q)}&filter=0&hl=en&gl=us`;
+                
+                cell.innerHTML = `
+                    <div class="flex items-center justify-center gap-1 group relative">
+                        <span class="font-bold text-slate-700">${text}</span>
+                        <a href="${googleUrl}" target="_blank" 
+                           class="opacity-30 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-indigo-600" 
+                           title="点击跳转 Google 验证 (请务必翻到最后一页查看真实数量)">
+                            <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                    </div>
+                `;
+            } else {
+                cell.innerText = String(text);
+            }
+
+            // Clear error states
+            cell.classList.remove('text-rose-500', 'cursor-pointer', 'underline', 'decoration-dotted');
+            cell.title = '';
+            cell.onclick = null;
+            
             calculateTableKGR(row);
         }
 
@@ -1906,6 +2103,10 @@
             const cell = row.querySelector('.table-allintitle');
             if (!cell) return;
             cell.innerText = '…';
+            // Clear error states
+            cell.classList.remove('text-rose-500', 'cursor-pointer', 'underline', 'decoration-dotted');
+            cell.title = '正在获取...';
+            cell.onclick = null;
         }
 
         function fetchAllintitleCount(keyword) {
@@ -1931,19 +2132,43 @@
                 url.searchParams.set('cx', allintitleConfig.cx);
                 url.searchParams.set('q', q);
                 url.searchParams.set('num', '1');
-                url.searchParams.set('filter', '0'); // Turn off duplicate content filter for more accurate count
-                url.searchParams.set('fields', 'searchInformation(totalResults)');
-                // 强制指定中文环境，以减少因服务器位置不同导致的结果差异
-                url.searchParams.set('hl', 'zh-CN');
-                url.searchParams.set('gl', 'CN');
+                url.searchParams.set('filter', '0'); 
+                url.searchParams.set('safe', 'off'); // 关闭安全搜索过滤
+                // url.searchParams.set('nfpr', '1'); // API 不支持 nfpr 参数，移除以防止 400 Error
+                
+                // 强制使用美国/英语环境，以对齐网页端 manual check 的结果
+                // 解决因数据中心不同导致的 19 vs 30 这种差异
+                url.searchParams.set('gl', 'us');
+                url.searchParams.set('hl', 'en');
+
 
                 return fetch(url.toString(), { signal: controller.signal })
                     .then(async (res) => {
-                        if (!res.ok) throw new Error(`http-${res.status}`);
+                        if (!res.ok) {
+                            const errorData = await res.json().catch(() => ({}));
+                            const msg = errorData.error ? errorData.error.message : `HTTP ${res.status}`;
+                            const err = new Error(msg);
+                            err.httpStatus = res.status;
+                            throw err;
+                        }
                         const data = await res.json();
-                        const raw = data && data.searchInformation ? data.searchInformation.totalResults : null;
-                        const value = raw == null ? null : Number(raw);
+                        
+                        // 兼容多种可能的返回结构
+                        let raw = null;
+                        if (data.searchInformation && data.searchInformation.totalResults !== undefined) {
+                            raw = data.searchInformation.totalResults;
+                        } else if (data.queries && data.queries.request && data.queries.request[0]) {
+                            raw = data.queries.request[0].totalResults;
+                        }
+
+                        if (raw === null) {
+                            console.warn('Google API 未返回 totalResults:', data);
+                            return null;
+                        }
+
+                        const value = Number(raw);
                         if (!Number.isFinite(value)) return null;
+                        
                         allintitleCache.set(cacheKey, { ts: Date.now(), value });
                         return value;
                     })
@@ -1960,6 +2185,61 @@
             allintitleInFlight.set(cacheKey, chained);
             chained.finally(() => allintitleInFlight.delete(cacheKey));
             return chained;
+        }
+
+                function showCenteredAlert(title, message, isConfirm = false, onConfirm = null) {
+            const modal = document.getElementById('genericAlertModal');
+            const content = document.getElementById('genericAlertContent');
+            const titleEl = document.getElementById('genericAlertTitle');
+            const msgEl = document.getElementById('genericAlertMessage');
+            const cancelBtn = document.getElementById('genericAlertCancelBtn');
+            const okBtn = document.getElementById('genericAlertOkBtn');
+            
+            if(!modal) return alert(message);
+
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+            
+            // Handle buttons
+            if (isConfirm) {
+                cancelBtn.classList.remove('hidden');
+                cancelBtn.onclick = closeGenericAlert;
+                
+                okBtn.onclick = () => {
+                    closeGenericAlert();
+                    if (onConfirm) onConfirm();
+                };
+            } else {
+                cancelBtn.classList.add('hidden');
+                okBtn.onclick = closeGenericAlert;
+            }
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            });
+        }
+
+        function showCenteredConfirm(title, message, onConfirm) {
+            showCenteredAlert(title, message, true, onConfirm);
+        }
+
+        function closeGenericAlert() {
+            const modal = document.getElementById('genericAlertModal');
+            const content = document.getElementById('genericAlertContent');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
         }
 
         function scheduleRowAllintitleUpdate(row, keyword) {
@@ -1981,12 +2261,39 @@
                 }
 
                 setAllintitleLoading(row);
-                const value = await fetchAllintitleCount(keyword).catch(() => null);
-                if (value == null) {
-                    setAllintitleCell(row, '-');
-                    return;
+                try {
+                    const value = await fetchAllintitleCount(keyword);
+                    if (value === null) {
+                        setAllintitleCell(row, '-');
+                    } else {
+                        setAllintitleCell(row, value);
+                    }
+                } catch (e) {
+                    console.error('Allintitle Update Error:', e);
+
+                    const info = describeAllintitleError(e);
+                    const isQuotaError = info.code === 'Quota Limit';
+
+                    setAllintitleCell(row, info.code);
+
+                    const cell = row.querySelector('.table-allintitle');
+                    if (cell) {
+                        cell.title = info.detail || (e.message || '未知错误');
+                        cell.classList.add('text-rose-500', 'cursor-pointer', 'underline', 'decoration-dotted');
+                        cell.onclick = (evt) => {
+                            evt.stopPropagation();
+                            if (isQuotaError) {
+                                showCenteredConfirm(
+                                    info.title,
+                                    info.detail,
+                                    () => openAllintitleConfigModal()
+                                );
+                            } else {
+                                showCenteredAlert(info.title, info.detail);
+                            }
+                        };
+                    }
                 }
-                setAllintitleCell(row, value);
             }, 600);
 
             allintitleRowTimers.set(row, timer);
@@ -2034,5 +2341,25 @@
             }, 5000);
         });
     </script>
+    <!-- Generic Alert Modal -->
+    <div id="genericAlertModal" class="fixed inset-0 bg-black/50 z-[100] hidden items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 transform scale-95 transition-transform duration-300" id="genericAlertContent">
+            <div class="p-6 text-center">
+                <div class="w-12 h-12 rounded-full bg-rose-100 p-2 mx-auto mb-4 flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-rose-500 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-2" id="genericAlertTitle">提示</h3>
+                <p class="text-slate-600 mb-6 text-sm break-words" id="genericAlertMessage">内容</p>
+                <div class="flex gap-3 justify-center" id="genericAlertButtons">
+                    <button id="genericAlertCancelBtn" onclick="closeGenericAlert()" class="hidden w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors">
+                        取消
+                    </button>
+                    <button id="genericAlertOkBtn" onclick="closeGenericAlert()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
