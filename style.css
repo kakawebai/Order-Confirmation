@@ -1,0 +1,863 @@
+:root {
+    --primary-color: #4a90e2;
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --text-color: #333;
+    --bg-light: #f4f6f8;
+    --border-color: #ddd;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-color);
+    background-color: #f8fafc; /* Light cool gray background */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+.top-nav {
+    background-color: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0 40px;
+    display: flex;
+    justify-content: center;
+    height: 60px;
+    align-items: center;
+    gap: 40px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #666;
+    font-size: 15px;
+    font-weight: 500;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.nav-item:hover {
+    color: var(--primary-color);
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.nav-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px 3px 0 0;
+}
+
+.container {
+    display: flex;
+    flex: 1;
+    padding: 30px 40px; /* Added padding around the panels */
+    gap: 30px; /* Space between the two cards */
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Left Panel */
+.left-panel {
+    flex: 1;
+    max-width: 600px;
+    background-color: #fff;
+    padding: 35px;
+    border-radius: 12px; /* Rounded corners for card feel */
+    border: 1px solid #e2e8f0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.panel-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.left-panel h1 {
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: var(--primary-color); /* Use primary blue for headers */
+    font-weight: 700;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%; /* Ensure inputs take full width of container */
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1e293b;
+    background-color: #fff;
+    transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.image-preview-box {
+    width: 120px;
+    height: 120px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    overflow: hidden;
+    margin-top: 8px;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.image-preview-box:hover {
+    border-color: var(--primary-color);
+    background-color: #eff6ff;
+}
+
+.image-preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.primary-btn:hover { 
+    background-color: #3b82f6; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.secondary-btn {
+    background-color: #fff;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+.secondary-btn:hover { 
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+.success-btn {
+    background-color: #3b82f6; /* Modern Blue */
+    color: white;
+}
+.success-btn:hover { background-color: #2563eb; }
+
+.save-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.whatsapp-btn {
+    background-color: #22c55e; /* WhatsApp Green */
+    color: white;
+}
+
+.whatsapp-btn:hover {
+    background-color: #16a34a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.text-btn {
+    background: transparent;
+    color: #777;
+    text-decoration: underline;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 10px 0;
+}
+
+/* Product List in Left Panel */
+.product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+.list-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    background-color: #ddd;
+}
+
+.list-item-info {
+    flex: 1;
+}
+
+.list-item-title {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.list-item-desc {
+    font-size: 12px;
+    color: #666;
+}
+
+.list-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.action-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+.edit-btn { background-color: #e0e0e0; color: #333; }
+.del-btn { background-color: #ffe0e0; color: var(--danger-color); }
+
+/* Right Panel */
+.right-panel {
+    flex: 1.2;
+    background-color: transparent;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.preview-container {
+    background-color: #fff;
+    padding: 35px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.preview-header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.preview-header-actions h2 {
+    font-size: 20px;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.order-preview {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background: white;
+    min-height: 600px;
+    padding: 30px; /* Reduced from 40px for a more compact look */
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: auto;
+    box-sizing: border-box; /* Ensure padding doesn't add to width */
+}
+
+.order-header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.order-header h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #000;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #333;
+}
+
+.header-row .customer {
+    text-align: left;
+    font-weight: 500;
+    /* Removed visibility: hidden to ensure layout consistency */
+}
+
+.header-row .date {
+    text-align: right;
+}
+
+.order-items {
+    flex: 1;
+}
+
+.order-preview.invoice-mode .order-header {
+    border-bottom: 1px solid #000;
+}
+
+.order-preview.invoice-mode .order-footer {
+    border-top: 1px solid #000;
+}
+
+.invoice-table-head,
+.invoice-line {
+    display: grid;
+    grid-template-columns: 1fr 56px 86px 92px;
+    gap: 10px;
+    align-items: center;
+}
+
+.invoice-table-head {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 10px;
+}
+
+.invoice-line {
+    font-size: 15px;
+    color: #111;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.invoice-line:last-child {
+    border-bottom: none;
+}
+
+.invoice-table-head .c-qty,
+.invoice-line .c-qty {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.invoice-table-head .c-unit,
+.invoice-line .c-unit,
+.invoice-table-head .c-amount,
+.invoice-line .c-amount {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.invoice-line .c-item {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.order-preview.invoice-mode .header-row {
+    display: none;
+}
+
+.order-preview.invoice-mode .original-price-row {
+    color: #111;
+}
+
+.order-preview.invoice-mode .original-price-group {
+    opacity: 1;
+}
+
+.order-preview.invoice-mode .original-price-group::after {
+    content: none;
+}
+
+.invoice-meta {
+    margin-top: 6px;
+}
+
+.invoice-meta-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 24px;
+    row-gap: 6px;
+    font-size: 14px;
+    color: #0f172a;
+}
+
+.invoice-meta-item {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    min-width: 0;
+}
+
+.invoice-meta-item:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.invoice-meta-item:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.invoice-meta-item:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.invoice-meta-item .k {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.invoice-meta-item .k::after {
+    content: ':';
+    margin-left: 2px;
+}
+
+.invoice-meta-item .v {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+@media (max-width: 360px) {
+    .invoice-meta-grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto;
+    }
+
+    .invoice-meta-item {
+        grid-column: auto;
+        grid-row: auto;
+    }
+}
+
+.invoice-parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 14px 0 8px;
+}
+
+.invoice-party-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #000;
+    margin-bottom: 6px;
+}
+
+.invoice-party-line {
+    font-size: 14px;
+    color: #111;
+    white-space: pre-wrap;
+}
+
+.invoice-party-sub {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #555;
+    flex-wrap: wrap;
+}
+
+.invoice-notes {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+    white-space: pre-wrap;
+}
+
+.order-preview.invoice-mode .total-row {
+    font-size: 16px;
+}
+
+.order-preview.invoice-mode .main-total {
+    font-size: 14px;
+}
+
+.invoice-items-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.invoice-items-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.invoice-edit-head {
+    display: grid;
+    grid-template-columns: 1fr 70px 90px 96px 30px;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #111;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.invoice-edit-row {
+    display: grid;
+    grid-template-columns: 1fr 70px 90px 96px 30px;
+    gap: 8px;
+    align-items: center;
+}
+
+.invoice-edit-row input {
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.invoice-edit-qty,
+.invoice-edit-unit {
+    text-align: right;
+}
+
+.invoice-edit-amount {
+    text-align: right;
+    font-weight: 600;
+    color: #111;
+    font-size: 13px;
+}
+
+.invoice-edit-remove {
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.preview-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 12px;
+    align-items: flex-start;
+}
+
+.preview-item:last-child {
+    border-bottom: none;
+}
+
+.preview-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.preview-img-contain {
+    border-radius: 4px;
+    background-color: transparent;
+    flex-shrink: 0;
+    max-width: 160px; /* Cap width to prevent excessive height */
+    height: auto;
+}
+
+.preview-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.preview-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: #000;
+    margin-bottom: 4px;
+}
+
+.preview-note {
+    font-size: 13px;
+    color: #777;
+    margin-top: 2px;
+    font-style: italic;
+    white-space: pre-wrap;
+}
+
+.preview-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 居中对齐，确保单价行和小计在一条线上 */
+    margin-top: 8px;
+    font-size: 13px;
+    flex-wrap: nowrap; /* 强制不换行 */
+}
+
+.preview-price-row .price {
+    color: #333;
+    white-space: nowrap; /* 确保单价和数量不拆行 */
+    flex: 1; /* 占据剩余空间 */
+}
+
+.preview-price-row .subtotal {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.empty-state {
+    text-align: center;
+    color: #ccc;
+    margin-top: 50px;
+    font-size: 16px;
+}
+
+.order-footer {
+    border-top: 2px solid #000;
+    padding-top: 15px;
+    margin-top: 10px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.main-total {
+    font-size: 12px; /* Changed from 16px to 12px as requested */
+    font-weight: 600;
+    color: #000;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.total-price-group {
+    display: flex;
+    align-items: baseline;
+    gap: 5px; /* Gap between Code (USD) and Symbol ($) */
+}
+
+.final-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 0; /* Symbol ($) and Amount (0.00) tight */
+}
+
+.main-total .currency {
+    font-size: inherit; /* Match parent font size */
+    margin-right: 0;
+}
+
+.original-price-row {
+    color: #666;
+    font-size: 14px;
+}
+
+.original-price-group {
+    position: relative;
+    opacity: 0.7;
+    display: inline-block;
+}
+
+.original-price-group::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    transform: translateY(-50%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        padding: 20px;
+        overflow: auto;
+    }
+    .left-panel {
+        max-width: 100%;
+        overflow: visible;
+        padding: 25px;
+    }
+    .right-panel {
+        overflow: visible;
+    }
+    .form-row {
+        flex-wrap: wrap; /* Allow price and quantity to stack if needed */
+    }
+    .form-row .form-group {
+        min-width: 120px; /* Prevent shrinking too much */
+    }
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 480px) {
+    .top-nav {
+        padding: 0 10px;
+        gap: 15px;
+        height: 50px;
+    }
+    .nav-item {
+        font-size: 13px;
+    }
+    .container {
+        padding: 10px;
+    }
+    .left-panel, .right-panel {
+        padding: 10px; /* 进一步减小面板边距 */
+    }
+    .order-preview {
+        padding: 20px 20px; /* 增加左右内边距，使内容不紧贴边缘 */
+    }
+    .order-header h2 {
+        font-size: 15px; /* 手机端字体改为15 */
+    }
+    .form-row .form-group {
+        flex: 1 1 100%; /* Stack price and quantity on very small screens */
+    }
+    .preview-header-actions {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    .save-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    .save-actions .btn {
+        width: 100%;
+    }
+    .preview-item {
+        gap: 10px; /* 缩小间距给文字留空间 */
+    }
+    .preview-img-contain {
+        max-width: 160px; /* 手机端也改回 160px 宽度 */
+    }
+    .preview-price-row {
+        justify-content: flex-end; /* 将 $100.00 x 1 靠右对齐 */
+        text-align: right;
+    }
+    
+    .preview-price-row .subtotal {
+        display: none; /* 手机端删除（隐藏）后面的小计金额 */
+    }
+}

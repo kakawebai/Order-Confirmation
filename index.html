@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单确认工具 - 快速生成高清商品订单图片 | Order Confirmation Tool</title>
+    <meta name="description" content="一款简单易用的订单确认图片生成工具，支持多语言、自定义货币、折扣计算及高清图片导出。适用于外贸、微商等多种电商场景。">
+    <meta name="keywords" content="订单确认, 订单图片生成器, 外贸工具, 电商工具, 订单管理, 商品列表生成">
+    
+    <link rel="dns-prefetch" href="https://cdn.bootcdn.net">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kakaciro.dpdns.org/index.html">
+    <meta property="og:title" content="订单确认工具 - 快速生成高清商品订单图片">
+    <meta property="og:description" content="一款简单易用的订单确认图片生成工具，支持多语言、自定义货币、折扣计算及高清图片导出。">
+    <meta property="og:image" content="https://kakaciro.dpdns.org/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://kakaciro.dpdns.org/index.html">
+    <meta property="twitter:title" content="订单确认工具 - 快速生成高清商品订单图片">
+    <meta property="twitter:description" content="一款简单易用的订单确认图片生成工具，支持多语言、自定义货币、折扣计算及高清图片导出。">
+    <meta property="twitter:image" content="https://kakaciro.dpdns.org/og-image.jpg">
+
+    <link rel="canonical" href="https://kakaciro.dpdns.org/index.html">
+    <meta name="robots" content="index, follow">
+    <link rel="preload" href="css/main.min.css" as="style">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2718%27%20fill%3D%27%234a90e2%27/%3E%3Ctext%20x%3D%2750%27%20y%3D%2768%27%20font-size%3D%2760%27%20text-anchor%3D%27middle%27%20fill%3D%27white%27%20font-family%3D%27Segoe%20UI%2C%20Arial%2C%20sans-serif%27%3E%E8%AE%A2%3C/text%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2718%27%20fill%3D%27%234a90e2%27/%3E%3Ctext%20x%3D%2750%27%20y%3D%2768%27%20font-size%3D%2760%27%20text-anchor%3D%27middle%27%20fill%3D%27white%27%20font-family%3D%27Segoe%20UI%2C%20Arial%2C%20sans-serif%27%3E%E8%AE%A2%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index.html" class="nav-item active">订单清单</a>
+        <a href="dianhuahaoma.html" class="nav-item">电话区号</a>
+        <a href="instagram-liuliang-quanjiexi.html" class="nav-item">Instagram 流量全解析</a>
+        <a href="facebook-guanggao.html" class="nav-item">Facebook 广告</a>
+        <a href="seo-kuaisu-paiming.html" class="nav-item">SEO 快速排名</a>
+    </nav>
+        <div class="container">
+        <!-- Left Panel: Input & Edit -->
+        <div class="left-panel">
+            <div class="panel-title-row">
+                <h1>商品编辑添加</h1>
+                <button id="invoiceToggleBtn" class="btn secondary-btn" type="button" aria-pressed="false">发票</button>
+            </div>
+            
+            <div class="form-group">
+                <label>预览语言</label>
+                <select id="languageSelector">
+                    <option value="en">English (英语)</option>
+                    <option value="zh-CN">简体中文</option>
+                    <option value="zh-TW">繁體中文</option>
+                    <option value="ar">العربية (阿拉伯语)</option>
+                    <option value="ja">日本語 (日语)</option>
+                    <option value="ko">한국어 (韩语)</option>
+                    <option value="ru">Русский (俄语)</option>
+                    <option value="fr">Français (法语)</option>
+                    <option value="de">Deutsch (德语)</option>
+                    <option value="es">Español (西班牙语)</option>
+                    <option value="it">Italiano (意大利语)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="orderCustomerGroup">
+                <label>Customer</label>
+                <input type="text" id="customerNameInput" placeholder="请输入客户名称">
+            </div>
+
+            <div class="form-group" id="orderDateGroup">
+                <label>订单日期</label>
+                <input type="text" id="orderDate" placeholder="YYYY-MM-DD">
+            </div>
+
+            <div class="form-group">
+                <label>货币符号</label>
+                <select id="currencySelector">
+                    <option value="$">USD ($)</option>
+                    <option value="$">HKD ($)</option>
+                    <option value="¥">CNY (¥)</option>
+                    <option value="¥">JPY (¥)</option>
+                    <option value="₩">KRW (₩)</option>
+                    <option value="₽">RUB (₽)</option>
+                    <option value="$">AUD ($)</option>
+                    <option value="$">TWD ($)</option>
+                    <option value="$">CAD ($)</option>
+                    <option value="€">EUR (€)</option>
+                    <option value="£">GBP (£)</option>
+                </select>
+            </div>
+
+            <div id="orderEditor">
+                <div class="form-group">
+                    <label>折扣 (%)</label>
+                    <input type="number" id="discountInput" placeholder="0-100" step="0.01" min="0" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label>图片显示模式</label>
+                    <select id="imageFitSelector">
+                        <option value="cover">裁剪填充 (Cover)</option>
+                        <option value="contain">完整原图 (Contain)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>商品图片</label>
+                    <input type="file" id="productImage" accept="image/*">
+                    <div class="image-preview-box" id="imagePreviewBox">
+                        <span>暂无图片</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>商品标题</label>
+                    <input type="text" id="productTitle" placeholder="请输入商品名称">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>单价 (<span id="priceCurrencySymbol">$</span>)</label>
+                        <input type="number" id="productPrice" placeholder="0.00" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>数量</label>
+                        <input type="number" id="productQty" value="1" min="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea id="productNote" placeholder="填写商品备注信息（可选，回车可换行）" rows="3"></textarea>
+                </div>
+
+                <button id="addProductBtn" class="btn primary-btn">添加商品</button>
+                <button id="updateProductBtn" class="btn secondary-btn" style="display:none;">保存修改</button>
+                <button id="cancelEditBtn" class="btn text-btn" style="display:none;">取消</button>
+
+                <hr>
+                
+                <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3>已添加商品列表</h3>
+                    <button id="clearAllBtn" class="btn text-btn" style="color: var(--danger-color); font-size: 12px; display: none;">清空列表</button>
+                </div>
+                <div id="productList" class="product-list">
+                    <!-- Added products will appear here for editing/deleting -->
+                </div>
+            </div>
+
+            <div id="invoiceEditor" style="display:none;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>发票编号</label>
+                        <input type="text" id="invoiceNumberInput" placeholder="例如：INV-0001">
+                    </div>
+                    <div class="form-group">
+                        <label>税率 (%)</label>
+                        <input type="number" id="invoiceTaxRateInput" placeholder="0" step="0.01" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>发票日期</label>
+                        <input type="date" id="invoiceDateInput">
+                    </div>
+                    <div class="form-group">
+                        <label>到期日</label>
+                        <input type="date" id="invoiceDueDateInput">
+                    </div>
+                </div>
+
+                <hr>
+
+                <h3>开票方 (From)</h3>
+                <div class="form-group">
+                    <label>公司名称</label>
+                    <input type="text" id="invoiceFromNameInput" placeholder="Company Name">
+                </div>
+                <div class="form-group">
+                    <label>公司地址</label>
+                    <textarea id="invoiceFromAddressInput" rows="3" placeholder="Company Address"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>电话</label>
+                        <input type="text" id="invoiceFromPhoneInput" placeholder="Phone">
+                    </div>
+                    <div class="form-group">
+                        <label>税号</label>
+                        <input type="text" id="invoiceFromTaxIdInput" placeholder="Tax ID">
+                    </div>
+                </div>
+
+                <hr>
+
+                <h3>收票方 (Bill To)</h3>
+                <div class="form-group">
+                    <label>客户名称</label>
+                    <input type="text" id="invoiceToNameInput" placeholder="Client Name">
+                </div>
+                <div class="form-group">
+                    <label>客户地址</label>
+                    <textarea id="invoiceToAddressInput" rows="3" placeholder="Client Address"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>电话</label>
+                        <input type="text" id="invoiceToPhoneInput" placeholder="Phone">
+                    </div>
+                    <div class="form-group">
+                        <label>税号</label>
+                        <input type="text" id="invoiceToTaxIdInput" placeholder="Tax ID">
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="invoice-items-header">
+                    <h3>明细 (Items)</h3>
+                    <button id="addInvoiceItemBtn" class="btn primary-btn" type="button">+ 添加明细</button>
+                </div>
+
+                <div id="invoiceItemsEditor" class="invoice-items-editor"></div>
+
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea id="invoiceNotesInput" rows="3" placeholder="Optional notes..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Preview -->
+        <div class="right-panel">
+            <div class="preview-container">
+                <div class="preview-header-actions">
+                    <h2 id="previewModeHeader">订单预览</h2>
+                    <div class="save-actions">
+                        <button id="saveBtn" class="btn success-btn">保存图片</button>
+                        <button id="saveWhatsAppBtn" class="btn whatsapp-btn">高清图片</button>
+                    </div>
+                </div>
+                
+                <div id="captureArea" class="order-preview">
+                    <div class="order-header">
+                        <h2 id="previewTitle">Order Confirmation</h2>
+                        <div id="invoiceMeta" class="invoice-meta" style="display:none;">
+                            <div class="invoice-meta-grid">
+                                <div class="invoice-meta-item">
+                                    <div class="k" id="invoiceMetaLabelNumber">Number</div>
+                                    <div class="v" id="invoiceNumberDisplay"></div>
+                                </div>
+                                <div class="invoice-meta-item">
+                                    <div class="k" id="invoiceMetaLabelDate">Date</div>
+                                    <div class="v" id="invoiceDateDisplay"></div>
+                                </div>
+                                <div class="invoice-meta-item">
+                                    <div class="k" id="invoiceMetaLabelDue">Due</div>
+                                    <div class="v" id="invoiceDueDateDisplay"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="header-row">
+                            <p class="customer"><span id="labelCustomer">Customer</span>: <span id="customerNameDisplay"></span></p>
+                            <p class="date"><span id="labelDate">Date</span>: <span id="currentDate"></span></p>
+                        </div>
+                    </div>
+
+                    <div id="invoiceParties" class="invoice-parties" style="display:none;">
+                        <div class="invoice-party">
+                            <div class="invoice-party-title" id="invoiceFromTitle">From</div>
+                            <div class="invoice-party-line" id="invoiceFromNameDisplay"></div>
+                            <div class="invoice-party-line" id="invoiceFromAddressDisplay"></div>
+                            <div class="invoice-party-sub">
+                                <span id="invoiceFromPhoneDisplay"></span>
+                                <span id="invoiceFromTaxIdDisplay"></span>
+                            </div>
+                        </div>
+                        <div class="invoice-party">
+                            <div class="invoice-party-title" id="invoiceToTitle">To</div>
+                            <div class="invoice-party-line" id="invoiceToNameDisplay"></div>
+                            <div class="invoice-party-line" id="invoiceToAddressDisplay"></div>
+                            <div class="invoice-party-sub">
+                                <span id="invoiceToPhoneDisplay"></span>
+                                <span id="invoiceToTaxIdDisplay"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items" id="previewItems">
+                        <!-- Preview items will be injected here -->
+                        <div class="empty-state">No items added</div>
+                    </div>
+
+                    <div class="order-footer">
+                        <div class="total-row">
+                            <span id="labelTotalItems">Total Items:</span>
+                            <span id="totalCount">0</span>
+                        </div>
+                        <div class="total-row original-price-row" id="originalPriceRow" style="display: none;">
+                            <span id="labelOriginalPrice">Original Price:</span>
+                            <div class="original-price-group">
+                                <span id="originalCurrencyCode">USD</span>
+                                <span id="originalCurrencySymbol">$</span>
+                                <span id="originalAmount">0.00</span>
+                            </div>
+                        </div>
+                        <div class="total-row discount-row" id="discountRow">
+                            <span id="labelDiscount">Discount:</span>
+                            <div class="discount-price-group">
+                                <span id="discountPercent">-0%</span>
+                            </div>
+                        </div>
+                        <div class="total-row" id="invoiceTaxRow" style="display:none;">
+                            <span id="invoiceTaxLabel">Tax:</span>
+                            <span id="invoiceTaxAmount">0.00</span>
+                        </div>
+                        <div class="total-row main-total">
+                            <span id="labelTotalAmount">Total Amount:</span>
+                            <div class="total-price-group">
+                                <span id="totalCurrencyCode">USD</span>
+                                <div class="final-amount">
+                                    <span id="totalCurrencySymbol">$</span>
+                                    <span id="totalAmount">0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invoice-notes" id="invoiceNotesDisplay" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background: #fff; border-top: 1px solid #e2e8f0; padding: 16px 0;">
+        <div style="max-width: 1440px; margin: 0 auto; padding: 0 40px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; color: #64748b; font-size: 13px;">
+            <span>© 2024 订单确认工具</span>
+            <span style="display: inline-flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 999px; font-weight: 600;">
+                <img src="assets/qq.png" alt="QQ" style="width: 18px; height: 18px; object-fit: contain;" />
+                QQ: 3760079636
+            </span>
+        </div>
+    </footer>
+
+    <script src="script.min.js" defer></script>
+</body>
+</html>
