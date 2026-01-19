@@ -745,6 +745,12 @@
                             <button onclick="exportToXLSX()" class="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-200 flex items-center justify-center">
                                 <i class="fas fa-file-excel mr-2 text-sm"></i> 导出
                             </button>
+                            <button onclick="saveToDatabase()" class="flex-1 md:flex-none bg-blue-600 hover:bg-blue-700 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-200 flex items-center justify-center">
+                                <i class="fas fa-database mr-2 text-sm"></i> 保存云端
+                            </button>
+                            <button onclick="loadFromDatabase()" class="flex-1 md:flex-none bg-purple-600 hover:bg-purple-700 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-purple-200 flex items-center justify-center">
+                                <i class="fas fa-cloud-download-alt mr-2 text-sm"></i> 读取云端
+                            </button>
                             <button onclick="openAllintitleConfigModal()" class="flex-1 md:flex-none bg-slate-900 hover:bg-slate-800 text-white px-3 md:px-4 py-2 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-slate-200 flex items-center justify-center" title="配置 Allintitle 自动获取">
                                 <i class="fas fa-gear mr-2"></i> Allintitle API
                             </button>
@@ -1277,6 +1283,72 @@
         });
 
         // Table Functions
+        async function saveToDatabase() {
+            const rows = document.querySelectorAll('#kgrTable tbody tr');
+            const data = [];
+            
+            rows.forEach(row => {
+                const keyword = row.cells[0].innerText.trim();
+                const volume = row.cells[1].innerText.trim();
+                const intent = row.cells[2].innerText.trim();
+                const cpc = row.cells[3].innerText.trim();
+                const kd = row.cells[4].innerText.trim();
+                const allintitle = row.cells[5].innerText.trim();
+                const kgr = row.cells[6].innerText.trim();
+                
+                if (keyword && keyword !== '新关键词') {
+                    data.push({ keyword, volume, intent, cpc, kd, allintitle, kgr });
+                }
+            });
+
+            if (data.length === 0) {
+                alert('没有有效数据可以保存');
+                return;
+            }
+
+            try {
+                const response = await fetch('save_kgr.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                console.error('保存失败:', error);
+                alert('保存失败，请检查网络或数据库配置');
+            }
+        }
+
+        async function loadFromDatabase() {
+            try {
+                const response = await fetch('get_kgr.php');
+                const result = await response.json();
+                
+                if (result.success && result.data.length > 0) {
+                    const tbody = document.querySelector('#kgrTable tbody');
+                    tbody.innerHTML = ''; // 清空当前表格
+                    
+                    result.data.forEach(item => {
+                        addTableRow({
+                            keyword: item.keyword,
+                            volume: item.volume,
+                            intent: item.intent,
+                            cpc: item.cpc,
+                            kd: item.kd,
+                            allintitle: item.allintitle
+                        });
+                    });
+                    alert('已成功加载云端历史数据');
+                } else {
+                    alert('云端暂无数据');
+                }
+            } catch (error) {
+                console.error('加载失败:', error);
+                alert('加载失败，请检查网络或数据库配置');
+            }
+        }
+
         function addTableRow(data = {}) {
             const tbody = document.querySelector('#kgrTable tbody');
             const newRow = document.createElement('tr');
@@ -1957,6 +2029,89 @@
             if (!modal || modal.classList.contains('hidden')) return;
             modal.classList.add('hidden');
             document.body.style.overflow = '';
+        }
+
+        // Database Operations
+        async function saveToDatabase() {
+            const rows = document.querySelectorAll('#kgrTable tbody tr');
+            const data = [];
+            
+            rows.forEach(row => {
+                const keyword = row.cells[0].innerText.trim();
+                const volume = row.querySelector('.table-volume')?.innerText.replace(/,/g, '').trim() || '0';
+                const intent = row.cells[2].innerText.trim();
+                const cpc = row.cells[3].innerText.trim();
+                const kd = row.cells[4].innerText.trim();
+                const allintitle = row.querySelector('.table-allintitle')?.innerText.replace(/,/g, '').trim() || '0';
+                const kgr = row.querySelector('.table-kgr span')?.innerText.trim() || '0';
+                
+                if (keyword && keyword !== 'example keyword' && keyword !== '新关键词') {
+                    data.push({
+                        keyword,
+                        volume: parseInt(volume) || 0,
+                        intent,
+                        cpc,
+                        kd,
+                        allintitle: parseInt(allintitle) || 0,
+                        kgr: parseFloat(kgr) || 0
+                    });
+                }
+            });
+
+            if (data.length === 0) {
+                showCenteredAlert('提示', '没有有效数据可保存');
+                return;
+            }
+
+            try {
+                const response = await fetch('save_kgr.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    showCenteredAlert('成功', result.message);
+                } else {
+                    showCenteredAlert('错误', result.message || '保存失败');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                showCenteredAlert('错误', '无法连接到服务器，请检查数据库配置');
+            }
+        }
+
+        async function loadFromDatabase() {
+            try {
+                const response = await fetch('get_kgr.php');
+                const result = await response.json();
+                
+                if (result.success && result.data.length > 0) {
+                    const tbody = document.querySelector('#kgrTable tbody');
+                    // 清空现有行，除了第一行（如果是默认行的话）
+                    tbody.innerHTML = '';
+                    
+                    result.data.forEach(item => {
+                        addTableRow({
+                            keyword: item.keyword,
+                            volume: item.volume,
+                            intent: item.intent,
+                            cpc: item.cpc,
+                            kd: item.kd,
+                            allintitle: item.allintitle
+                        });
+                    });
+                    showCenteredAlert('成功', `已从云端读取 ${result.data.length} 条记录`);
+                } else {
+                    showCenteredAlert('提示', result.message || '云端没有找到历史记录');
+                }
+            } catch (error) {
+                console.error('Load error:', error);
+                showCenteredAlert('错误', '读取失败，请检查数据库配置');
+            }
         }
 
         // Import Modal
