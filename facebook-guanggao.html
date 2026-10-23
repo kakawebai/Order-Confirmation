@@ -77,17 +77,24 @@
         .top-nav {
             background-color: #fff;
             border-bottom: 1px solid #e2e8f0;
-            padding: 0 40px;
+            padding: 0 24px;
             display: flex;
             justify-content: center;
             height: 60px;
             align-items: center;
-            gap: 40px;
+            gap: 32px;
             flex-shrink: 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 1000;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .top-nav::-webkit-scrollbar {
+            display: none;
         }
 
         .top-nav-item {
@@ -100,6 +107,8 @@
             align-items: center;
             position: relative;
             transition: color 0.3s;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .top-nav-item:hover {
@@ -132,23 +141,25 @@
                 top: auto;
                 left: 0;
                 right: 0;
-                padding: 0;
-                gap: 0;
+                padding: 0 10px;
+                gap: 8px;
                 height: 60px;
                 background: #ffffff;
                 border-top: 1px solid #e2e8f0;
                 border-bottom: none;
                 box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
                 z-index: 1000;
-                justify-content: space-around;
+                justify-content: flex-start;
+                overflow-x: auto;
+                white-space: nowrap;
             }
             .top-nav-item {
                 font-size: 12px;
-                flex: 1;
+                flex: 0 0 auto;
                 flex-direction: column;
                 justify-content: center;
                 text-align: center;
-                padding: 5px 0;
+                padding: 5px 8px;
             }
             .top-nav-item.active::after {
                  top: 0;
@@ -181,6 +192,7 @@
         <a href="instagram-liuliang-quanjiexi.html" class="top-nav-item">Instagram 流量全解析</a>
         <a href="facebook-guanggao.html" class="top-nav-item active">Facebook 广告</a>
         <a href="seo-kuaisu-paiming.html" class="top-nav-item">SEO 快速排名</a>
+        <a href="zhànqún.html" class="top-nav-item">站群互链</a>
     </nav>
 
     <!-- Fixed Left Navigation -->

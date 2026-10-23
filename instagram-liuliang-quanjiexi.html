@@ -90,17 +90,24 @@
         .top-nav {
             background-color: #fff;
             border-bottom: 1px solid #e2e8f0;
-            padding: 0 40px;
+            padding: 0 24px;
             display: flex;
             justify-content: center;
             height: 60px;
             align-items: center;
-            gap: 40px;
+            gap: 32px;
             flex-shrink: 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 1000;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .top-nav::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-item {
@@ -113,6 +120,8 @@
             align-items: center;
             position: relative;
             transition: color 0.3s;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .nav-item:hover {
@@ -140,6 +149,7 @@
                  padding: 0 10px;
                  gap: 15px;
                  height: 50px;
+                 justify-content: flex-start;
              }
              .nav-item {
                  font-size: 13px;
@@ -165,6 +175,7 @@
         <a href="instagram-liuliang-quanjiexi.html" class="nav-item active">Instagram 流量全解析</a>
         <a href="facebook-guanggao.html" class="nav-item">Facebook 广告</a>
         <a href="seo-kuaisu-paiming.html" class="nav-item">SEO 快速排名</a>
+        <a href="zhànqún.html" class="nav-item">站群互链</a>
     </nav>
 
     <!-- Fixed Sidebar Navigation -->

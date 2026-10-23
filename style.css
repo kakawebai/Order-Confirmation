@@ -26,14 +26,21 @@ body {
 .top-nav {
     background-color: #fff;
     border-bottom: 1px solid #e2e8f0;
-    padding: 0 40px;
+    padding: 0 24px;
     display: flex;
     justify-content: center;
     height: 60px;
     align-items: center;
-    gap: 40px;
+    gap: 32px;
     flex-shrink: 0;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+.top-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .nav-item {
@@ -46,6 +53,8 @@ body {
     align-items: center;
     position: relative;
     transition: color 0.3s;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .nav-item:hover {
@@ -661,9 +670,10 @@ hr {
     border-radius: 4px;
     background-color: #f0f0f0;
     flex-shrink: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
 }
 
 .preview-img-contain {
@@ -672,6 +682,9 @@ hr {
     flex-shrink: 0;
     max-width: 160px; /* Cap width to prevent excessive height */
     height: auto;
+    object-fit: contain;
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
 }
 
 .preview-details {
@@ -810,11 +823,21 @@ hr {
 }
 
 /* 响应式调整 */
+@media screen and (max-width: 768px) {
+    .top-nav {
+        padding: 0 12px;
+        gap: 16px;
+        height: 50px;
+        justify-content: flex-start;
+    }
+}
+
 @media screen and (max-width: 480px) {
     .top-nav {
         padding: 0 10px;
-        gap: 15px;
+        gap: 14px;
         height: 50px;
+        justify-content: flex-start;
     }
     .nav-item {
         font-size: 13px;

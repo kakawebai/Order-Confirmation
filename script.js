@@ -913,7 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isContain = dom.imageFitSelect.value === 'contain';
             const imgHtml = isContain 
                  ? `<img src="${imgSrc}" class="preview-img-contain" style="width: 160px; height: auto; object-fit: contain; border-radius: 4px; flex-shrink: 0; display: block; margin-right: 15px;">`
-                 : `<div class="preview-img" style="background-image: url('${imgSrc}'); background-size: cover; margin-right: 15px;"></div>`;
+                 : `<img src="${imgSrc}" class="preview-img" style="width: 140px; height: 140px; object-fit: cover; object-position: center; border-radius: 4px; flex-shrink: 0; display: block; margin-right: 15px;">`;
 
             item.innerHTML = `
                 ${imgHtml}
