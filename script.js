@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.updateBtn.addEventListener('click', updateProduct);
     dom.cancelBtn.addEventListener('click', cancelEdit);
     dom.clearAllBtn.addEventListener('click', clearAllProducts);
-    dom.saveBtn.addEventListener('click', saveAsImage);
+    dom.saveBtn.addEventListener('click', saveAsPDF);
     dom.saveWhatsAppBtn.addEventListener('click', () => saveAsImage(true));
     dom.productList.addEventListener('click', handleListAction);
 
@@ -438,6 +438,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         return html2canvasLoader;
+    }
+
+    let jsPdfLoader = null;
+
+    function loadJsPDF() {
+        if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+        if (jsPdfLoader) return jsPdfLoader;
+
+        jsPdfLoader = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.bootcdn.net/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            script.async = true;
+            script.onload = () => resolve(window.jspdf.jsPDF);
+            script.onerror = () => reject(new Error('Failed to load jsPDF'));
+            document.head.appendChild(script);
+        });
+
+        return jsPdfLoader;
     }
 
     function escapeHtml(input) {
@@ -1060,5 +1078,111 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.textContent = originalText;
             btn.disabled = false;
         });
+    }
+
+    async function saveAsPDF() {
+        const btn = dom.saveBtn;
+        const originalText = btn.textContent;
+
+        btn.textContent = '生成 PDF 中...';
+        btn.disabled = true;
+
+        let html2canvasFn, JsPDF;
+        try {
+            [html2canvasFn, JsPDF] = await Promise.all([loadHtml2Canvas(), loadJsPDF()]);
+        } catch (err) {
+            console.error('PDF component load failed:', err);
+            btn.textContent = originalText;
+            btn.disabled = false;
+            alert('PDF 组件加载失败，请重试');
+            return;
+        }
+
+        const scale = getExportScale();
+        // 记录原始样式以便恢复
+        const originalWidth = dom.captureArea.style.width;
+        const originalMaxWidth = dom.captureArea.style.maxWidth;
+
+        // 在开始截图前，暂时固定宽度以确保布局一致性
+        dom.captureArea.style.width = '450px';
+        dom.captureArea.style.maxWidth = '450px';
+
+        try {
+            const canvas = await html2canvasFn(dom.captureArea, {
+                scale: scale,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                width: 450,
+                windowWidth: 450,
+                onclone: (clonedDoc) => {
+                    const clonedCaptureArea = clonedDoc.getElementById('captureArea');
+                    if (clonedCaptureArea) {
+                        clonedCaptureArea.style.width = '450px';
+                        clonedCaptureArea.style.maxWidth = '450px';
+                        clonedCaptureArea.style.boxShadow = 'none';
+                        clonedCaptureArea.style.borderRadius = '0';
+                    }
+                }
+            });
+
+            dom.captureArea.style.width = originalWidth;
+            dom.captureArea.style.maxWidth = originalMaxWidth;
+
+            const pdf = new JsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 8;
+            const contentWidth = pageWidth - margin * 2;
+            const contentHeight = pageHeight - margin * 2;
+            const imageHeight = canvas.height * contentWidth / canvas.width;
+
+            if (imageHeight <= contentHeight) {
+                pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, contentWidth, imageHeight);
+            } else {
+                // 内容超过一页时，按页面高度切片分页输出
+                const pxPerMM = canvas.width / contentWidth;
+                const sliceHeightPx = Math.floor(contentHeight * pxPerMM);
+                let offsetY = 0;
+                let pageIndex = 0;
+
+                while (offsetY < canvas.height) {
+                    if (pageIndex > 0) pdf.addPage();
+
+                    const sliceHeight = Math.min(sliceHeightPx, canvas.height - offsetY);
+                    const slice = document.createElement('canvas');
+                    slice.width = canvas.width;
+                    slice.height = sliceHeight;
+
+                    const ctx = slice.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, slice.width, slice.height);
+                    ctx.drawImage(canvas, 0, offsetY, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+
+                    pdf.addImage(slice.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, contentWidth, sliceHeight / pxPerMM);
+                    offsetY += sliceHeight;
+                    pageIndex += 1;
+                }
+            }
+
+            const customerName = activeMode === 'invoice'
+                ? (invoice.toName || '').trim() || 'Customer'
+                : dom.customerInput.value.trim() || 'Customer';
+            const dateStr = activeMode === 'invoice'
+                ? (invoice.date || '').trim() || new Date().toISOString().split('T')[0]
+                : dom.dateInput.value.trim() || new Date().toISOString().split('T')[0];
+            const modeSuffix = activeMode === 'invoice' ? '_Invoice' : '';
+            const safeCustomer = customerName.replace(/[\\/:*?"<>|]/g, '_');
+            const safeDate = dateStr.replace(/[\\/:*?"<>|]/g, '_');
+
+            pdf.save(`${safeCustomer}_${safeDate}${modeSuffix}.pdf`);
+        } catch (err) {
+            console.error('PDF export failed:', err);
+            dom.captureArea.style.width = originalWidth;
+            dom.captureArea.style.maxWidth = originalMaxWidth;
+            alert('PDF 生成失败，请重试');
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
     }
 });
