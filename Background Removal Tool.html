@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>去白底工具 · 多格式导出</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2718%27%20fill%3D%27%234a90e2%27/%3E%3Ctext%20x%3D%2750%27%20y%3D%2768%27%20font-size%3D%2760%27%20text-anchor%3D%27middle%27%20fill%3D%27white%27%20font-family%3D%27Segoe%20UI%2C%20Arial%2C%20sans-serif%27%3E%E8%AE%A2%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f1f3f2; --panel: #fff; --ink: #1d2523; --muted: #66726f; --line: #d9dfdd;
+    --brand: #1e3f3a; --brand-h: #2b5750; --accent: #c8ff5a; --nav-active: #1e3f3a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #141918; --panel: #1d2423; --ink: #e8eeec; --muted: #94a19e; --line: #323c3a; --brand: #3e7d72; --brand-h: #4c9486; --nav-active: #72d6c4; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  .top-nav {
+    position: sticky; top: 0; z-index: 1000; height: 60px;
+    background: var(--panel);
+    background: color-mix(in srgb, var(--panel) 92%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+    display: flex; align-items: center;
+  }
+  .nav-inner {
+    width: 100%; max-width: 1080px; height: 100%; margin: 0 auto; padding: 0 20px;
+    display: flex; justify-content: center; justify-content: safe center; align-items: center; gap: 32px;
+    overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .top-nav-item {
+    text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500;
+    height: 100%; display: inline-flex; align-items: center; position: relative;
+    transition: color .2s; flex-shrink: 0; white-space: nowrap;
+  }
+  .top-nav-item:hover { color: var(--nav-active); }
+  .top-nav-item:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 4px; }
+  .top-nav-item.active { color: var(--nav-active); font-weight: 700; }
+  .top-nav-item.active::after {
+    content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+    background: var(--nav-active); border-radius: 3px 3px 0 0;
+  }
+  main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 60px; }
+  @media (max-width: 640px) {
+    .top-nav { height: 50px; }
+    .nav-inner { padding: 0 14px; gap: 16px; justify-content: flex-start; }
+    .top-nav-item { font-size: 13.5px; }
+    main { padding: 20px 14px 48px; }
+  }
+  h1 { font-size: 24px; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 20px; font-size: 14px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; }
+  .drop { border: 2px dashed var(--line); border-radius: 10px; padding: 28px 16px; text-align: center; color: var(--muted); cursor: pointer; transition: border-color .15s, background .15s; }
+  .drop.over, .drop:hover, .drop:focus-visible { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 7%, transparent); outline: none; }
+  .drop b { color: var(--ink); }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px 28px; }
+  .row { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .row > span:first-child { min-width: 84px; }
+  .row input[type=range] { flex: 1; accent-color: var(--brand); }
+  .row output { min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+  label.chk { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; margin-right: 14px; }
+  input[type=checkbox] { accent-color: var(--brand); width: 16px; height: 16px; }
+  select, input[type=color] { font: inherit; font-size: 14px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
+  input[type=color] { padding: 0; width: 34px; height: 28px; cursor: pointer; }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .bar .grow { flex: 1; }
+  .btn { background: var(--brand); color: #fff; border: 0; border-radius: 6px; padding: 8px 16px; font: inherit; font-size: 14px; cursor: pointer; }
+  .btn:hover { background: var(--brand-h); }
+  .btn:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .btn.ghost:hover { border-color: var(--brand); }
+  .btn.sm { padding: 4px 10px; font-size: 13px; }
+  .btn:disabled { opacity: .45; cursor: default; }
+  #list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+  .stage { padding: 12px; display: grid; place-items: center; min-height: 200px;
+    background: repeating-conic-gradient(#d4d9d7 0% 25%, #fff 0% 50%) 50% / 18px 18px; }
+  .stage[data-bg=dark] { background: #1b1f1e; } .stage[data-bg=light] { background: #fff; } .stage[data-bg=green] { background: #2e7d4f; }
+  .stage canvas { max-width: 100%; max-height: 300px; height: auto; width: auto; }
+  .meta { padding: 10px 12px 4px; font-size: 13px; display: flex; justify-content: space-between; gap: 8px; }
+  .meta .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .meta .d { color: var(--muted); white-space: nowrap; }
+  .acts { padding: 6px 12px 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .empty { color: var(--muted); text-align: center; padding: 30px 0; grid-column: 1 / -1; }
+  #toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 6px; font-size: 14px; opacity: 0; pointer-events: none; transition: .2s; }
+  #toast.on { opacity: 1; transform: translate(-50%, 0); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="top-nav" aria-label="主导航">
+  <div class="nav-inner">
+    <a href="index.html" class="top-nav-item">订单清单</a>
+    <a href="dianhuahaoma.html" class="top-nav-item">电话区号</a>
+    <a href="instagram-liuliang-quanjiexi.html" class="top-nav-item">Instagram 流量全解析</a>
+    <a href="facebook-guanggao.html" class="top-nav-item">Facebook 广告</a>
+    <a href="seo-kuaisu-paiming.html" class="top-nav-item">SEO 快速排名</a>
+    <a href="zhànqún.html" class="top-nav-item">站群互链</a>
+    <a href="Background%20Removal%20Tool.html" class="top-nav-item active" aria-current="page">去白底工具</a>
+  </div>
+</nav>
+<main>
+  <h1>去白底工具</h1>
+  <p class="sub">只去除与图片边缘相连的背景，内部的白色球衣、高光等细节原样保留。仍有残留的背景，直接点击预览图上那块区域即可去除。所有处理都在本地浏览器完成，图片不会上传。</p>
+
+  <div class="panel">
+    <div class="drop" id="drop" tabindex="0" role="button" aria-label="选择或拖入图片">
+      <b>点击选择、拖入或直接粘贴图片（Ctrl/⌘+V）</b><br>支持 PNG、JPG、WebP 等，可一次选多张
+      <input type="file" id="file" accept="image/*" multiple hidden>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="grid2">
+      <label class="row"><span>背景容差</span><input type="range" id="tol" min="0" max="80" value="12"><output id="tolV">12</output></label>
+      <label class="row"><span>边缘柔化</span><input type="range" id="soft" min="0" max="40" value="10"><output id="softV">10</output></label>
+      <label class="row"><span>裁掉空白边</span><input type="checkbox" id="crop"><span style="min-width:0">留边</span><input type="range" id="pad" min="0" max="80" value="8"><output id="padV">8</output></label>
+      <label class="row"><span>封闭区容差</span><input type="range" id="holeTol" min="0" max="100" value="35"><output id="holeTolV">35</output></label>
+      <label class="row"><span>封闭区最小面积</span><input type="range" id="holeMin" min="0" max="3" step="0.005" value="0.005"><output id="holeV">0.005%</output></label>
+      <div class="row"><span>背景色</span>
+        <label class="chk" style="margin:0"><input type="checkbox" id="autoBg" checked>自动取四角</label>
+        <input type="color" id="bgColor" value="#ffffff" disabled aria-label="手动背景色">
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label class="chk"><input type="checkbox" id="holes" checked>自动去除被包围的背景（提手内侧、镂空处）</label>
+      <label class="chk">预览底色
+        <select id="prevBg"><option value="check">棋盘格</option><option value="dark">深色</option><option value="light">白色</option><option value="green">绿色</option></select>
+      </label>
+    </div>
+  </div>
+
+  <div class="panel bar">
+    <strong>导出格式</strong>
+    <label class="chk"><input type="checkbox" class="fmt" value="png" checked>PNG</label>
+    <label class="chk"><input type="checkbox" class="fmt" value="webp">WebP</label>
+    <label class="chk"><input type="checkbox" class="fmt" value="svg">SVG</label>
+    <label class="chk"><input type="checkbox" class="fmt" value="jpg">JPG（用下方底色填充）</label>
+    <input type="color" id="jpgBg" value="#ffffff" aria-label="JPG 底色">
+    <span class="grow"></span>
+    <button class="btn" id="dlAll" disabled>全部下载</button>
+    <button class="btn ghost" id="clear" disabled>清空</button>
+  </div>
+
+  <div id="list"><div class="empty">还没有图片，先在上方添加。</div></div>
+</main>
+<div id="toast" role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const items = [];
+let timer = 0;
+
+const hex2rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const opts = () => ({
+  tol: +$('tol').value, soft: +$('soft').value, auto: $('autoBg').checked, bg: hex2rgb($('bgColor').value),
+  holes: $('holes').checked, holeMin: +$('holeMin').value, holeTol: +$('holeTol').value, crop: $('crop').checked, pad: +$('pad').value
+});
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 1800);
+}
+
+/* ---------- 核心：边缘漫水填充去背景 ---------- */
+function cutout(img, o, seeds = []) {
+  const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0);
+  const id = ctx.getImageData(0, 0, w, h), d = id.data;
+
+  // 背景基准色：四角平均（或手动指定）
+  let bg = o.bg;
+  if (o.auto) {
+    const corners = [0, w - 1, (h - 1) * w, h * w - 1];
+    bg = [0, 1, 2].map(k => Math.round(corners.reduce((s, p) => s + d[p * 4 + k], 0) / 4));
+  }
+  const [bR, bG, bB] = bg, tol = o.tol;
+  const dist = i => { const p = i * 4; return Math.max(Math.abs(d[p] - bR), Math.abs(d[p + 1] - bG), Math.abs(d[p + 2] - bB)); };
+
+  const vis = new Uint8Array(w * h);   // 1 = 要删除
+  const seen = new Uint8Array(w * h);  // 1 = 已访问过
+  const q = new Int32Array(w * h);
+  let tail = 0, ref = bg, t = tol;
+  const near = (i, r) => { const p = i * 4; return d[p + 3] < 8 || (Math.abs(d[p] - r[0]) <= t && Math.abs(d[p + 1] - r[1]) <= t && Math.abs(d[p + 2] - r[2]) <= t); };
+  const push = n => { if (!seen[n] && near(n, ref)) { seen[n] = 1; q[tail++] = n; } };
+  const run = start => {
+    let head = start;
+    while (head < tail) {
+      const i = q[head++], x = i % w;
+      if (x > 0) push(i - 1);
+      if (x < w - 1) push(i + 1);
+      if (i >= w) push(i - w);
+      if (i < w * (h - 1)) push(i + w);
+    }
+  };
+  const commit = s => { for (let k = s; k < tail; k++) vis[q[k]] = 1; };
+
+  // 1) 从四条边界开始，删除与外部相连的背景
+  let s0 = tail;
+  for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
+  for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
+  run(s0); commit(s0);
+
+  // 2) 手动点击：以点击处的颜色为基准，删除相连的同色区域（用封闭区容差，更宽容）
+  t = o.holeTol;
+  for (const [sx, sy] of seeds) {
+    if (sx < 0 || sy < 0 || sx >= w || sy >= h) continue;
+    const i = sy * w + sx;
+    if (seen[i]) continue;
+    ref = [d[i * 4], d[i * 4 + 1], d[i * 4 + 2]];
+    s0 = tail; seen[i] = 1; q[tail++] = i; run(s0); commit(s0);
+  }
+
+  // 3) 被包围的背景（如提手内侧）：面积够大的背景色连通块才删，避免误伤细小高光
+  ref = bg; t = o.holeTol;
+  if (o.holes) {
+    const minPx = o.holeMin * w * h / 100;
+    for (let i = 0; i < w * h; i++) {
+      if (seen[i] || !near(i, bg)) continue;
+      s0 = tail; seen[i] = 1; q[tail++] = i; run(s0);
+      if (tail - s0 >= minPx) commit(s0);
+    }
+  }
+
+  t = tol;
+  for (let i = 0; i < w * h; i++) if (vis[i]) d[i * 4 + 3] = 0;
+
+  // 边缘柔化 + 去白边：靠近背景的像素按与背景的差异算透明度，并还原其本色
+  if (o.soft > 0) {
+    const edge = [];
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = y * w + x;
+      if (vis[i]) continue;
+      if ((x > 0 && vis[i - 1]) || (x < w - 1 && vis[i + 1]) || (y > 0 && vis[i - w]) || (y < h - 1 && vis[i + w])) edge.push(i);
+    }
+    for (const i of edge) {
+      const a = Math.min(1, Math.max(0.05, (dist(i) - tol) / o.soft)), p = i * 4;
+      if (a < 1) {
+        d[p] = Math.max(0, Math.min(255, bR + (d[p] - bR) / a));
+        d[p + 1] = Math.max(0, Math.min(255, bG + (d[p + 1] - bG) / a));
+        d[p + 2] = Math.max(0, Math.min(255, bB + (d[p + 2] - bB) / a));
+        d[p + 3] = Math.round(a * 255);
+      }
+    }
+  }
+  ctx.putImageData(id, 0, 0);
+
+  // 可选：裁掉透明空白
+  if (o.crop) {
+    let x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      if (d[(y * w + x) * 4 + 3] > 0) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    }
+    if (x1 >= 0) {
+      const p = o.pad, cw = x1 - x0 + 1 + p * 2, ch = y1 - y0 + 1 + p * 2;
+      const c2 = document.createElement('canvas'); c2.width = cw; c2.height = ch;
+      c2.getContext('2d').drawImage(c, x0, y0, x1 - x0 + 1, y1 - y0 + 1, p, p, x1 - x0 + 1, y1 - y0 + 1);
+      c2.offX = x0 - p; c2.offY = y0 - p;
+      return c2;
+    }
+  }
+  c.offX = 0; c.offY = 0;
+  return c;
+}
+
+/* ---------- 导出 ---------- */
+const MIME = { png: 'image/png', webp: 'image/webp', jpg: 'image/jpeg' };
+const toBlob = (cv, type, q) => new Promise(r => cv.toBlob(r, type, q));
+const blobToDataURL = b => new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(b); });
+
+async function exportBlob(cv, fmt) {
+  if (fmt === 'png') return toBlob(cv, MIME.png);
+  if (fmt === 'webp') return toBlob(cv, MIME.webp, 1);
+  if (fmt === 'jpg') {
+    const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height;
+    const x = c.getContext('2d'); x.fillStyle = $('jpgBg').value; x.fillRect(0, 0, c.width, c.height); x.drawImage(cv, 0, 0);
+    return toBlob(c, MIME.jpg, 0.95);
+  }
+  const url = await blobToDataURL(await toBlob(cv, MIME.png));
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${cv.width} ${cv.height}" width="${cv.width}" height="${cv.height}">\n  <image width="${cv.width}" height="${cv.height}" xlink:href="${url}"/>\n</svg>`;
+  return new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+}
+const fileName = (it, fmt) => it.base + (fmt === 'jpg' ? '' : '_transparent') + '.' + fmt;
+
+function save(blob, name) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+async function downloadAll() {
+  const fmts = [...document.querySelectorAll('.fmt:checked')].map(e => e.value);
+  if (!fmts.length) return toast('请至少勾选一种导出格式');
+  const jobs = [];
+  for (const it of items) for (const f of fmts) jobs.push([it, f]);
+  $('dlAll').disabled = true;
+  try {
+    if (jobs.length > 1 && window.JSZip) {
+      const zip = new JSZip(), used = {};
+      for (const [it, f] of jobs) {
+        let n = fileName(it, f); used[n] = (used[n] || 0) + 1;
+        if (used[n] > 1) n = n.replace(/(\.\w+)$/, `_${used[n]}$1`);
+        zip.file(n, await exportBlob(it.out, f));
+      }
+      save(await zip.generateAsync({ type: 'blob' }), 'cutouts.zip');
+    } else {
+      for (const [it, f] of jobs) { save(await exportBlob(it.out, f), fileName(it, f)); await new Promise(r => setTimeout(r, 250)); }
+    }
+    toast(`已导出 ${jobs.length} 个文件`);
+  } finally { $('dlAll').disabled = !items.length; }
+}
+
+/* ---------- 界面 ---------- */
+function render() {
+  const list = $('list');
+  list.innerHTML = '';
+  $('dlAll').disabled = $('clear').disabled = !items.length;
+  if (!items.length) { list.innerHTML = '<div class="empty">还没有图片，先在上方添加。</div>'; return; }
+  const o = opts();
+  items.forEach((it, idx) => {
+    it.out = cutout(it.img, o, it.seeds);
+    it.out.style.cursor = 'crosshair';
+    it.out.title = '点击残留的背景区域，可直接去除';
+    it.out.onclick = e => {
+      const r = it.out.getBoundingClientRect();
+      it.seeds.push([Math.floor((e.clientX - r.left) / r.width * it.out.width) + it.out.offX, Math.floor((e.clientY - r.top) / r.height * it.out.height) + it.out.offY]);
+      render();
+    };
+    const card = document.createElement('div'); card.className = 'card';
+    const stage = document.createElement('div'); stage.className = 'stage'; stage.dataset.bg = $('prevBg').value;
+    stage.appendChild(it.out);
+    const meta = document.createElement('div'); meta.className = 'meta';
+    meta.innerHTML = '<span class="n"></span><span class="d">' + it.out.width + ' × ' + it.out.height + '</span>';
+    meta.firstChild.textContent = it.base; meta.firstChild.title = it.base;
+    const acts = document.createElement('div'); acts.className = 'acts';
+    [['png', 'PNG'], ['webp', 'WebP'], ['svg', 'SVG'], ['jpg', 'JPG']].forEach(([f, label]) => {
+      const b = document.createElement('button'); b.className = 'btn sm'; b.textContent = label;
+      b.onclick = async () => save(await exportBlob(it.out, f), fileName(it, f));
+      acts.appendChild(b);
+    });
+    const cp = document.createElement('button'); cp.className = 'btn sm ghost'; cp.textContent = '复制图片';
+    cp.onclick = async () => {
+      try { await navigator.clipboard.write([new ClipboardItem({ 'image/png': toBlob(it.out, MIME.png) })]); toast('已复制到剪贴板'); }
+      catch (e) { toast('当前浏览器不允许复制，请改用下载'); }
+    };
+    const rm = document.createElement('button'); rm.className = 'btn sm ghost'; rm.textContent = '移除';
+    rm.onclick = () => { items.splice(idx, 1); render(); };
+    const un = document.createElement('button'); un.className = 'btn sm ghost'; un.textContent = '撤销点击'; un.disabled = !it.seeds.length;
+    un.onclick = () => { it.seeds.pop(); render(); };
+    acts.append(cp, un, rm);
+    card.append(stage, meta, acts);
+    list.appendChild(card);
+  });
+}
+const schedule = () => { clearTimeout(timer); timer = setTimeout(render, 120); };
+
+function addFiles(files) {
+  const imgs = [...files].filter(f => f.type.startsWith('image/'));
+  if (!imgs.length) return toast('没有识别到图片文件');
+  Promise.all(imgs.map(f => new Promise(res => {
+    const img = new Image(), url = URL.createObjectURL(f);
+    img.onload = () => res({ img, seeds: [], base: f.name.replace(/\.[^/.]+$/, '') || 'image' });
+    img.onerror = () => { toast('无法读取：' + f.name); res(null); };
+    img.src = url;
+  }))).then(r => { r.filter(Boolean).forEach(x => items.push(x)); render(); });
+}
+
+const drop = $('drop');
+drop.onclick = () => $('file').click();
+drop.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('file').click(); } };
+$('file').onchange = e => { addFiles(e.target.files); e.target.value = ''; };
+['dragenter', 'dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+window.addEventListener('paste', e => addFiles([...e.clipboardData.files]));
+
+[['tol', 'tolV', ''], ['soft', 'softV', ''], ['pad', 'padV', ''], ['holeMin', 'holeV', '%'], ['holeTol', 'holeTolV', '']].forEach(([a, b, u]) => $(a).addEventListener('input', () => { $(b).textContent = $(a).value + u; schedule(); }));
+['holes', 'crop', 'bgColor'].forEach(id => $(id).addEventListener('input', schedule));
+$('autoBg').onchange = () => { $('bgColor').disabled = $('autoBg').checked; schedule(); };
+$('prevBg').onchange = () => document.querySelectorAll('.stage').forEach(s => s.dataset.bg = $('prevBg').value);
+$('dlAll').onclick = downloadAll;
+$('clear').onclick = () => { items.length = 0; render(); };
+</script>
+</body>
+</html>

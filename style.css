@@ -29,6 +29,7 @@ body {
     padding: 0 24px;
     display: flex;
     justify-content: center;
+    justify-content: safe center;
     height: 60px;
     align-items: center;
     gap: 32px;
